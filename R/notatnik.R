@@ -8,6 +8,14 @@ library("viridis")
 ## integrated_all
 integrated_all <- readRDS("/home/jason/data/10x_heart/SCT_int_no_regression/Outdir/Objects/integrated_all.rds")
 
+my_theme <-
+  theme_minimal() +
+  theme(axis.text.x = element_text(size = 16),
+        axis.text.y = element_text(size = 16),
+        axis.title.x = element_text(size = 16),
+        axis.title.y = element_text(size = 16),
+        legend.text=element_text(size=12))
+
 #metadata
 
 metadata_all <-
@@ -245,133 +253,3 @@ metadata_raw_object <- data.table::fwrite(t, "/home/jason/data/shiny_dashboard/h
 
 t <- data.table::fread("/home/jason/data/shiny_dashboard/heart10x/data/metadata_raw_object.csv")
 
-
-
-agata <- read.table("/home/jason/practice/first_pass_deseq2.csv", sep = ",")
-anton_up <- xlsx::read.xlsx("/home/jason/practice/Anton/For_Karim.xlsx",
-                         sheetName = "up")
-anton_down <- xlsx::read.xlsx("/home/jason/practice/Anton/For_Karim.xlsx",
-                            sheetName = "down")
-
-agata <- agata %>%
-  tibble::rownames_to_column(var = "id") %>%
-  as.data.frame()
-
-agata_bm <-
-  biomaRt::getBM(
-    filters = "ensembl_gene_id",
-    attributes = c("ensembl_gene_id", "external_gene_name", "entrezgene_id"),
-    values = agata_clean$id,
-    mart = zebrafish,
-    bmHeader = TRUE,
-    uniqueRows = TRUE
-  )
-
-  GO_terms <- getBM(
-    attributes = c("name_1006", "namespace_1003", "external_gene_name", "ensembl_gene_id"),
-    filters = "ensembl_gene_id",
-    values = agata$id,
-    mart = zebrafish)
-
-
-GO_terms_BP <- GO_terms[GO_terms$namespace_1003 == "biological_process", ]
-GO_terms_MF <- GO_terms[GO_terms$namespace_1003 == "molecular_function", ]
-
-df_BP <-
-  data.frame(
-    external_gene_name = unique(GO_terms_BP$ensembl_gene_id),
-    GO_BP = sapply(unique(GO_terms_BP$ensembl_gene_id),
-                   function(g)
-                     paste0(GO_terms_BP[GO_terms_BP$ensembl_gene_id == g, "name_1006"],
-                            collapse = ", ")
-    )
-  )
-
-df_MF <-
-  data.frame(
-    external_gene_name = unique(GO_terms_MF$ensembl_gene_id),
-    GO_MF = sapply(unique(GO_terms_MF$ensembl_gene_id),
-                   function(g)
-                     paste0(GO_terms_MF[GO_terms_MF$ensembl_gene_id == g, "name_1006"],
-                            collapse = ", ")
-    )
-  )
-
-agata_long <-
-  agata %>%
-  dplyr::left_join(., df_BP, by = c("id" = "external_gene_name")) %>%
-  dplyr::left_join(., df_MF, by = c("id" = "external_gene_name")) %>%
-  dplyr::arrange(desc(log2FoldChange)) %>%
-  dplyr::mutate(padj = ifelse(is.na(padj), 1, padj)) %>%
-  dplyr::mutate(pvalue = ifelse(is.na(pvalue), 1, pvalue))
-
-
-xlsx::write.xlsx(agata_long,
-                 "/home/jason/practice/first_pass_deseq2_anotated.xlsx",
-                 row.names = FALSE)
-
-agata_clean <-
-  agata_long %>%
-  dplyr::filter(log2FoldChange != "NA") %>%
-  dplyr::filter(padj < 0.05) %>%
-  dplyr::left_join(., agata_bm[, c(1,3)], by = c("id"= "Gene stable ID"))
-
-
-up_genes <- agata_clean[agata_clean$log2FoldChange > 0 , ]
-up_anoton_x <- anton_up[anton_up$log2FoldChange.x > 0 , ]
-up_anoton_y <- anton_up[anton_up$log2FoldChange.y > 0 , ]
-
-down_genes <- agata_clean[agata_clean$log2FoldChange < 0 , ]
-down_anoton_x <- anton_down[anton_down$log2FoldChange.x > 0 , ]
-down_anoton_y <- anton_down[anton_up$log2FoldChange.y > 0 , ]
-
-list.up_down <- list(up = as.character(up_genes$id), down = as.character(down_genes$id))
-anton_list_up_down <- list(up = as.character(up_anoton_x$ensembl_gene_id), down = as.character(down_anoton_x$ensembl_gene_id))
-
-anton_list_up_down_2 <- list(up = as.character(up_anoton_y$ensembl_gene_id), down = as.character(down_anoton_y$ensembl_gene_id))
-
-out_enrichGO <- compareCluster(gene = list.up_down,
-                                    fun = "enrichGO",
-                                    keyType = "ENSEMBL",
-                                    OrgDb = org.Dr.eg.db,
-                                    ont = "BP",
-                                    pvalueCutoff = 0.05,
-                                    #qvalueCutoff =0.05,
-                                    pAdjustMethod = "BH")
-
-anton_enrichGO <- compareCluster(gene = anton_list_up_down,
-                               fun = "enrichGO",
-                               keyType = "ENSEMBL",
-                               OrgDb = org.Dr.eg.db,
-                               ont = "BP",
-                               pvalueCutoff = 0.05,
-                               #qvalueCutoff =0.05,
-                               pAdjustMethod = "BH")
-
-anton_enrichGO_2 <- compareCluster(gene = anton_list_up_down_2,
-                                 fun = "enrichGO",
-                                 keyType = "ENSEMBL",
-                                 OrgDb = org.Dr.eg.db,
-                                 ont = "BP",
-                                 pvalueCutoff = 0.05,
-                                 #qvalueCutoff =0.05,
-                                 pAdjustMethod = "BH")
-
-dotplot(out_enrichGO, showCategory = 20) + ggtitle("ET33 vs CMs")
-
-gofilter(out_enrichGO, level = 4)
-
-
-
-up_genes_kegg <- agata_clean[agata_clean$log2FoldChange > 0 , ]
-down_genes_kegg <- agata_clean[agata_clean$log2FoldChange < 0 , ]
-list.up_down_kegg <- list(up = as.character(up_genes_kegg$`NCBI gene (formerly Entrezgene) ID`),
-                          down = as.character(up_genes_kegg$`NCBI gene (formerly Entrezgene) ID`))
-out_KEGG <- compareCluster(gene = list.up_down_kegg,
-                       fun = "enrichKEGG",
-                       organism = "dre",
-                       keyType = "kegg",
-                       pvalueCutoff = 0.05,
-                       pAdjustMethod = "BH")
-
-dotplot(out_KEGG, showCategory = 20) + ggtitle("KEGG: ET33 vs CMs")
