@@ -16,17 +16,6 @@ my_theme <-
         axis.title.y = element_text(size = 16),
         legend.text=element_text(size=12))
 
-#metadata
-
-metadata_all <-
-  integrated_all@meta.data %>%
-  tibble::rownames_to_column(var = "cell") %>%
-  left_join(.,
-            Embeddings(integrated_all, reduction = "umap") %>%
-              as.data.frame() %>%
-              tibble::rownames_to_column(var = "cell"),
-            by = c("cell" = "cell")
-            )
 # labels
 l1 <- c()
 l2  <- c()
