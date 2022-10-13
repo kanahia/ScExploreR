@@ -5,3 +5,7 @@
 # metadata for all datasets
 # TODO
 "metadata_all"
+
+# slot data for all datasets
+# TODO
+"slot_data_all"
