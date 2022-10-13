@@ -62,7 +62,7 @@ one_theme <- theme(axis.text.x = element_text(size = 16),
   ggplot(metadata_all) +
     geom_point(aes(x = UMAP_1 , y = UMAP_2, color = edited_res.1.5), alpha = 0.75) +
     scale_color_manual(
-      values = colors_main_umap) +
+      values = colors_main_umap) + # TODO rename colors vector such that it is more clear this is package defined var
     theme_bw() +
     one_theme +
     NoLegend() +

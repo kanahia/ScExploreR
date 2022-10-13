@@ -30,9 +30,6 @@ devtools::load_all()
    metadata_all$edited_res.1.5 <- factor(metadata_all$edited_res.1.5,
                                          levels = cluster_order)
 
-   colors_main_umap <- c("#76AF00", "#E48800", "#00B92B", "deeppink3", "#C69900", "#5CB300",
-                         "#9290FF", "#00BF79", "#E26EF7", "#C27EFF", "#00B8E5", "#FC61D5",
-                         "#FF61C6", "#FF66A7", "#8BAB00", "#00BCD9", "#F8766D", "#B99E00")
 
    #metadata myo
    metadata_myo <- data.table::fread("/home/jason/data/shiny_dashboard/heart10x/data/metadata_myo.csv")
@@ -48,7 +45,7 @@ devtools::load_all()
      dplyr::summarise(u1 = median(UMAP_1),
                       u2 = median(UMAP_2)) %>%
      dplyr::rename("label" = 1) %>%
-     dplyr::mutate(color = colors_main_umap)
+     dplyr::mutate(color = ScExploreR::colors_main_umap)
 
 
 ## Add icon along with the title in the shinydashboard header
@@ -187,7 +184,7 @@ server <- function(input, output) {
         #          y = labels_all$u2,
         #          size = 4,
         #          lineheight = 0.8) +
-        ggplot2::scale_color_manual(values = colors_main_umap) +
+        ggplot2::scale_color_manual(values = ScExploreR::colors_main_umap) +
         ggrepel::geom_label_repel(data = labels_all,
                                   x = labels_all$u1,
                                   y = labels_all$u2,
