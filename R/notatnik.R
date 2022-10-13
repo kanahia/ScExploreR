@@ -179,17 +179,7 @@ my_FeaturePlot <- function(metadata,
 }
 
 
-data.table::fwrite(metadata_all,
-                 "/home/jason/data/shiny_dashboard/heart10x/data/metadata_all.csv",
-                 row.names = FALSE)
-saveRDS(integrated_all@assays$SCT@data,
-        "/home/jason/data/shiny_dashboard/heart10x/data/slot_data_all.rds")
 
-data.table::fwrite(metadata_all,
-                   "/home/jason/data/shiny_dashboard/heart10x/data/metadata_all.csv",
-                   row.names = FALSE)
-saveRDS(Myo_new@assays$SCT@data,
-        "/home/jason/data/shiny_dashboard/heart10x/data/slot_data_myo.rds")
 
 data.table::fwrite(metadata_myo,
                    "/home/jason/data/shiny_dashboard/heart10x/data/metadata_myo.csv",
