@@ -42,7 +42,7 @@ for(i in 1:length(unique(metadata_all$edited_res.1.5))) {
    .$UMAP_2 %>% as.numeric() %>% median() %>% round(., digits = 2) %>% as.vector()
 }
 
-labels_for_plotting <- data_frame(label = unique(as.vector(metadata_all$edited_res.1.5)),
+labels_for_plotting <- tibble::tibble(label = unique(as.vector(metadata_all$edited_res.1.5)),
                                   umap_1 = as.vector(l1),
                                   umap_2 = as.vector(l2))
 
