@@ -177,8 +177,8 @@ server <- function(input, output) {
                    alpha = 0.9,
                    size = 0.04) +
         ggplot2::theme_minimal() +
-        ggplot2::one_theme +
-        ggplot2::NoLegend() +
+        ScExploreR::one_theme() +
+        Seurat::NoLegend() +
         # annotate(geom = "text",
         #          label = labels_all$label  %>% stringr::str_wrap(., width = 10),
         #          x = labels_all$u1,
