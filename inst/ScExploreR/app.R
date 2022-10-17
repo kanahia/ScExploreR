@@ -16,16 +16,6 @@ devtools::load_all()
      dplyr::mutate(p_val_adj = format.pval(p_val_adj, digits = 2)) %>%
      dplyr::mutate(p_val = format.pval(p_val, digits = 2))
 
-   # all_metadata
-   metadata_all <- data.table::fread("/home/jason/data/shiny_dashboard/heart10x/data/metadata_all.csv")
-   cluster_order <- c("Myocardium", "Bulbus arteriosus", "Epicardium", "Mesoderm progenitors", "AV endocardium", "AV cushion",
-                      "Neural crest", "Red blood cells", "Hematopoietic precursor", "Mesenchymal fibroblasts", "Cardiac peripheral nerves",
-                      "Neuropeptide secreting neurons", "Leukocytes", "Resident fibroblasts", "Endothelial precursors",
-                       "Proliferating cells", "Endothelial cells", "Unclassified")
-   metadata_all$edited_res.1.5 <- factor(metadata_all$edited_res.1.5,
-                                         levels = cluster_order)
-
-
    #metadata myo
    metadata_myo <- data.table::fread("/home/jason/data/shiny_dashboard/heart10x/data/metadata_myo.csv")
 
