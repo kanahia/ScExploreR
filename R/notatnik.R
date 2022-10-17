@@ -1,35 +1,3 @@
-library("Seurat")
-library("ggplot2")
-library("dplyr")
-library("tibble")
-library("scales")
-library("viridis")
-
-## integrated_all
-integrated_all <- readRDS("/home/jason/data/10x_heart/SCT_int_no_regression/Outdir/Objects/integrated_all.rds")
-
-my_theme <-
-  theme_minimal() +
-  theme(axis.text.x = element_text(size = 16),
-        axis.text.y = element_text(size = 16),
-        axis.title.x = element_text(size = 16),
-        axis.title.y = element_text(size = 16),
-        legend.text=element_text(size=12))
-
-# labels
-l1 <- c()
-l2  <- c()
-for(i in 1:length(unique(metadata_all$edited_res.1.5))) {
- l1[i] <-
-   metadata_all %>%
-    dplyr::filter(edited_res.1.5 == unique(metadata_all$edited_res.1.5)[i]) %>%
-    .$UMAP_1 %>% as.numeric() %>% median() %>% round(., digits = 2) %>% as.vector()
-
- l2[i] <-
-   metadata_all %>%
-   dplyr::filter(edited_res.1.5 == unique(metadata_all$edited_res.1.5)[i]) %>%
-   .$UMAP_2 %>% as.numeric() %>% median() %>% round(., digits = 2) %>% as.vector()
- 
 #' ScExploreR ggplot2 theme
 #' TODO
 #'
@@ -45,36 +13,6 @@ one_theme <- function() {
           legend.title = ggplot2::element_blank(),
           plot.title = ggplot2::element_text(hjust = 0.5, face = "bold"))
 }
-
-labels_for_plotting <- tibble::tibble(label = unique(as.vector(metadata_all$edited_res.1.5)),
-                                  umap_1 = as.vector(l1),
-                                  umap_2 = as.vector(l2))
-
-labels_for_plotting <- as.data.frame(labels_for_plotting)
-
-
-#theme
-one_theme <- theme(axis.text.x = element_text(size = 16),
-                 axis.text.y = element_text(size = 16),
-                 axis.title.x = element_text(size = 16),
-                 axis.title.y = element_text(size = 16),
-                 legend.text=element_text(size = 14),
-                 legend.title=element_blank(),
-                 plot.title = element_text(hjust = 0.5, face = "bold"))
-
-#umap
-  ggplot(metadata_all) +
-    geom_point(aes(x = UMAP_1 , y = UMAP_2, color = edited_res.1.5), alpha = 0.75) +
-    scale_color_manual(
-      values = colors_main_umap) + # TODO rename colors vector such that it is more clear this is package defined var
-    theme_bw() +
-    one_theme +
-    NoLegend() +
-  annotate(geom = "text",
-           label = labels_for_plotting$label,
-           x = labels_for_plotting$umap_1,
-           y = labels_for_plotting$umap_2,
-           size = 4.5)
 
 #' Custom FeaturePlot
 #'
@@ -183,58 +121,4 @@ my_FeaturePlot <- function(metadata,
       }
   return(FT.plot)
 }
-
-
-
-
-data.table::fwrite(metadata_myo,
-                   "/home/jason/data/shiny_dashboard/heart10x/data/metadata_myo.csv",
-                   row.names = FALSE)
-
-
-raw_heart.integrated <-
-  readRDS("/home/jason/data/10x_heart/10x_clean/RDS_files/raw_heart_integrated.RDS")
-
-raw_heart.integrated@assays
-
-p.raw_mt.content_vs_nGenes <-
-  raw_heart.integrated@meta.data %>%
-  ggplot(aes(x = log10(nFeature_RNA), y = percent.mt, color = percent.mt)) +
-  geom_point(alpha = 0.1, shape = 19) +
-  #scale_colour_gradientn(colours = wes_palette(n = 5, name = "Zissou1")) +
-  scale_color_gradientn(colors = viridis(256, option = "D")) +
-  # scale_x_log10() +
-  theme_minimal() +
-  theme(legend.text=element_text(size=16),
-        legend.title = element_text(size =18),
-        axis.text = element_text(size =16),
-        axis.title = element_text(size = 16)) +
-  #ylim(0,100) +
-  labs(x = "log10(Number of genes)") +
-  geom_vline(xintercept = log10(200), linetype = "dotted", color = "black", size = 0.5) +
-  geom_vline(xintercept = log10(2500), linetype = "dotted", color = "black", size = 0.5) +
-  geom_hline(yintercept = 30, linetype = "dotted", color = "red", size = 0.5) +
-  geom_segment(aes(x = log10(200), y = 0, xend = log10(200), yend = 30), colour = "darkred") +
-  geom_segment(aes(x = log10(2500), y = 0, xend = log10(2500), yend = 30), colour = "darkred") +
-  geom_segment(aes(x = log10(200), y = 0, xend = log10(2500), yend = 0), colour = "darkred") +
-  geom_segment(aes(x = log10(200), y = 30, xend = log10(2500), yend = 30), colour = "darkred") +
-  geom_segment(aes(x = log10(5630), y = 38, xend = log10(2500), yend = 30), colour = "darkred",
-               arrow = arrow(length = unit(0.3, "cm"))) +
-  annotate("label", x = log10(5630), y = 40, label = "Selected cells", size = 6)
-
-p.raw_mt.content_vs_nGenes.hist <-
-  ggExtra::ggMarginal(p.raw_mt.content_vs_nGenes,
-                      type = "histogram",
-                      margins = "x",
-                      fill = "slateblue4", #4B03A1FF
-                      size = 8)
-
-
-t <- raw_heart.integrated@meta.data
-t <- t[, c("nFeature_RNA", "percent.mt")]
-
-metadata_raw_object <- data.table::fwrite(t, "/home/jason/data/shiny_dashboard/heart10x/data/metadata_raw_object.csv",
-                                          row.names = TRUE)
-
-t <- data.table::fread("/home/jason/data/shiny_dashboard/heart10x/data/metadata_raw_object.csv")
 
