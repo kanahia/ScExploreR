@@ -7,6 +7,7 @@
 #' @importFrom dplyr bind_rows
 #' @importFrom readxl excel_sheets
 #'
+#' @export
 read_multiple_sheets <- function(file){
   sheets <- readxl::excel_sheets(file)
   out_list <- list()

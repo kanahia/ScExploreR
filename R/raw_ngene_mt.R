@@ -9,6 +9,7 @@
 #' @importFrom viridis viridis
 #' @importFrom ggExtra ggMarginal
 #'
+#' @export
 raw_ngene_mt <- function(input_metadata) {
   t <- data.table::fread(input_metadata)
   t2 <-
