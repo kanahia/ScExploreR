@@ -29,6 +29,21 @@ for(i in 1:length(unique(metadata_all$edited_res.1.5))) {
    metadata_all %>%
    dplyr::filter(edited_res.1.5 == unique(metadata_all$edited_res.1.5)[i]) %>%
    .$UMAP_2 %>% as.numeric() %>% median() %>% round(., digits = 2) %>% as.vector()
+ 
+#' ScExploreR ggplot2 theme
+#' TODO
+#'
+#' @importFrom ggplot2 element_blank element_text
+#'
+#' @export
+one_theme <- function() {
+    theme(axis.text.x = ggplot2::element_text(size = 16),
+          axis.text.y = ggplot2::element_text(size = 16),
+          axis.title.x = ggplot2::element_text(size = 16),
+          axis.title.y = ggplot2::element_text(size = 16),
+          legend.text = ggplot2::element_text(size = 14),
+          legend.title = ggplot2::element_blank(),
+          plot.title = ggplot2::element_text(hjust = 0.5, face = "bold"))
 }
 
 labels_for_plotting <- tibble::tibble(label = unique(as.vector(metadata_all$edited_res.1.5)),
@@ -108,15 +123,6 @@ my_FeaturePlot <- function(metadata,
   metadata$color <- ifelse(metadata$cell %in% m_gene_cell$cell, "positive", "negative")
   metadata$color <- factor(metadata$color, levels = c("positive", "negative"), ordered = TRUE)
 
-  #theme
-  one_theme <- theme(axis.text.x = element_text(size = 16),
-                     axis.text.y = element_text(size = 16),
-                     axis.title.x = element_text(size = 16),
-                     axis.title.y = element_text(size = 16),
-                     legend.text = element_text(size = 14),
-                     legend.title = element_blank(),
-                     plot.title = element_text(hjust = 0.5, face = "bold"))
-
   #coorinates for labels
   position_label <-
     metadata %>%
@@ -135,7 +141,7 @@ my_FeaturePlot <- function(metadata,
     #scale_color_manual(values = c("positive" = "#414487FF" , "negative" = "#FDE725FF")) +
     theme_classic() +
     ggtitle(gene) +
-    one_theme
+    one_theme()
 
   if(order == TRUE) {
     FT.plot <-
@@ -147,7 +153,7 @@ my_FeaturePlot <- function(metadata,
       #scale_color_manual(values = c("positive" = "#414487FF" , "negative" = "#FDE725FF")) +
       theme_classic() +
       ggtitle(gene) +
-      one_theme
+      one_theme()
     } else {
       set.seed(42)
       shuffled_metadata <- metadata[sample(1:nrow(metadata)), ]
@@ -157,7 +163,7 @@ my_FeaturePlot <- function(metadata,
                    aes(x = UMAP_1 , y = UMAP_2, color = slot_data, fill = color), alpha = 0.9, size = 0.04) +
         theme_classic() +
         ggtitle(gene) +
-        one_theme +
+        one_theme() +
         scale_fill_discrete(guide = "none")
       }
   # plot umap
