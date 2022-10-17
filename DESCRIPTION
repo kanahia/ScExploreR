@@ -17,6 +17,8 @@ Imports:
     ggExtra,
     ggplot2,
     magrittr,
+    shiny,
+    shinydashboard,
     readxl,
     rlang,
     tibble,

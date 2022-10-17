@@ -1,8 +1,3 @@
-library("shiny")
-library("shinydashboard")
-library("dplyr")
-source("/home/jason/data/shiny_dashboard/heart10x/R/read_multiple_sheets.R")
-source("/home/jason/data/shiny_dashboard/heart10x/R/raw_ngene_mt.R")
 devtools::load_all()
 #read data
 
