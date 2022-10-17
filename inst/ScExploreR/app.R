@@ -32,7 +32,7 @@ devtools::load_all()
      dplyr::rename("label" = 1) %>%
      dplyr::mutate(color = ScExploreR::colors_main_umap)
 
-title = "ScExploreR" # name to display in title bar
+title <- "ScExploreR" # name to display in title bar
 header_title <- # logo to display in header bar
     tags$a(href='https://zdglab.iimcb.gov.pl/',
         tags$img(src="zdg_logo.png",
