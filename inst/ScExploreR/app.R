@@ -47,19 +47,19 @@ devtools::load_all()
      dplyr::rename("label" = 1) %>%
      dplyr::mutate(color = ScExploreR::colors_main_umap)
 
-
-## Add icon along with the title in the shinydashboard header
-title <- tags$a(href='https://zdglab.iimcb.gov.pl/',
-                tags$img(src="zdg_logo.png",
-                         height = '100',
-                         width = '200',
-                         align = "center"),
-                target="_blank")
+title = "ScExploreR" # name to display in title bar
+header_title <- # logo to display in header bar
+    tags$a(href='https://zdglab.iimcb.gov.pl/',
+        tags$img(src="zdg_logo.png",
+                 height = '100',
+                 width = '200',
+                 align = "center"),
+        target="_blank")
 
 ui <- shinydashboard::dashboardPage(
   skin = "blue",
   shinydashboard::dashboardHeader(
-                  title = title,
+                  title = header_title,
                   titleWidth = 220,
                   tags$li(class = "dropdown",
                           shiny::tags$style(".main-header {max-height: 100px}"),
@@ -139,7 +139,8 @@ ui <- shinydashboard::dashboardPage(
                 shiny::h1("Gene table: Myocardium")),
               shiny::dataTableOutput("markers_myo"))
       )
-    )
+    ),
+    title = title
   )
 
 
