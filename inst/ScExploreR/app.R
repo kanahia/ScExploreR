@@ -2,19 +2,6 @@ devtools::load_all()
 #read data
 
 
-  ## all_markers
-   markers_all <- ScExploreR::read_multiple_sheets(file = "/home/jason/data/shiny_dashboard/heart10x/data/main_clustering_markers.xlsx")
-   markers_all <- markers_all %>%
-     dplyr::mutate(avg_log2FC = round(avg_log2FC, digits = 2)) %>%
-     dplyr::mutate(p_val_adj = format.pval(p_val_adj, digits = 2)) %>%
-     dplyr::mutate(p_val = format.pval(p_val, digits = 2))
-
-  ## markers_myo
-   markers_myo <- ScExploreR::read_multiple_sheets("/home/jason/data/10x_heart/SCT_int_no_regression/Outdir/Plots/Myocardium/markers_myo_new-updated.xlsx")
-   markers_myo <- markers_myo %>%
-     dplyr::mutate(avg_log2FC = round(avg_log2FC, digits = 2)) %>%
-     dplyr::mutate(p_val_adj = format.pval(p_val_adj, digits = 2)) %>%
-     dplyr::mutate(p_val = format.pval(p_val, digits = 2))
 
    #metadata myo
    metadata_myo <- data.table::fread("/home/jason/data/shiny_dashboard/heart10x/data/metadata_myo.csv")
