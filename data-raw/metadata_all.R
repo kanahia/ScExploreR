@@ -25,3 +25,14 @@ cluster_order <- c(
                                        levels = cluster_order)
 
 usethis::use_data(metadata_all, overwrite=TRUE)
+
+# labels for all dataset
+labels_all <- metadata_all %>%
+  dplyr::select(edited_res.1.5, UMAP_1, UMAP_2) %>%
+  dplyr::group_by(edited_res.1.5) %>%
+  dplyr::summarise(u1 = median(UMAP_1),
+                   u2 = median(UMAP_2)) %>%
+  dplyr::rename("label" = 1) %>%
+  dplyr::mutate(color = ScExploreR::colors_main_umap)
+
+usethis::use_data(labels_all, overwrite=TRUE)

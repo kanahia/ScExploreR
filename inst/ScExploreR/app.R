@@ -1,14 +1,5 @@
 devtools::load_all()
 
-   labels_all <-
-     metadata_all %>%
-     dplyr::select(edited_res.1.5, UMAP_1, UMAP_2) %>%
-     dplyr::group_by(edited_res.1.5) %>%
-     dplyr::summarise(u1 = median(UMAP_1),
-                      u2 = median(UMAP_2)) %>%
-     dplyr::rename("label" = 1) %>%
-     dplyr::mutate(color = ScExploreR::colors_main_umap)
-
 title <- "ScExploreR" # name to display in title bar
 header_title <- # logo to display in header bar
     tags$a(href='https://zdglab.iimcb.gov.pl/',
