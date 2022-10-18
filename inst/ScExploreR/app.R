@@ -1,14 +1,4 @@
 devtools::load_all()
-#read data
-
-
-
-   #metadata myo
-   metadata_myo <- data.table::fread("/home/jason/data/shiny_dashboard/heart10x/data/metadata_myo.csv")
-
-   #slot data
-   slot_data_all <- readRDS("/home/jason/data/shiny_dashboard/heart10x/data/slot_data_all.rds")
-   slot_data_all <- readRDS("/home/jason/data/shiny_dashboard/heart10x/data/slot_data_myo.rds")
 
    labels_all <-
      metadata_all %>%
