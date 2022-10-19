@@ -16,19 +16,16 @@ header_title <- # logo to display in header bar
 ui <- shinydashboard::dashboardPage(
   skin = "blue",
   shinydashboard::dashboardHeader(
-    title = header_title,
-    titleWidth = 220,
     tags$li(
       class = "dropdown",
       shiny::tags$style(".main-header {max-height: 100px}"),
       shiny::tags$style(".main-header .logo {height: 100px;}"),
-      shiny::tags$style(
-        ".sidebar-toggle {height: 100px; padding-top: 20px !important;}"
-      ),
-      shiny::tags$style(".navbar {min-height:100px; !important}")
-    )
+    ),
+    title = header_title,
+    titleWidth = 220
   ),
   shinydashboard::dashboardSidebar(
+    shiny::tags$style(".left-side, .main-sidebar {padding-top: 100px}"),
     width = 220,
     shinydashboard::sidebarMenu(
       shinydashboard::menuItem(
