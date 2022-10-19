@@ -31,8 +31,6 @@ ui <- shinydashboard::dashboardPage(
   shinydashboard::dashboardSidebar(
     width = 220,
     shinydashboard::sidebarMenu(
-      shinydashboard::menuItem("Blank", tabName = "blank", icon = icon("dashboard")),
-      shinydashboard::menuItem("Menu"),
       shinydashboard::menuItem(
         "Whole heart",
         tabName = "whole_heart",
