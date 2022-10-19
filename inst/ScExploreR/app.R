@@ -2,99 +2,147 @@ devtools::load_all()
 
 title <- "ScExploreR" # name to display in title bar
 header_title <- # logo to display in header bar
-    tags$a(href='https://zdglab.iimcb.gov.pl/',
-        tags$img(src="zdg_logo.png",
-                 height = '100',
-                 width = '200',
-                 align = "center"),
-        target="_blank")
+  tags$a(
+    href = 'https://zdglab.iimcb.gov.pl/',
+    tags$img(
+      src = "zdg_logo.png",
+      height = '100',
+      width = '200',
+      align = "center"
+    ),
+    target = "_blank"
+  )
 
 ui <- shinydashboard::dashboardPage(
   skin = "blue",
   shinydashboard::dashboardHeader(
-                  title = header_title,
-                  titleWidth = 220,
-                  tags$li(class = "dropdown",
-                          shiny::tags$style(".main-header {max-height: 100px}"),
-                          shiny::tags$style(".main-header .logo {height: 100px;}"),
-                          shiny::tags$style(".sidebar-toggle {height: 100px; padding-top: 20px !important;}"),
-                          shiny::tags$style(".navbar {min-height:100px; !important}")
-                          )),
+    title = header_title,
+    titleWidth = 220,
+    tags$li(
+      class = "dropdown",
+      shiny::tags$style(".main-header {max-height: 100px}"),
+      shiny::tags$style(".main-header .logo {height: 100px;}"),
+      shiny::tags$style(
+        ".sidebar-toggle {height: 100px; padding-top: 20px !important;}"
+      ),
+      shiny::tags$style(".navbar {min-height:100px; !important}")
+    )
+  ),
   shinydashboard::dashboardSidebar(
-                   width = 220,
-                   shinydashboard::sidebarMenu(
-                     shinydashboard::menuItem("Blank", tabName = "blank", icon = icon("dashboard")),
-                     shinydashboard::menuItem("Menu"),
-                     shinydashboard::menuItem("Whole heart", tabName = "whole_heart", icon = icon("heart", lib = "glyphicon"),
-                              shinydashboard::menuSubItem("Gene table", tabName = "gene_table_all"),
-                              shinydashboard::menuSubItem("Visualization", tabName = "visualization_all")),
-                     shinydashboard::menuItem("Myocardium", tabName = "myocardium", icon = icon("triangle-top", lib = "glyphicon"),
-                              shinydashboard::menuSubItem("Gene table", tabName = "gene_table_myo"),
-                              shinydashboard::menuSubItem("Visualization", tabName = "visualization_myo"))
-                     )
-                   # Adjust the sidebar
-                   #tags$style(".left-side, .main-sidebar {padding-top: -20px}")
-                   ),
+    width = 220,
+    shinydashboard::sidebarMenu(
+      shinydashboard::menuItem("Blank", tabName = "blank", icon = icon("dashboard")),
+      shinydashboard::menuItem("Menu"),
+      shinydashboard::menuItem(
+        "Whole heart",
+        tabName = "whole_heart",
+        icon = icon("heart", lib = "glyphicon"),
+        shinydashboard::menuSubItem("Gene table", tabName = "gene_table_all"),
+        shinydashboard::menuSubItem("Visualization", tabName = "visualization_all")
+      ),
+      shinydashboard::menuItem(
+        "Myocardium",
+        tabName = "myocardium",
+        icon = icon("triangle-top", lib = "glyphicon"),
+        shinydashboard::menuSubItem("Gene table", tabName = "gene_table_myo"),
+        shinydashboard::menuSubItem("Visualization", tabName = "visualization_myo")
+      )
+    )
+  ),
   shinydashboard::dashboardBody(
     shinydashboard::tabItems(
       shinydashboard::tabItem("whole_heart"),
       shinydashboard::tabItem("myocardium"),
-      shinydashboard::tabItem("visualization_all",
-              shinydashboard::tabPanel("Visualization",
-                    shinydashboard::wellPanel(
-                       shiny::fluidRow(#column(width = 2),
-                                shiny::column(width = 2, offset = 6,
-                                       shiny::selectInput(inputId = "type_of_data",
-                                                   label = "Type of data",
-                                                   choices = c("Overview", "Dataset", "Line",
-                                                               "Stage", "Percent.mt", "Percent.hemoglobin",
-                                                               "Cell-Cycle-phase", "nCount_RNA", "nFeature_RNA", "iris"),
-                                                   selected = "Overview"))
-                                ),
-                        shiny::fluidRow(shiny::column(width = 5,
-                                        shiny::plotOutput("DimPlot", width = "100%")), #, width = 800, height = 600)),
-                                 shiny::column(width = 5, offset = 1,
-                                        shiny::plotOutput("Multiplot", width = "100%")) # width = 800, height = 600))
-                                )
-                       ),
-                    shiny::wellPanel(
-                       shiny::fluidRow(shiny::column(width = 2,
-                                       shiny::textInput(inputId = "gene",
-                                                 label = "Choose gene",
-                                                 value = "myh6",
-                                                 placeholder = "myh6",
-                                                 width = "100px")),
-                                shiny::column(width = 2, offset = 4, style= 'padding-top:0px;',
-                                  shiny::textInput(inputId = "gene2",
-                                            label = "Choose gene",
-                                            value = "myh7l",
-                                            placeholder = "myh7l",
-                                            width = "100px"))
-                                ),
-                       shiny::fluidRow(shiny::column(width = 5,
-                                       shiny::plotOutput("Featureplot", width = "100%")), # width = 800, height = 600)),
-                                shiny::column(width = 5,
-                                       offset = 1,
-                                       shiny::plotOutput("my_FT", width = "100%")), ## width = 800, height = 600)),
-                                style = "background-color: gray99;"
-                                )
-                       )
-                    )
+      shinydashboard::tabItem(
+        "visualization_all",
+        shiny::tabPanel(
+          "Visualization",
+          shiny::wellPanel(
+            shiny::fluidRow(
+              shiny::column(
+                width = 2,
+                offset = 6,
+                shiny::selectInput(
+                  inputId = "type_of_data",
+                  label = "Type of data",
+                  choices = c(
+                    "Overview",
+                    "Dataset",
+                    "Line",
+                    "Stage",
+                    "Percent.mt",
+                    "Percent.hemoglobin",
+                    "Cell-Cycle-phase",
+                    "nCount_RNA",
+                    "nFeature_RNA",
+                    "iris"
+                  ),
+                  selected = "Overview"
+                )
+            )),
+            shiny::fluidRow(
+              shiny::column(width = 5,
+                            shiny::plotOutput("DimPlot", width = "100%")),
+              shiny::column(
+                width = 5,
+                offset = 1,
+                shiny::plotOutput("Multiplot", width = "100%")
+              )
+            )
+          ),
+          shiny::wellPanel(
+            shiny::fluidRow(
+              shiny::column(
+                width = 2,
+                shiny::textInput(
+                  inputId = "gene",
+                  label = "Choose gene",
+                  value = "myh6",
+                  placeholder = "myh6",
+                  width = "100px"
+                )
               ),
-      shinydashboard::tabItem("gene_table_all",
-              shiny::fluidPage(
-                shiny::h1("Gene table: Whole heart")),
-              shiny::dataTableOutput("markers_all")
+              shiny::column(
+                width = 2,
+                offset = 4,
+                style = 'padding-top:0px;',
+                shiny::textInput(
+                  inputId = "gene2",
+                  label = "Choose gene",
+                  value = "myh7l",
+                  placeholder = "myh7l",
+                  width = "100px"
+                )
+              )
+            ),
+            shiny::fluidRow(
+              shiny::column(width = 5,
+                            shiny::plotOutput("Featureplot", width = "100%")),
+              shiny::column(
+                width = 5,
+                offset = 1,
+                shiny::plotOutput("my_FT", width = "100%")
               ),
+              style = "background-color: gray99;"
+            )
+          )
+        )
+      ),
+      shinydashboard::tabItem(
+        "gene_table_all",
+        shiny::fluidPage(shiny::h1("Gene table: Whole heart")),
+        shiny::dataTableOutput("markers_all")
+      ),
       shinydashboard::tabItem("visualization_myo", "Sub-item 1 tab content"),
-      shinydashboard::tabItem("gene_table_myo",
-              shiny::fluidPage(
-                shiny::h1("Gene table: Myocardium")),
-              shiny::dataTableOutput("markers_myo"))
+      shinydashboard::tabItem(
+        "gene_table_myo",
+        shiny::fluidPage(shiny::h1("Gene table: Myocardium")),
+        shiny::dataTableOutput("markers_myo")
       )
-    ),
-    title = title
-  )
+    )
+  ),
+  title = title
+)
 
 
 server <- function(input, output) {
