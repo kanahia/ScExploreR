@@ -111,8 +111,9 @@ ui <- shinydashboard::dashboardPage(
               )
             ),
             shiny::fluidRow(
-              shiny::column(width = 5,
-                            shiny::plotOutput("Featureplot", width = "100%")),
+              shiny::column(
+                width = 5,
+                shiny::plotOutput("Featureplot", width = "100%")),
               shiny::column(
                 width = 5,
                 offset = 1,
@@ -141,74 +142,73 @@ ui <- shinydashboard::dashboardPage(
 
 
 server <- function(input, output, session) {
+
   output$markers_all <-
     shiny::renderDataTable(markers_all, options = list(pageLength = 10))
+
   output$markers_myo <-
     shiny::renderDataTable(markers_myo, options = list(pageLength = 10))
+
   output$Featureplot <-
-     shiny::renderPlot({
-        my_FeaturePlot(metadata = metadata_all,
-                       data_slot = slot_data_all,
-                       gene = c(input$gene),
-                       identity = "edited_res.1.5",
-                       order = FALSE,
-                       label = TRUE)
-      #FeaturePlot(integrated_all, features = c(input$gene), pt.size = 0.04, order = T) + scale_color_viridis(direction = -1)
-      })
+    shiny::renderPlot({
+      my_FeaturePlot(
+        metadata = metadata_all,
+        data_slot = slot_data_all,
+        gene = input$gene,
+        identity = "edited_res.1.5",
+        order = FALSE,
+        label = TRUE
+      )
+    })
 
   output$my_FT <-
     shiny::renderPlot({
-      my_FeaturePlot(metadata = metadata_all,
-                     data_slot = slot_data_all,
-                     gene = c(input$gene2),
-                     identity = "edited_res.1.5",
-                     order = FALSE,
-                     label = TRUE)
-      })
+      my_FeaturePlot(
+        metadata = metadata_all,
+        data_slot = slot_data_all,
+        gene = c(input$gene2),
+        identity = "edited_res.1.5",
+        order = FALSE,
+        label = TRUE
+      )
+    })
 
   output$DimPlot <-
     shiny::renderPlot({
       ggplot2::ggplot(metadata_all) +
-        ggplot2::geom_point(ggplot2::aes(x = UMAP_1 ,
-                       y = UMAP_2,
-                       color = edited_res.1.5),
-                   alpha = 0.9,
-                   size = 0.04) +
-        ggplot2::theme_minimal() +
-        ScExploreR::one_theme() +
-        Seurat::NoLegend() +
-        # annotate(geom = "text",
-        #          label = labels_all$label  %>% stringr::str_wrap(., width = 10),
-        #          x = labels_all$u1,
-        #          y = labels_all$u2,
-        #          size = 4,
-        #          lineheight = 0.8) +
-        ggplot2::scale_color_manual(values = ScExploreR::colors_main_umap) +
-        ggrepel::geom_label_repel(data = labels_all,
-                                  x = labels_all$u1,
-                                  y = labels_all$u2,
-                                  label = labels_all$label  %>% stringr::str_wrap(., width = 10),
-                                  fill = labels_all$color, alpha = 0.5)
-
+      ggplot2::geom_point(ggplot2::aes(
+        x = UMAP_1,
+        y = UMAP_2,
+        color = edited_res.1.5),
+        alpha = 0.9,
+        size = 0.04
+      ) +
+      ggplot2::theme_minimal() +
+      ScExploreR::one_theme() +
+      Seurat::NoLegend() +
+      ggplot2::scale_color_manual(values = ScExploreR::colors_main_umap) + # TODO improve color scheme name
+      ggrepel::geom_label_repel(
+        data = labels_all,
+        x = labels_all$u1,
+        y = labels_all$u2,
+        label = labels_all$label  %>% stringr::str_wrap(., width = 10),
+        fill = labels_all$color,
+        alpha = 0.5
+      )
     })
 
   output$Multiplot <-
     shiny::renderPlot({
-      if(input$type_of_data == "Overview") {
+      if (input$type_of_data == "Overview") {
         raw_ngene_mt(input_metadata = "/home/jason/data/shiny_dashboard/heart10x/data/metadata_raw_object.csv")
-        }
-
-      else if(input$type_of_data == "DataSet") {
-
-        print("lol")
-
-      } else if(input$type_of_data == "iris") {
-
-        ggplot2::ggplot(data = iris, ggplot2::aes(x = Sepal.Length, y = Sepal.Width, color = Species)) +
-          ggplot2::geom_point()
-
       }
-
+      else if (input$type_of_data == "DataSet") {
+        print("lol")
+      } else if (input$type_of_data == "iris") {
+        ggplot2::ggplot(data = iris,
+                        ggplot2::aes(x = Sepal.Length, y = Sepal.Width, color = Species)) +
+          ggplot2::geom_point()
+      }
     })
 }
 
