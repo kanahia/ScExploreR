@@ -140,7 +140,7 @@ ui <- shinydashboard::dashboardPage(
 )
 
 
-server <- function(input, output) {
+server <- function(input, output, session) {
   output$markers_all <- shiny::renderDataTable(markers_all, options = list(iDisplayLength = 10))
   output$markers_myo <- shiny::renderDataTable(markers_myo, options = list(iDisplayLength = 10))
    output$Featureplot <-
