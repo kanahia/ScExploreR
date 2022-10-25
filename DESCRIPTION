@@ -19,6 +19,7 @@ Imports:
     magrittr,
     shiny,
     shinydashboard,
+    shinycssloader,
     readxl,
     rlang,
     tibble,

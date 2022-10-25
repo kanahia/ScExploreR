@@ -2,9 +2,9 @@ devtools::load_all()
 
 title <- "ScExploreR" # name to display in title bar
 header_title <- # logo to display in header bar
-  tags$a(
+  shiny::tags$a(
     href = 'https://zdglab.iimcb.gov.pl/',
-    tags$img(
+    shiny::tags$img(
       src = "zdg_logo.png",
       height = '100',
       width = '200',
@@ -16,7 +16,7 @@ header_title <- # logo to display in header bar
 ui <- shinydashboard::dashboardPage(
   skin = "blue",
   shinydashboard::dashboardHeader(
-    tags$li(
+    shiny::tags$li(
       class = "dropdown",
       shiny::tags$style(".main-header {max-height: 100px}"),
       shiny::tags$style(".main-header .logo {height: 100px;}"),
@@ -129,7 +129,25 @@ ui <- shinydashboard::dashboardPage(
         shiny::fluidPage(shiny::h1("Gene table: Whole heart")),
         shiny::dataTableOutput("markers_all")
       ),
-      shinydashboard::tabItem("visualization_myo", "Sub-item 1 tab content"),
+      shinydashboard::tabItem(
+        "visualization_myo",
+        shiny::fluidRow(
+            shiny::column(
+                offset = 1,
+                width = 5,
+                ScExploreR::FeaturePlotShinyUI("myo_featureplot_1",
+                                               value = "myh6",
+                                               placeholder = "myh6")
+            ),
+            shiny::column(
+                width = 5,
+                offset = 1,
+                ScExploreR::FeaturePlotShinyUI("myo_featureplot_2",
+                                               value = "myh7",
+                                               placeholder = "myh7")
+            )
+        )
+      ),
       shinydashboard::tabItem(
         "gene_table_myo",
         shiny::fluidPage(shiny::h1("Gene table: Myocardium")),
@@ -210,6 +228,17 @@ server <- function(input, output, session) {
           ggplot2::geom_point()
       }
     })
+
+  ScExploreR::FeaturePlotShiny(
+                   id = "myo_featureplot_1",
+                   metadata = metadata_all,
+                   data_slot = slot_data_all,
+                   identity = "edited_res.1.5")
+  ScExploreR::FeaturePlotShiny(
+                   id = "myo_featureplot_2",
+                   metadata = metadata_all,
+                   data_slot = slot_data_all,
+                   identity = "edited_res.1.5")
 }
 
 shiny::shinyApp(ui, server)
