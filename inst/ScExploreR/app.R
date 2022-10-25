@@ -46,8 +46,8 @@ ui <- shinydashboard::dashboardPage(
   ),
   shinydashboard::dashboardBody(
     shinydashboard::tabItems(
-      shinydashboard::tabItem("whole_heart"),
-      shinydashboard::tabItem("myocardium"),
+      # shinydashboard::tabItem("whole_heart"), TODO either add something under those tabs or remove them
+      # shinydashboard::tabItem("myocardium"),
       shinydashboard::tabItem(
         "visualization_all",
         shiny::tabPanel(
