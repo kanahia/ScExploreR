@@ -1,5 +1,6 @@
 #!/usr/bin/env R
 # metadata
+devtools::load_all()
 library("magrittr")
 
 integrated_all <- readRDS("/home/jason/data/10x_heart/SCT_int_no_regression/Outdir/Objects/integrated_all.rds")
