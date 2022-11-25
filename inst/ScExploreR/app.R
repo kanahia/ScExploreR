@@ -104,7 +104,7 @@ ui <- shinydashboard::dashboardPage(
                                                placeholder = "myh7l")
                 )
               )
-          ) #koniec well-panell
+          ) #koniec well-panell s
         )
       ),
       shinydashboard::tabItem(

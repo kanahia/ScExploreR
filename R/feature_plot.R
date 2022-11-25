@@ -22,7 +22,7 @@ FeaturePlotShinyUI <- function(id,
             ),
         shinycssloaders::withSpinner(
             type = spinnertype,
-            shiny::plotOutput(ns("feature_plot"), width = "85%", height = "500")
+            shiny::plotOutput(ns("feature_plot"), width = "85%", height = "500") #changed width
         )
     )
 }
