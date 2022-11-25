@@ -83,13 +83,15 @@ my_FeaturePlot <- function(metadata,
     ggplot2::geom_point(
         data = metadata[metadata$color == "negative", ],
         ggplot2::aes(x = UMAP_1 , y = UMAP_2, color = slot_data), alpha = 0.9, size = 0.04) +
+    ScExploreR::one_theme() +
+    ggplot2::theme_minimal() +
     ggplot2::geom_point(
         data = metadata[metadata$color != "negative", ],
         ggplot2::aes(x = UMAP_1 , y = UMAP_2, color = slot_data), alpha = 0.9, size = 0.04) +
     #scale_color_manual(values = c("positive" = "#414487FF" , "negative" = "#FDE725FF")) +
-    ggplot2::theme_classic() +
     ggplot2::ggtitle(gene) +
-    one_theme()
+    ScExploreR::one_theme() +
+    ggplot2::theme_minimal()
 
   if(order == TRUE) {
     FT.plot <-
@@ -97,13 +99,15 @@ my_FeaturePlot <- function(metadata,
       ggplot2::geom_point(
         data = metadata[metadata$color == "negative", ],
         ggplot2::aes(x = UMAP_1 , y = UMAP_2, color = slot_data), alpha = 0.9, size = 0.04) +
+      ScExploreR::one_theme() +
+      ggplot2::theme_minimal() +
       ggplot2::geom_point(
         data = metadata[metadata$color != "negative", ],
         ggplot2::aes(x = UMAP_1 , y = UMAP_2, color = slot_data), alpha = 0.9, size = 0.04) +
       #scale_color_manual(values = c("positive" = "#414487FF" , "negative" = "#FDE725FF")) +
-      ggplot2::theme_classic() +
       ggplot2::ggtitle(gene) +
-      one_theme()
+      ScExploreR::one_theme() +
+      ggplot2::theme_minimal()
     } else {
       set.seed(42)
       shuffled_metadata <- metadata[sample(1:nrow(metadata)), ]
@@ -111,10 +115,10 @@ my_FeaturePlot <- function(metadata,
         ggplot2::ggplot() +
         ggplot2::geom_point(data = shuffled_metadata,
                    ggplot2::aes(x = UMAP_1 , y = UMAP_2, color = slot_data, fill = color), alpha = 0.9, size = 0.04) +
-        ggplot2::theme_classic() +
         ggplot2::ggtitle(gene) +
-        one_theme() +
-        ggplot2::scale_fill_discrete(guide = "none")
+        ggplot2::scale_fill_discrete(guide = "none") +
+        ScExploreR::one_theme() +
+        ggplot2::theme_minimal()
       }
 
   # plot umap
@@ -126,11 +130,15 @@ my_FeaturePlot <- function(metadata,
                x = position_label$u1,
                y = position_label$u2,
                size = 4.5) +
-      viridis::scale_color_viridis(direction = -1)
+      viridis::scale_color_viridis(direction = -1) +
+      ScExploreR::one_theme() +
+      ggplot2::theme_minimal()
     } else {
       FT.plot <-
         FT.plot +
-        viridis::scale_color_viridis(direction = -1)
+        viridis::scale_color_viridis(direction = -1) +
+        ScExploreR::one_theme() +
+        ggplot2::theme_minimal()
       }
 
   return(FT.plot)

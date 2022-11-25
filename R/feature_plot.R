@@ -18,10 +18,11 @@ FeaturePlotShinyUI <- function(id,
             label = label,
             value = value,
             placeholder = placeholder,
-            width = width),
+            width = width
+            ),
         shinycssloaders::withSpinner(
             type = spinnertype,
-            shiny::plotOutput(ns("feature_plot"), width = "100%")
+            shiny::plotOutput(ns("feature_plot"), width = "85%", height = "500")
         )
     )
 }

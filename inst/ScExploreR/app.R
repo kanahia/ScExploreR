@@ -19,7 +19,7 @@ ui <- shinydashboard::dashboardPage(
     shiny::tags$li(
       class = "dropdown",
       shiny::tags$style(".main-header {max-height: 100px}"),
-      shiny::tags$style(".main-header .logo {height: 100px;}"),
+      shiny::tags$style(".main-header .logo {height: 100px;}")
     ),
     title = header_title,
     titleWidth = 220
@@ -76,52 +76,35 @@ ui <- shinydashboard::dashboardPage(
                 )
             )),
             shiny::fluidRow(
-              shiny::column(width = 5,
-                            shiny::plotOutput("DimPlot", width = "100%")),
+              shiny::column(width = 6,
+                            shiny::plotOutput("DimPlot", width = "85%", height = "500")),
               shiny::column(
-                width = 5,
-                offset = 1,
-                shiny::plotOutput("Multiplot", width = "100%")
+                width = 6,
+                #offset = 1,
+                shiny::plotOutput("Multiplot", width = "85%", height = "500")
               )
             )
           ),
           shiny::wellPanel(
             shiny::fluidRow(
               shiny::column(
-                width = 2,
-                shiny::textInput(
-                  inputId = "gene",
-                  label = "Choose gene",
-                  value = "myh6",
-                  placeholder = "myh6",
-                  width = "100px"
-                )
+                width = 6,
+                style = 'padding-top:0px; height:200px;',
+                ScExploreR::FeaturePlotShinyUI("all_featureplot_1",
+                                               value = "myh6",
+                                               placeholder = "myh6")
+                #offset = 1,
+                
               ),
               shiny::column(
-                width = 2,
-                offset = 4,
+                width = 6,
                 style = 'padding-top:0px;',
-                shiny::textInput(
-                  inputId = "gene2",
-                  label = "Choose gene",
-                  value = "myh7l",
-                  placeholder = "myh7l",
-                  width = "100px"
+                ScExploreR::FeaturePlotShinyUI("all_featureplot_2",
+                                               value = "myh7l",
+                                               placeholder = "myh7l")
                 )
               )
-            ),
-            shiny::fluidRow(
-              shiny::column(
-                width = 5,
-                shiny::plotOutput("Featureplot", width = "100%")),
-              shiny::column(
-                width = 5,
-                offset = 1,
-                shiny::plotOutput("my_FT", width = "100%")
-              ),
-              style = "background-color: gray99;"
-            )
-          )
+          ) #koniec well-panell
         )
       ),
       shinydashboard::tabItem(
@@ -143,8 +126,8 @@ ui <- shinydashboard::dashboardPage(
                 width = 5,
                 offset = 1,
                 ScExploreR::FeaturePlotShinyUI("myo_featureplot_2",
-                                               value = "myh7",
-                                               placeholder = "myh7")
+                                               value = "myh7l",
+                                               placeholder = "myh7l")
             )
         )
       ),
@@ -167,29 +150,29 @@ server <- function(input, output, session) {
   output$markers_myo <-
     shiny::renderDataTable(markers_myo, options = list(pageLength = 10))
 
-  output$Featureplot <-
-    shiny::renderPlot({
-      my_FeaturePlot(
-        metadata = metadata_all,
-        data_slot = slot_data_all,
-        gene = input$gene,
-        identity = "edited_res.1.5",
-        order = FALSE,
-        label = TRUE
-      )
-    })
-
-  output$my_FT <-
-    shiny::renderPlot({
-      my_FeaturePlot(
-        metadata = metadata_all,
-        data_slot = slot_data_all,
-        gene = c(input$gene2),
-        identity = "edited_res.1.5",
-        order = FALSE,
-        label = TRUE
-      )
-    })
+  # output$Featureplot <-
+  #   shiny::renderPlot({
+  #     my_FeaturePlot(
+  #       metadata = metadata_all,
+  #       data_slot = slot_data_all,
+  #       gene = input$gene,
+  #       identity = "edited_res.1.5",
+  #       order = FALSE,
+  #       label = TRUE
+  #     )
+  #   })
+  # 
+  # output$my_FT <-
+  #   shiny::renderPlot({
+  #     my_FeaturePlot(
+  #       metadata = metadata_all,
+  #       data_slot = slot_data_all,
+  #       gene = c(input$gene2),
+  #       identity = "edited_res.1.5",
+  #       order = FALSE,
+  #       label = TRUE
+  #     )
+  #   })
 
   output$DimPlot <-
     shiny::renderPlot({
@@ -228,17 +211,32 @@ server <- function(input, output, session) {
           ggplot2::geom_point()
       }
     })
+  
+  # FT plots for all data
+  ScExploreR::FeaturePlotShiny(
+              id = "all_featureplot_1",
+              metadata = metadata_all,
+              data_slot = slot_data_all,
+              identity = "edited_res.1.5")
+  
+  ScExploreR::FeaturePlotShiny(
+              id = "all_featureplot_2",
+              metadata = metadata_all,
+              data_slot = slot_data_all,
+              identity = "edited_res.1.5")
 
+  # FT plots for myocardium  
   ScExploreR::FeaturePlotShiny(
-                   id = "myo_featureplot_1",
-                   metadata = metadata_all,
-                   data_slot = slot_data_all,
-                   identity = "edited_res.1.5")
+              id = "myo_featureplot_1",
+              metadata = metadata_all,
+              data_slot = slot_data_all,
+              identity = "edited_res.1.5")
+  
   ScExploreR::FeaturePlotShiny(
-                   id = "myo_featureplot_2",
-                   metadata = metadata_all,
-                   data_slot = slot_data_all,
-                   identity = "edited_res.1.5")
+              id = "myo_featureplot_2",
+              metadata = metadata_all,
+              data_slot = slot_data_all,
+              identity = "edited_res.1.5")
 }
 
 shiny::shinyApp(ui, server)
