@@ -116,15 +116,17 @@ ui <- shinydashboard::dashboardPage(
         "visualization_myo",
         shiny::fluidRow(
             shiny::column(
-                offset = 1,
-                width = 5,
+                #offset = 1,
+                width = 6,
+                style = 'padding-top:0px; height:200px;',
                 ScExploreR::FeaturePlotShinyUI("myo_featureplot_1",
                                                value = "myh6",
                                                placeholder = "myh6")
             ),
             shiny::column(
-                width = 5,
-                offset = 1,
+                width = 6,
+                #offset = 1,
+                style = 'padding-top:0px;',
                 ScExploreR::FeaturePlotShinyUI("myo_featureplot_2",
                                                value = "myh7l",
                                                placeholder = "myh7l")
@@ -182,7 +184,7 @@ server <- function(input, output, session) {
         y = UMAP_2,
         color = edited_res.1.5),
         alpha = 0.9,
-        size = 0.04
+        size = 0.1
       ) +
       ggplot2::theme_minimal() +
       ScExploreR::one_theme() +
@@ -194,8 +196,8 @@ server <- function(input, output, session) {
         y = labels_all$u2,
         label = labels_all$label  %>% stringr::str_wrap(., width = 10),
         fill = labels_all$color,
-        alpha = 0.5
-      )
+        alpha = 0.8
+        )
     })
 
   output$Multiplot <-
@@ -203,8 +205,21 @@ server <- function(input, output, session) {
       if (input$type_of_data == "Overview") {
         raw_ngene_mt(input_metadata = "/home/jason/data/shiny_dashboard/heart10x/data/metadata_raw_object.csv")
       }
-      else if (input$type_of_data == "DataSet") {
-        print("lol")
+      else if (input$type_of_data == "Dataset") {
+        ScExploreR::plot_contribution(metadata = metadata_all,
+                                      main_group = "edited_res.1.5",
+                                      feature = "DataSet")
+      }
+      else if (input$type_of_data == "Line") {
+        ScExploreR::plot_contribution(metadata = metadata_all,
+                                      main_group = "edited_res.1.5",
+                                      feature = "line")
+      }
+      else if (input$type_of_data == "Stage") {
+        ScExploreR::plot_contribution(metadata = metadata_all,
+                                      main_group = "edited_res.1.5",
+                                      feature = "stage")
+        
       } else if (input$type_of_data == "iris") {
         ggplot2::ggplot(data = iris,
                         ggplot2::aes(x = Sepal.Length, y = Sepal.Width, color = Species)) +
