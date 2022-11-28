@@ -228,15 +228,15 @@ server <- function(input, output, session) {
   # FT plots for myocardium  
   ScExploreR::FeaturePlotShiny(
               id = "myo_featureplot_1",
-              metadata = metadata_all,
-              data_slot = slot_data_all,
-              identity = "edited_res.1.5")
+              metadata = metadata_myo,
+              data_slot = myo_slot_data,
+              identity = "custom_int_res2")
   
   ScExploreR::FeaturePlotShiny(
               id = "myo_featureplot_2",
-              metadata = metadata_all,
-              data_slot = slot_data_all,
-              identity = "edited_res.1.5")
+              metadata = metadata_myo,
+              data_slot = myo_slot_data,
+              identity = "custom_int_res2")
 }
 
 shiny::shinyApp(ui, server)

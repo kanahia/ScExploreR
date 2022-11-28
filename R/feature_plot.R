@@ -32,14 +32,14 @@ FeaturePlotShinyUI <- function(id,
 #' @importFrom shiny moduleServer renderPlot
 #'
 #' @export
-FeaturePlotShiny <- function(id, metadata, data_slot, identity) {
+FeaturePlotShiny <- function(id, metadata = NULL, data_slot = NULL, identity) {
     shiny::moduleServer(
         id,
         function(input, output, session) {
             output$feature_plot <- shiny::renderPlot({
                 my_FeaturePlot(
-                    metadata = metadata_all,
-                    data_slot = slot_data_all,
+                    metadata = metadata,
+                    data_slot = data_slot,
                     gene = input$gene_selector,
                     identity = identity, # TODO add identity choice?
                     order = FALSE,
