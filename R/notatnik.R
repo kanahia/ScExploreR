@@ -139,7 +139,9 @@ my_FeaturePlot <- function(metadata,
         viridis::scale_color_viridis(direction = -1) +
         ScExploreR::one_theme() +
         ggplot2::theme_minimal()
-      }
+    }
+  
+  FT.plot <- FT.plot + ggplot2::theme(legend.title=element_blank())
 
   return(FT.plot)
 }
