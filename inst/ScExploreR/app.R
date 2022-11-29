@@ -53,40 +53,16 @@ ui <- shinydashboard::dashboardPage(
         shiny::tabPanel(
           "Visualization",
           shiny::wellPanel(
-            # shiny::fluidRow(
-            #   shiny::column(
-            #     width = 2,
-            #     offset = 6,
-            #     MultiPlot_UI("choose")
-            #     # shiny::selectInput(
-            #     #   inputId = "type_of_data",
-            #     #   label = "Type of data",
-            #     #   choices = c(
-            #     #     "Overview",
-            #     #     "Dataset",
-            #     #     "Line",
-            #     #     "Stage",
-            #     #     "Percent.mt",
-            #     #     "Percent.hemoglobin",
-            #     #     "Cell-Cycle-phase",
-            #     #     "nCount_RNA",
-            #     #     "nFeature_RNA",
-            #     #     "iris"
-            #     #   ),
-            #     #   selected = "Overview"
-            #     # )
-            # )
-            # ),
             shiny::fluidRow(
               shiny::column(width = 6,
-                            shiny::plotOutput("DimPlot", width = "85%", height = "500")),
+                            shinycustomloader::withLoader(
+                              type = "html",
+                              loader = "dnaspin",
+                              shiny::plotOutput("DimPlot", width = "85%", height = "600")
+                              )
+                            ),
               shiny::column(
                 width = 6,
-                #offset = 1,
-                #shiny::plotOutput("Multiplot", width = "85%", height = "500")
-                # shinycustomloader::withLoader(type = "html",
-                #                               loader = "loader3",
-                #                               shiny::plotOutput("Multiplot"))
                 ScExploreR::MultiPlot_UI("Multiplot")
               )
             )
@@ -99,8 +75,6 @@ ui <- shinydashboard::dashboardPage(
                 ScExploreR::FeaturePlotShinyUI("all_featureplot_1",
                                                value = "myh6",
                                                placeholder = "myh6")
-                #offset = 1,
-                
               ),
               shiny::column(
                 width = 6,
@@ -110,7 +84,7 @@ ui <- shinydashboard::dashboardPage(
                                                placeholder = "myh7l")
                 )
               )
-          ) #koniec well-panell s
+          )
         )
       ),
       shinydashboard::tabItem(
@@ -158,30 +132,6 @@ server <- function(input, output, session) {
   output$markers_myo <-
     shiny::renderDataTable(markers_myo, options = list(pageLength = 10))
 
-  # output$Featureplot <-
-  #   shiny::renderPlot({
-  #     my_FeaturePlot(
-  #       metadata = metadata_all,
-  #       data_slot = slot_data_all,
-  #       gene = input$gene,
-  #       identity = "edited_res.1.5",
-  #       order = FALSE,
-  #       label = TRUE
-  #     )
-  #   })
-  # 
-  # output$my_FT <-
-  #   shiny::renderPlot({
-  #     my_FeaturePlot(
-  #       metadata = metadata_all,
-  #       data_slot = slot_data_all,
-  #       gene = c(input$gene2),
-  #       identity = "edited_res.1.5",
-  #       order = FALSE,
-  #       label = TRUE
-  #     )
-  #   })
-
   output$DimPlot <-
     shiny::renderPlot({
       ggplot2::ggplot(metadata_all) +
@@ -206,36 +156,6 @@ server <- function(input, output, session) {
         )
     })
 
-  # output$Multiplot <-
-  #   shiny::renderPlot({
-  #     if (input$type_of_data == "Overview") {
-  #       raw_ngene_mt(input_metadata = "/home/jason/data/shiny_dashboard/heart10x/data/metadata_raw_object.csv")
-  #     }
-  #     else if (input$type_of_data == "Dataset") {
-  #       ScExploreR::plot_contribution(metadata = metadata_all,
-  #                                     main_group = "edited_res.1.5",
-  #                                     feature = "DataSet")
-  #     }
-  #     else if (input$type_of_data == "Line") {
-  #       ScExploreR::plot_contribution(metadata = metadata_all,
-  #                                     main_group = "edited_res.1.5",
-  #                                     feature = "line")
-  #     }
-  #     else if (input$type_of_data == "Stage") {
-  #       ScExploreR::plot_contribution(metadata = metadata_all,
-  #                                     main_group = "edited_res.1.5",
-  #                                     feature = "stage")
-  #       
-  #     } else if (input$type_of_data == "iris") {
-  #       ggplot2::ggplot(data = iris,
-  #                       ggplot2::aes(x = Sepal.Length, y = Sepal.Width, color = Species)) +
-  #         ggplot2::geom_point()
-  #     }
-  #   })
-  
-  # ScExploreR::MultiPlot_Shiny(
-  #             id = "choose")
-  
   ScExploreR::MultiPlot_Shiny(
     id = "Multiplot",
     metadata = metadata_all)

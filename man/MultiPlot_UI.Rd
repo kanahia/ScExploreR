@@ -6,10 +6,11 @@
 \usage{
 MultiPlot_UI(
   id,
-  label = "Type of data",
+  label = "Metadata:",
   selected = "Overview",
-  choices = c("Overview", "Dataset", "Line", "Stage", "Percent.mt",
-    "Percent.hemoglobin", "Cell-Cycle-phase", "nCount_RNA", "nFeature_RNA", "iris")
+  choices = c("Overview", Dataset = "DataSet", Line = "line", Stage = "stage",
+    "Percent.mt", "Percent.hemoglobin", `Cell cycle` = "Phase", `Cell cycle-timepoint` =
+    "Phase_timepoint", "nCount_RNA", "nFeature_RNA", Iris = "iris")
 )
 }
 \arguments{

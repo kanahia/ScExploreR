@@ -9,8 +9,7 @@ FeaturePlotShinyUI(
   label = "Choose gene",
   value = "",
   placeholder = "",
-  width = "100px",
-  spinnertype = 5
+  width = "100px"
 )
 }
 \description{

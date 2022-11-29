@@ -4,7 +4,12 @@
 \alias{plot_contribution}
 \title{Plot contributions}
 \usage{
-plot_contribution(metadata, main_group = "edited_res.1.5", feature, choice)
+plot_contribution(
+  metadata,
+  main_group = "edited_res.1.5",
+  feature = c("line", "stage", "DataSet", "iris", "Phase", "Phase_timepoint"),
+  choice
+)
 }
 \arguments{
 \item{metadata}{}

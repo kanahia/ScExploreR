@@ -4,7 +4,7 @@
 \alias{MultiPlot_Shiny}
 \title{MultiPlot_Shiny}
 \usage{
-MultiPlot_Shiny(id)
+MultiPlot_Shiny(id, feature = NULL, metadata = NULL)
 }
 \arguments{
 \item{id}{}

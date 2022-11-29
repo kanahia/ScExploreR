@@ -8,8 +8,7 @@ FeaturePlotShinyUI <- function(id,
                                label="Choose gene",
                                value="",
                                placeholder="",
-                               width="100px",
-                               spinnertype = 5) {
+                               width="100px") {
     ns <- shiny::NS(id)
     shiny::tags$div(
         style = "background-color: gray99;box-shadow: 1px 2px;",
@@ -20,10 +19,13 @@ FeaturePlotShinyUI <- function(id,
             placeholder = placeholder,
             width = width
             ),
-        shinycssloaders::withSpinner(
-            type = spinnertype,
-            shiny::plotOutput(ns("feature_plot"), width = "85%", height = "500") #changed width
-        )
+        shinycustomloader::withLoader(type = "html",
+                                      loader = "dnaspin",
+                                      shiny::plotOutput(ns("feature_plot"), width = "85%", height = "500"))
+        # shinycssloaders::withSpinner(
+        #     type = spinnertype,
+        #     shiny::plotOutput(ns("feature_plot"), width = "85%", height = "500") #changed width
+        # )
     )
 }
 
