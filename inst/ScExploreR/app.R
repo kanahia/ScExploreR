@@ -46,51 +46,53 @@ ui <- shinydashboard::dashboardPage(
   ),
   shinydashboard::dashboardBody(
     shinydashboard::tabItems(
-      # shinydashboard::tabItem("whole_heart"), TODO either add something under those tabs or remove them
-      # shinydashboard::tabItem("myocardium"),
       shinydashboard::tabItem(
         "visualization_all",
         shiny::tabPanel(
           "Visualization",
-          shiny::wellPanel(
-            shiny::fluidRow(
-              shiny::column(width = 6,
-                            shinycustomloader::withLoader(
-                              type = "html",
-                              loader = "dnaspin",
-                              shiny::plotOutput("DimPlot", width = "85%", height = "600")
-                              )
-                            ),
-              shiny::column(
-                width = 6,
-                ScExploreR::MultiPlot_UI("Multiplot")
-              )
-            )
-          ),
-          shiny::wellPanel(
-            shiny::fluidRow(
-              shiny::column(
-                width = 6,
-                style = 'padding-top:0px; height:200px;',
-                ScExploreR::FeaturePlotShinyUI("all_featureplot_1",
-                                               value = "myh6",
-                                               placeholder = "myh6")
-              ),
-              shiny::column(
-                width = 6,
-                style = 'padding-top:0px;',
-                ScExploreR::FeaturePlotShinyUI("all_featureplot_2",
-                                               value = "myh7l",
-                                               placeholder = "myh7l")
+          shiny::tabsetPanel(
+            shiny::tabPanel(
+              "Overview",
+              shiny::wellPanel(shiny::fluidRow(
+                shiny::column(
+                  width = 6,
+                  shinycustomloader::withLoader(
+                    type = "html",
+                    loader = "dnaspin",
+                    shiny::plotOutput("DimPlot", width = "85%", height = "600")
+                  )
+                ),
+                shiny::column(width = 6,
+                              ScExploreR::MultiPlot_UI("Multiplot"))
+              )),
+              shiny::wellPanel(shiny::fluidRow(
+                shiny::column(
+                  width = 6,
+                  style = 'padding-top:0px; height:200px;',
+                  ScExploreR::FeaturePlotShinyUI(
+                    "all_featureplot_1",
+                    value = "myh6",
+                    placeholder = "myh6"
+                  )
+                ),
+                shiny::column(
+                  width = 6,
+                  style = 'padding-top:0px;',
+                  ScExploreR::FeaturePlotShinyUI(
+                    "all_featureplot_2",
+                    value = "myh7l",
+                    placeholder = "myh7l"
+                  )
                 )
-              )
-          )
-        )
-      ),
+              ))
+            ),
+            shiny::tabPanel("test")
+      )
+      )),
       shinydashboard::tabItem(
         "gene_table_all",
         shiny::fluidPage(shiny::h1("Gene table: Whole heart")),
-        shiny::dataTableOutput("markers_all")
+        DT::dataTableOutput("markers_all")
       ),
       shinydashboard::tabItem(
         "visualization_myo",
@@ -116,7 +118,7 @@ ui <- shinydashboard::dashboardPage(
       shinydashboard::tabItem(
         "gene_table_myo",
         shiny::fluidPage(shiny::h1("Gene table: Myocardium")),
-        shiny::dataTableOutput("markers_myo")
+        DT::dataTableOutput("markers_myo")
       )
     )
   ),
@@ -127,10 +129,10 @@ ui <- shinydashboard::dashboardPage(
 server <- function(input, output, session) {
 
   output$markers_all <-
-    shiny::renderDataTable(markers_all, options = list(pageLength = 10))
-
+    DT::renderDataTable(markers_all, options = list(pageLength = 10), filter = "top")
+  
   output$markers_myo <-
-    shiny::renderDataTable(markers_myo, options = list(pageLength = 10))
+    DT::renderDataTable(markers_myo, options = list(pageLength = 10), filter = "top")
 
   output$DimPlot <-
     shiny::renderPlot({
