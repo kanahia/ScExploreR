@@ -8,9 +8,9 @@ MultiPlot_UI(
   id,
   label = "Metadata:",
   selected = "Overview",
-  choices = c("Overview", Dataset = "DataSet", Line = "line", Stage = "stage",
-    "Percent.mt", "Percent.hemoglobin", `Cell cycle` = "Phase", `Cell cycle-timepoint` =
-    "Phase_timepoint", `Number of genes` = "nFeature_RNA", `Number of UMI` = "log10_UMI",
+  choices = c("Overview", Dataset = "DataSet", Stage = "stage", Line = "line", `Number
+    of genes` = "nFeature_RNA", `Number of UMI` = "log10_UMI", `Percent mt` =
+    "percent.mt", `Cell cycle` = "Phase", `Cell cycle-timepoint` = "Phase_timepoint",
     Iris = "iris")
 )
 }

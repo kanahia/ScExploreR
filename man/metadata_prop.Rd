@@ -4,7 +4,13 @@
 \alias{metadata_prop}
 \title{metadata_prop}
 \usage{
-metadata_prop(metadata, main_group, feature, stage = NULL)
+metadata_prop(
+  metadata,
+  main_group,
+  feature,
+  stage = NULL,
+  arg_geom_col = ggplot2::geom_col
+)
 }
 \arguments{
 \item{metadata}{metadata}
