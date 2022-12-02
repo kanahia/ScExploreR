@@ -32,7 +32,7 @@ ui <-
         shinydashboard::menuItem(
           "Whole heart",
           tabName = "whole_heart",
-          icon = icon("heart", lib = "glyphicon"),
+          icon = shiny::icon("heart", lib = "glyphicon"),
           shinydashboard::menuSubItem("Gene table", tabName = "gene_table_all"),
           shinydashboard::menuSubItem("Visualization", tabName = "visualization_all"),
           shinydashboard::menuSubItem("Differential expression", tabName = "DE")
@@ -40,7 +40,7 @@ ui <-
         shinydashboard::menuItem(
           "Myocardium",
           tabName = "myocardium",
-          icon = icon("triangle-top", lib = "glyphicon"),
+          icon = shiny::icon("triangle-top", lib = "glyphicon"),
           shinydashboard::menuSubItem("Gene table", tabName = "gene_table_myo"),
           shinydashboard::menuSubItem("Visualization", tabName = "visualization_myo")
           )
@@ -156,12 +156,16 @@ ui <-
                                  selected = "Bulbus arteriosus"),
                      radioButtons(inputId = "sort_by", 
                                   label = "Label genes by:",
-                                  choices = c("Significance" = "p_val_adj",
-                                              "log2FoldChange" = "avc_log2FC"),
+                                  choices = c("log2FoldChange" = "avg_log2FC",
+                                              "Significance" = "p_val_adj"),
+                                  selected = "avg_log2FC",
                                   inline = TRUE)
                      ),
-              column(width = 10,
-                     shiny::plotOutput(outputId = "Volcano_plot", width = "85%", height = "600")
+              column(width = 9,
+                     shinycustomloader::withLoader(
+                       type = "html",
+                       loader = "dnaspin",
+                       shiny::plotOutput(outputId = "Volcano_plot", width = "85%", height = "700"))
                      )
             )
           )
@@ -243,25 +247,25 @@ server <- function(input, output, session) {
   # testing plots
   output$Volcano_plot <- shiny::renderPlot({
     
-    # volcano_plot(integrated_data, 
-    #              markers = markers_all,
-    #              ident.1 = "Myocardium",
-    #              ident.2 = "AV cushion",
-    #              avg_log2FC.1 = -3,
-    #              avg_log2FC.2 = 3,
-    #              plot_top = TRUE, 
-    #              n_genes = 10,
-    #              height = 45,
-    #              pos.label.1 = 1.7,
-    #              pos.label.2 = -1.62,
-    #              label.title.size = 6.5 ,
-    #              ann_text_size = 6) + 
-    #   #theme(plot.margin = unit(c(0.1,8.5,0.1,8.5), "cm")) +
-    #   scale_x_continuous(limits = c(-2.5, 2.5), breaks = seq(-2.5, 2.5, by = 1)) +
-    #   coord_fixed(ratio = 0.0163)
+    volcano_plot(integrated_data,
+                 markers = DE_list[[paste0(input$cluster_1, "_vs_", input$cluster_2)]],
+                 ident.1 = input$cluster_1,
+                 ident.2 = input$cluster_2,
+                 avg_log2FC.1 = -3,
+                 avg_log2FC.2 = 3,
+                 plot_top = if(input$sort_by == "avg_log2FC") {TRUE} else if(input$sort_by == "p_val_adj") {FALSE},
+                 n_genes = 10,
+                 height = 45,
+                 pos.label.1 = 1.7,
+                 pos.label.2 = -1.62,
+                 label.title.size = 6.5 ,
+                 ann_text_size = 6) +
+      #theme(plot.margin = unit(c(0.1,8.5,0.1,8.5), "cm")) +
+      ggplot2::scale_x_continuous(limits = c(-2.5, 2.5), breaks = seq(-2.5, 2.5, by = 1)) +
+      ggplot2::coord_fixed(ratio = 0.0163)
     
-    ggplot2::ggplot(data=iris, aes(x = Sepal.Length, y = Sepal.Width)) +
-    ggplot2::geom_point(aes(color=Species, shape=Species))
+    #ggplot2::ggplot(data=iris, aes(x = Sepal.Length, y = Sepal.Width)) +
+    #ggplot2::geom_point(aes(color=Species, shape=Species))
     
   })
 }
