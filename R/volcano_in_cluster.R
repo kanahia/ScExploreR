@@ -29,8 +29,8 @@ volcano_plot <- function(seurat_object,
                          height = 15,
                          label.ident.1 = ident.1,
                          label.ident.2 = ident.2,
-                         pos.label.1 = 2,
-                         pos.label.2 = -2,
+                         pos.label.1 = pos_label_1,
+                         pos.label.2 = pos_label_2,
                          label.title.size = 5.5,
                          ann_text_size = 5,
                          plot_top = FALSE,
@@ -47,6 +47,9 @@ volcano_plot <- function(seurat_object,
         min.pct = 0.1,
         only.pos = FALSE)
   }
+  
+  pos_label_1 <- max(markers$avg_log2FC[markers$avg_log2FC > 0])/2 +0.15
+  pos_label_2 <- min(markers$avg_log2FC[markers$avg_log2FC < 0])/2 - 0.15
 
   if(!is.numeric(c(avg_log2FC.1, avg_log2FC.2))) {
     stop("log2FC is not numeric")
@@ -89,17 +92,6 @@ volcano_plot <- function(seurat_object,
     ggplot2::ylab("-log10 adjusted p-value") +
     ggplot2::theme_minimal() +
     #scale_y_continuous(limits = c(0,50)) +
-    ggplot2::theme(
-      plot.margin = unit(c(2, 2, 2, 2), "mm"),
-      legend.text = element_text(size = 16),
-      legend.position = "bottom",
-      #c(0.89, 0.55),
-      #legend.box.background = element_rect(color = "grey"),
-      plot.title = element_text(size = ggplot2::rel(1.5), hjust = -1),
-      plot.subtitle = element_text(hjust = 0.5, size = 10),
-      axis.title = element_text(size = ggplot2::rel(1.45)),
-      axis.text = element_text(size = 15)
-    ) +
     #xlim(-3, 4) +
     ggplot2::geom_vline(xintercept = 0, size = 0.2) +
     ggplot2::geom_hline(yintercept = 0, size = 0.2) +
@@ -112,7 +104,18 @@ volcano_plot <- function(seurat_object,
                  "#F8766D" = "padj & avg log2FC > 0.25",
                  "blue" = "padj",
                  "grey" = "Not sig"),
-      values = c("lawngreen", "royalblue", "chocolate3", "seashell4", "lightsalmon1"))
+      values = c("lawngreen", "royalblue", "chocolate3", "seashell4", "lightsalmon1")) +
+    ggplot2::theme(
+      legend.position = "bottom",
+      plot.margin = unit(c(1, 2, 1, 0), "cm"),
+      legend.text = element_text(size = 16),
+      #c(0.89, 0.55),
+      #legend.box.background = element_rect(color = "grey"),
+      plot.title = element_text(size = ggplot2::rel(1.5), hjust = -1),
+      plot.subtitle = element_text(hjust = 0.5, size = 10),
+      axis.title = element_text(size = ggplot2::rel(1.45)),
+      axis.text = element_text(size = 15)
+    )
 
   p.volcano.ann <-
     p.volcano +
@@ -160,7 +163,6 @@ volcano_plot <- function(seurat_object,
                       label = ifelse(gene %in% t2, gene, "")),
         size = ann_text_size,
         max.overlaps = 100)
-
   } else {
     
     t <- markers %>%
@@ -182,9 +184,9 @@ volcano_plot <- function(seurat_object,
     
     p.volcano.ann.final <-
       p.volcano.ann +
-      ggrepel::geom_text_repel(data =
-                                 dplyr::filter(markers,
-                                               avg_log2FC > avg_log2FC.1 | avg_log2FC < avg_log2FC.2),
+      ggrepel::geom_text_repel(data = markers,
+                                 # dplyr::filter(markers,
+                                 #               avg_log2FC > avg_log2FC.1 | avg_log2FC < avg_log2FC.2),
                                mapping = aes(x = avg_log2FC,
                                              y = -log10(p_val_adj),
                                              label = ifelse(gene %in% t2, gene, "")),
