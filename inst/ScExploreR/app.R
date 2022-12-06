@@ -20,6 +20,7 @@ ui <-
       shiny::tags$li(
         class = "dropdown",
         shiny::tags$style(".main-header {max-height: 100px}"),
+        #shiny::tags$head(shiny::tags$style(".shiny-plot-output{height:50vh !important;}")),
         shiny::tags$style(".main-header .logo {height: 100px;}")
         ),
       title = header_title,
@@ -154,19 +155,27 @@ ui <-
                                  choices = sort(levels(metadata_all$edited_res.1.5)),
                                  width = "240px",
                                  selected = "Bulbus arteriosus"),
+                     shinyWidgets::chooseSliderSkin("Modern", color = "#3C8DBC"),
+                     #shinyWidgets::setSliderColor(c("lightsalmon1"), c(1)),
+                     sliderInput(inputId = "slider",
+                                 label = "Number of genes",
+                                 min = 1, max = 20, value = 10, step = 1),
                      radioButtons(inputId = "sort_by", 
                                   label = "Label genes by:",
                                   choices = c("log2FoldChange" = "avg_log2FC",
                                               "Significance" = "p_val_adj"),
                                   selected = "avg_log2FC",
-                                  inline = TRUE)
+                                  inline = FALSE)
                      ),
-              column(width = 9,
+              column(width = 5,
                      shinycustomloader::withLoader(
                        type = "html",
                        loader = "dnaspin",
                        shiny::plotOutput(outputId = "Volcano_plot", width = "85%", height = "700"))
-                     )
+                                         #shiny::tags$style(".shiny-plot-output{height:50vh !important;}")))
+                     ),
+              column(width = 5,
+                     DT::dataTableOutput("DE_cluster", width = "100%"))
             )
           )
         )
@@ -254,20 +263,29 @@ server <- function(input, output, session) {
                  avg_log2FC.1 = -3,
                  avg_log2FC.2 = 3,
                  plot_top = if(input$sort_by == "avg_log2FC") {TRUE} else if(input$sort_by == "p_val_adj") {FALSE},
-                 n_genes = 10,
+                 n_genes = input$slider,
                  height = 45,
-                 pos.label.1 = 1.7,
-                 pos.label.2 = -1.62,
+                 # pos.label.1 = 1,
+                 # pos.label.2 = -1,
                  label.title.size = 6.5 ,
-                 ann_text_size = 6) +
+                 ann_text_size = 6) 
       #theme(plot.margin = unit(c(0.1,8.5,0.1,8.5), "cm")) +
-      ggplot2::scale_x_continuous(limits = c(-2.5, 2.5), breaks = seq(-2.5, 2.5, by = 1)) +
-      ggplot2::coord_fixed(ratio = 0.0163)
+      #ggplot2::scale_x_continuous(limits = c(-2.5, 2.5), breaks = seq(-2.5, 2.5, by = 1)) +
+      #ggplot2::coord_fixed(ratio = 0.0163)
     
     #ggplot2::ggplot(data=iris, aes(x = Sepal.Length, y = Sepal.Width)) +
     #ggplot2::geom_point(aes(color=Species, shape=Species))
     
   })
+  
+  output$DE_cluster <- DT::renderDataTable(
+
+    DE_list[[paste0(input$cluster_1, "_vs_", input$cluster_2)]],
+    options = list(pageLength = 15, filter = "top")
+    )
+    
+    
+
 }
 
 shiny::shinyApp(ui, server)

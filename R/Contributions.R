@@ -32,25 +32,27 @@ metadata_prop <- function(metadata,
                           arg_geom_col = ggplot2::geom_col) {
   if(is.null(stage)) {
     metadata_p <-
-      metadata %>%
-      dplyr::group_by_(main_group, feature) %>%
-      dplyr::summarise(n = dplyr::n()) %>%
-      dplyr::mutate(percent = prop.table(n) * 100) %>%
-      ggplot2::ggplot(aes(x = stringr::str_wrap(!! sym(main_group), width = 5), 
-                          y = percent, 
-                          fill = !! sym(feature))) +
-      arg_geom_col()
+        metadata %>%
+          dplyr::group_by_(main_group, feature) %>%
+          dplyr::summarise(n = dplyr::n()) %>%
+          dplyr::mutate(percent = prop.table(n) * 100) %>%
+          ggplot2::ggplot(aes(x = stringr::str_wrap(!! sym(main_group), width = 5), 
+                              y = percent, 
+                              fill = !! sym(feature))) +
+          arg_geom_col()
+      
     
   } else {
     metadata_p <-
-      metadata %>%
-      dplyr::group_by_(main_group, stage, feature) %>%
-      dplyr::summarise(n = dplyr::n()) %>%
-      dplyr::mutate(percent = prop.table(n) * 100) %>%
-      ggplot2::ggplot(aes(x = stringr::str_wrap(!! sym(main_group), width = 5), 
-                          y = percent, 
-                          fill = !! sym(feature))) +
-      arg_geom_col()
+        metadata %>%
+          dplyr::group_by_(main_group, stage, feature) %>%
+          dplyr::summarise(n = dplyr::n()) %>%
+          dplyr::mutate(percent = prop.table(n) * 100) %>%
+          ggplot2::ggplot(aes(x = stringr::str_wrap(!! sym(main_group), width = 5), 
+                              y = percent, 
+                              fill = !! sym(feature))) +
+          arg_geom_col()
+      
   }
  
   
