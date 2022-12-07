@@ -23,8 +23,16 @@ for(i in 1:length(levels(s))){
           logfc.threshold = 0.25,
           slot = "data") %>%
         dplyr::mutate(gene = rownames(.))
+      
+      DE_list[[paste0(levels(s)[i], "_vs_", levels(s)[j])]] <-
+        DE_list[[paste0(levels(s)[i], "_vs_", levels(s)[j])]] %>%
+        dplyr::mutate(cluster = ifelse(avg_log2FC > 0, levels(s)[i], levels(s)[j]),
+                      p_val_adj = rstatix::p_round(p_val_adj),
+                      p_val_adj = rstatix::p_round(p_val),
+                      avg_log2FC = round(avg_log2FC, digits = 2))
+      
     } else {
-      print("next")
+      print(paste0("skpped ",levels(s)[i], "_vs_", levels(s)[j]))
     }
     
   }

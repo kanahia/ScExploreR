@@ -280,11 +280,10 @@ server <- function(input, output, session) {
   
   output$DE_cluster <- DT::renderDataTable(
 
-    DE_list[[paste0(input$cluster_1, "_vs_", input$cluster_2)]],
-    options = list(pageLength = 15, filter = "top")
+    DE_list[[paste0(input$cluster_1, "_vs_", input$cluster_2)]][, c(2:5,7)] %>%
+      DT::datatable(options = list(pageLength = 15, filter = "top",  width = "100%", height = "auto"))
+      #DT::formatRound(columns = c(1, 2), digits = 2)
     )
-    
-    
 
 }
 

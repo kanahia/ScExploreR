@@ -107,8 +107,8 @@ volcano_plot <- function(seurat_object,
       values = c("lawngreen", "royalblue", "chocolate3", "seashell4", "lightsalmon1")) +
     ggplot2::theme(
       legend.position = "bottom",
-      plot.margin = unit(c(1, 2, 1, 0), "cm"),
-      legend.text = element_text(size = 16),
+      #plot.margin = unit(c(0.1, 0.1, 0.1, 0.1), "mm"),
+      legend.text = element_text(size = 14),
       #c(0.89, 0.55),
       #legend.box.background = element_rect(color = "grey"),
       plot.title = element_text(size = ggplot2::rel(1.5), hjust = -1),
