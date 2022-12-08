@@ -31,24 +31,36 @@ ui <-
       width = 220,
       shinydashboard::sidebarMenu(
         shinydashboard::menuItem(
+          "Welcome panel",
+          tabName = "welcome",
+          icon = shiny::icon("stats", lib = "glyphicon")
+        ),
+        shinydashboard::menuItem(
           "Whole heart",
           tabName = "whole_heart",
           icon = shiny::icon("heart", lib = "glyphicon"),
-          shinydashboard::menuSubItem("Gene table", tabName = "gene_table_all"),
           shinydashboard::menuSubItem("Visualization", tabName = "visualization_all"),
-          shinydashboard::menuSubItem("Differential expression", tabName = "DE")
+          shinydashboard::menuSubItem("Differential expression", tabName = "DE"),
+          shinydashboard::menuSubItem("Cell markers", tabName = "gene_table_all"),
+          shinydashboard::menuSubItem("Enrichment analysis", 
+                                      tabName = "enrichment_analysis",  
+                                      icon = shiny::icon("blackberry", lib = "font-awesome"))
           ),
         shinydashboard::menuItem(
           "Myocardium",
           tabName = "myocardium",
           icon = shiny::icon("triangle-top", lib = "glyphicon"),
-          shinydashboard::menuSubItem("Gene table", tabName = "gene_table_myo"),
-          shinydashboard::menuSubItem("Visualization", tabName = "visualization_myo")
+          shinydashboard::menuSubItem("Visualization", tabName = "visualization_myo"),
+          shinydashboard::menuSubItem("Cell markers", tabName = "gene_table_myo")
           )
         )
       ),
     shinydashboard::dashboardBody(
       shinydashboard::tabItems(
+        shinydashboard::tabItem(
+          tabName = "welcome",
+          main_text
+        ),
         shinydashboard::tabItem(
           "visualization_all",
           shiny::tabPanel(
@@ -107,9 +119,14 @@ ui <-
           ),
         shinydashboard::tabItem(
           "gene_table_all",
-          shiny::fluidPage(shiny::h1("Gene table: Whole heart")),
+          shiny::fluidPage(shiny::h1("Marker genes")),
           DT::dataTableOutput("markers_all")
         ),
+        shinydashboard::tabItem(
+          tabName = "enrichment_analysis",
+          ScExploreR::enrichment_analysis_UI(id = "enrich")
+          
+         ),
         shinydashboard::tabItem(
           "visualization_myo",
           shiny::fluidRow(
@@ -137,7 +154,7 @@ ui <-
         ),
         shinydashboard::tabItem(
           "gene_table_myo",
-          shiny::fluidPage(shiny::h1("Gene table: Myocardium")),
+          shiny::fluidPage(shiny::h1("Marker genes: Myocardium")),
           DT::dataTableOutput("markers_myo")
         ),
         shinydashboard::tabItem(
@@ -284,6 +301,9 @@ server <- function(input, output, session) {
       DT::datatable(options = list(pageLength = 15, filter = "top",  width = "100%", height = "auto"))
       #DT::formatRound(columns = c(1, 2), digits = 2)
     )
+  
+  ScExploreR::enrichment_analysis_Shiny(
+    id = "enrich")
 
 }
 

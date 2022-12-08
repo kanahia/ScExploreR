@@ -110,14 +110,7 @@ plot_contribution <- function(metadata,
   } else if(feature == "Overview") {
     p <- 
       ScExploreR::raw_ngene_mt(input_metadata = "/home/jason/data/shiny_dashboard/heart10x/data/metadata_raw_object.csv")
-  } else if(feature == "iris") {
-    
-    p <-
-      ggplot2::ggplot(data = iris,
-                      ggplot2::aes(x = Sepal.Length, 
-                                   y = Sepal.Width, 
-                                   color = Species)) +
-      ggplot2::geom_point()
+
   } else if (feature == "Phase"){
     
     p <-
@@ -275,8 +268,7 @@ MultiPlot_UI <- function(id,
                            "Number of UMI" = "log10_UMI",
                            "Percent mt" = "percent.mt",
                            "Cell cycle" = "Phase",
-                           "Cell cycle-timepoint" = "Phase_timepoint",
-                           "Iris" = "iris")
+                           "Cell cycle-timepoint" = "Phase_timepoint")
                          ) {
   ns <- shiny::NS(id)
   shiny::tags$div(
