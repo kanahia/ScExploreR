@@ -77,7 +77,10 @@ enrichment_analysis_Shiny <- function(id) {
           )
         
         if(!is.null(out)) {
-          enrichplot::dotplot(out)
+          enrichplot::dotplot(out) +
+            ggplot2::geom_point(inherit.aes = TRUE, border = "black", alpha = 0.8)+
+            one_theme() +
+            ggplot2::scale_alpha(range = c(0.2, 0.8))
         } else {print("Your output will appear here:")}
    
       }) #render

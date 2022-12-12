@@ -14,3 +14,17 @@ term2gene <-
   dplyr::select(-c(ensembl_id))
 
 usethis::use_data(term2gene, overwrite = TRUE)
+
+# ggplot2::ggplot(data = as.data.frame(o),
+#                 aes(x = GeneRatio,
+#                     y = ID,
+#                     fill = rstatix::p_round(qvalue),
+#                     size = Count),
+#                 colour = "black") +
+#   geom_point(inherit.aes = T)
+# 
+# 
+# View(as.data.frame(o) %>%
+#        dplyr::mutate(size = as.data.frame(o)$GeneRatio %>% stringr::str_split(pattern = "/") %>% unlist() %>% .[c(seq(2, length(.), by = 2))] %>% as.numeric(),
+#                      ratio = Count/ratio))
+
