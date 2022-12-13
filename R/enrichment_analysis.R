@@ -19,6 +19,12 @@ enrichment_analysis_UI <- function(id,
       ),
       shiny::column(
         width = 2,
+        radioButtons(inputId = ns("choose_reference"), 
+                     label = "Annotate by:",
+                     choices = c("Single cell heart data" = "scData",
+                                 "ZFIN anatomical terms" = "anatomicalData"),
+                     selected = "scData",
+                     inline = FALSE),
         shiny::textAreaInput(
           inputId = ns("caption"), 
           label = label, 
@@ -28,13 +34,16 @@ enrichment_analysis_UI <- function(id,
           placeholder = placeholder
         ),
         shiny::actionButton(inputId = ns("button"),
-                            label = "Submit", 
+                            label = "Submit!", 
                             icon = shiny::icon("file-upload", lib = "glyphicon"), 
-                            width = NULL)
+                            width = NULL,
+                            style="color: #fff; background-color: #3c8dbc; border-radius: 15%;")
       ),
       shiny::column(
         width = 6,
-        shiny::plotOutput(outputId = ns("text_output")))
+        shiny::plotOutput(outputId = ns("text_output"),
+                          height = "550px",
+                          width = "85%"))
     )
   )
 }
@@ -71,16 +80,27 @@ enrichment_analysis_Shiny <- function(id) {
                 minGSSize = 10,
                 maxGSSize = 500,
                 qvalueCutoff = 0.2,
-                TERM2GENE = term2gene,
-                TERM2NAME = NA)
+                TERM2GENE =
+                  if (input$choose_reference == "scData") {
+                    term2gene
+                    } else if (input$choose_reference == "anatomicalData") {
+                      anatomical_terms},
+                TERM2NAME = NA
+              )
             
             enrichplot::dotplot(out) +
               ggplot2::geom_point(inherit.aes = TRUE, 
                                   border = "black", 
                                   alpha = 0.8)+
               one_theme() +
+              ggplot2::theme(
+                panel.background = ggplot2::element_rect(fill='transparent', colour = NA),
+                plot.background = ggplot2::element_rect(fill='transparent', color=NA),
+                legend.background = ggplot2::element_rect(fill='transparent'),
+                legend.box.background = ggplot2::element_rect(fill='transparent')
+                ) +
               ggplot2::scale_alpha(range = c(0.2, 0.8)) +
-              viridis::scale_color_viridis()
+              viridis::scale_color_viridis(direction = -1)
           })
     
         output$text_output <- shiny::renderPlot({
