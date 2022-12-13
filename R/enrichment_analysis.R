@@ -6,7 +6,7 @@
 #' @export
 enrichment_analysis_UI <- function(id, 
                                    label = "Paste input genes here: ",
-                                   info = "Upload yout genes of interest for gene set enrichment analysis",
+                                   info = "Upload your genes of interest for gene set enrichment analysis",
                                    placeholder =  "myh6\ncmlc2\nisl1\ntbx2a\n..."){
   ns <- shiny::NS(id)
   
@@ -14,17 +14,17 @@ enrichment_analysis_UI <- function(id,
     shiny::fluidRow(
       shiny::column(
         width = 12,
-        h1(info,
-           style = "font-size:20px;")
+        shiny::h1(info,
+                  style = "font-size:20px;")
       ),
       shiny::column(
         width = 2,
-        radioButtons(inputId = ns("choose_reference"), 
-                     label = "Annotate by:",
-                     choices = c("Single cell heart data" = "scData",
+        shiny::radioButtons(inputId = ns("choose_reference"), 
+                            label = "Annotate by:",
+                            choices = c("Single cell heart data" = "scData",
                                  "ZFIN anatomical terms" = "anatomicalData"),
-                     selected = "scData",
-                     inline = FALSE),
+                            selected = "scData",
+                            inline = FALSE),
         shiny::textAreaInput(
           inputId = ns("caption"), 
           label = label, 
@@ -66,7 +66,7 @@ enrichment_analysis_Shiny <- function(id) {
     id,
     function(input, output, session) {
       click <- 
-        eventReactive(
+        shiny::eventReactive(
           eventExpr = input$button,
           valueExpr = {
             out_df <- 

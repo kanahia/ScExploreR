@@ -123,8 +123,11 @@ ui <-
             shiny::column(
               width = 1,
               offset = 11,
-              downloadButton("downloadData", "Download",
-                             style = "color: #fff; background-color: #27AE60; border-radius: 10%;"))
+              shiny::downloadButton(
+                outputId = "downloadData", 
+                label = "Download",
+                style = "color: #fff; background-color: #27AE60; border-radius: 10%;")
+              )
             ),
           shiny::fluidPage(shiny::h1("Marker genes")),
           DT::dataTableOutput("markers_all")
@@ -168,37 +171,37 @@ ui <-
           tabName = "DE",
           shiny::wellPanel(
             shiny::fluidRow(
-              column(width = 2,
-                     selectInput(inputId = "cluster_1", 
-                                 label = "Cluster 1:",
-                                 choices = sort(levels(metadata_all$edited_res.1.5)),
-                                 width = "240px"
-                                 ),
-                     selectInput(inputId = "cluster_2", 
-                                 label = "Cluster 2:",
-                                 choices = sort(levels(metadata_all$edited_res.1.5)),
-                                 width = "240px",
-                                 selected = "Bulbus arteriosus"),
-                     shinyWidgets::chooseSliderSkin("Modern", color = "#3C8DBC"),
-                     #shinyWidgets::setSliderColor(c("lightsalmon1"), c(1)),
-                     sliderInput(inputId = "slider",
-                                 label = "Number of genes",
-                                 min = 1, max = 20, value = 10, step = 1),
-                     radioButtons(inputId = "sort_by", 
-                                  label = "Label genes by:",
-                                  choices = c("log2FoldChange" = "avg_log2FC",
-                                              "Significance" = "p_val_adj"),
-                                  selected = "avg_log2FC",
-                                  inline = FALSE)
-                     ),
-              column(width = 5,
+              shiny::column(width = 2,
+                            shiny::selectInput(inputId = "cluster_1", 
+                                   label = "Cluster 1:",
+                                   choices = sort(levels(metadata_all$edited_res.1.5)),
+                                   width = "240px"
+                                   ),
+                            shiny::selectInput(inputId = "cluster_2", 
+                                   label = "Cluster 2:",
+                                   choices = sort(levels(metadata_all$edited_res.1.5)),
+                                   width = "240px",
+                                   selected = "Bulbus arteriosus"),
+                       shinyWidgets::chooseSliderSkin("Modern", color = "#3C8DBC"),
+                       #shinyWidgets::setSliderColor(c("lightsalmon1"), c(1)),
+                       shiny::sliderInput(inputId = "slider",
+                                   label = "Number of genes",
+                                   min = 1, max = 20, value = 10, step = 1),
+                       shiny::radioButtons(inputId = "sort_by", 
+                                    label = "Label genes by:",
+                                    choices = c("log2FoldChange" = "avg_log2FC",
+                                                "Significance" = "p_val_adj"),
+                                    selected = "avg_log2FC",
+                                    inline = FALSE)
+                       ),
+              shiny::column(width = 5,
                      shinycustomloader::withLoader(
                        type = "html",
                        loader = "dnaspin",
                        shiny::plotOutput(outputId = "Volcano_plot", width = "85%", height = "700"))
                                          #shiny::tags$style(".shiny-plot-output{height:50vh !important;}")))
                      ),
-              column(width = 5,
+              shiny::column(width = 5,
                      DT::dataTableOutput("DE_cluster", width = "100%"))
             )
           )
@@ -312,14 +315,15 @@ server <- function(input, output, session) {
   ScExploreR::enrichment_analysis_Shiny(
     id = "enrich")
   
-  output$downloadData <- downloadHandler(
-    filename = function() { 
-      paste("AbuNahia2022_", "markers_all", ".csv", sep="")
-    },
-    content = function(file) {
-      write.csv(markers_all, file, row.names = FALSE)
-    })
-
+  output$downloadData <- 
+    shiny::downloadHandler(
+      filename = function() { 
+        paste("AbuNahia2022_", "markers_all", ".csv", sep="")
+        },
+      content = function(file) {
+        write.csv(markers_all, file, row.names = FALSE)
+        }
+      )
 }
 
 shiny::shinyApp(ui, server)

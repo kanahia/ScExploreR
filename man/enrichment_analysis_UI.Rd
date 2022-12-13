@@ -6,8 +6,8 @@
 \usage{
 enrichment_analysis_UI(
   id,
-  label = "Paste your input genes here",
-  info = "Please, upload your list of genes for gene set enrichment analysis",
+  label = "Paste input genes here: ",
+  info = "Upload your genes of interest for gene set enrichment analysis",
   placeholder = "myh6\\ncmlc2\\nisl1\\ntbx2a\\n..."
 )
 }
