@@ -119,6 +119,12 @@ ui <-
           ),
         shinydashboard::tabItem(
           "gene_table_all",
+          shiny::fluidRow(
+            shiny::column(
+              width = 1,
+              offset = 11,
+              downloadButton("downloadData", "Download",
+                             style = "color: #fff; background-color: #27AE60; border-radius: 10%;"))),
           shiny::fluidPage(shiny::h1("Marker genes")),
           DT::dataTableOutput("markers_all")
         ),
