@@ -124,7 +124,8 @@ ui <-
               width = 1,
               offset = 11,
               downloadButton("downloadData", "Download",
-                             style = "color: #fff; background-color: #27AE60; border-radius: 10%;"))),
+                             style = "color: #fff; background-color: #27AE60; border-radius: 10%;"))
+            ),
           shiny::fluidPage(shiny::h1("Marker genes")),
           DT::dataTableOutput("markers_all")
         ),
@@ -310,6 +311,14 @@ server <- function(input, output, session) {
   
   ScExploreR::enrichment_analysis_Shiny(
     id = "enrich")
+  
+  output$downloadData <- downloadHandler(
+    filename = function() { 
+      paste("AbuNahia2022_", "markers_all", ".csv", sep="")
+    },
+    content = function(file) {
+      write.csv(markers_all, file, row.names = FALSE)
+    })
 
 }
 

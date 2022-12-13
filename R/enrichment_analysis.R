@@ -5,8 +5,8 @@
 #'
 #' @export
 enrichment_analysis_UI <- function(id, 
-                                   label = "Paste your input genes here",
-                                   info = "Please, upload your list of genes for gene set enrichment analysis",
+                                   label = "Paste input genes here: ",
+                                   info = "Upload yout genes of interest for gene set enrichment analysis",
                                    placeholder =  "myh6\ncmlc2\nisl1\ntbx2a\n..."){
   ns <- shiny::NS(id)
   
@@ -40,10 +40,16 @@ enrichment_analysis_UI <- function(id,
                             style="color: #fff; background-color: #3c8dbc; border-radius: 15%;")
       ),
       shiny::column(
-        width = 6,
+        width = 5,
         shiny::plotOutput(outputId = ns("text_output"),
-                          height = "550px",
-                          width = "85%"))
+                          height = "600px",
+                          width = "85%")),
+      shiny::column(
+        width = 5,
+        DT::dataTableOutput(outputId = ns("enrich_table"),
+                            height = "100%",
+                            width = "100%")
+        )
     )
   )
 }
@@ -72,7 +78,7 @@ enrichment_analysis_Shiny <- function(id) {
               dplyr::select(NCBI) %>%
               tidyr::drop_na()
             
-            out <-
+            #out <-
               clusterProfiler::enricher(
                 gene = out_df$NCBI,
                 pvalueCutoff = 0.05,
@@ -87,25 +93,34 @@ enrichment_analysis_Shiny <- function(id) {
                       anatomical_terms},
                 TERM2NAME = NA
               )
-            
-            enrichplot::dotplot(out) +
-              ggplot2::geom_point(inherit.aes = TRUE, 
-                                  border = "black", 
-                                  alpha = 0.8)+
+          })
+    
+        output$text_output <- shiny::renderPlot({
+          
+          if(!is.null(click())){
+            enrichplot::dotplot(click())+
               one_theme() +
               ggplot2::theme(
                 panel.background = ggplot2::element_rect(fill='transparent', colour = NA),
                 plot.background = ggplot2::element_rect(fill='transparent', color=NA),
                 legend.background = ggplot2::element_rect(fill='transparent'),
                 legend.box.background = ggplot2::element_rect(fill='transparent')
-                ) +
+              ) +
               ggplot2::scale_alpha(range = c(0.2, 0.8)) +
               viridis::scale_color_viridis(direction = -1)
-          })
-    
-        output$text_output <- shiny::renderPlot({
-          click()
+          }#  click()
         }) #render
+        
+        output$enrich_table <- 
+          DT::renderDataTable(as.data.frame(click()) %>%
+                                dplyr::select(-c(1,2,9)) %>%
+                                dplyr::mutate(pvalue = rstatix::p_round(pvalue),
+                                              p.adjust = rstatix::p_round(p.adjust),
+                                              qvalue = rstatix::p_round(qvalue),
+                                              gene.name = ScExploreR::ncbi2gene(enrichResult = click())) %>%
+                                dplyr::select(-c(geneID)),
+                              options = list(pageLength = 10, scrollX = TRUE), 
+                              filter = "top")
     } #function
   ) #module
 }
