@@ -22,7 +22,8 @@ enrichment_analysis_UI <- function(id,
         shiny::radioButtons(inputId = ns("choose_reference"), 
                             label = "Annotate by:",
                             choices = c("Single cell heart data" = "scData",
-                                 "ZFIN anatomical terms" = "anatomicalData"),
+                                 "ZFIN anatomical terms" = "anatomicalData",
+                                 "Cardiomyocytes clusters" = "CMs"),
                             selected = "scData",
                             inline = FALSE),
         shiny::textAreaInput(
@@ -89,8 +90,10 @@ enrichment_analysis_Shiny <- function(id) {
                 TERM2GENE =
                   if (input$choose_reference == "scData") {
                     term2gene
-                    } else if (input$choose_reference == "anatomicalData") {
-                      anatomical_terms},
+                    } else if (input$choose_reference == "anatomicalData") { 
+                      anatomical_terms
+                      } else if (input$choose_reference == "CMs") {
+                        term2gene_CMs},
                 TERM2NAME = NA
               )
           })

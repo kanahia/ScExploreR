@@ -122,9 +122,10 @@ ui <-
           shiny::fluidRow(
             shiny::column(
               width = 1,
-              offset = 11,
+              offset = 11, 
+              #downloadButton_UI(id = "all_m", label = "Download")
               shiny::downloadButton(
-                outputId = "downloadData", 
+                outputId = "downloadData",
                 label = "Download",
                 style = "color: #fff; background-color: #27AE60; border-radius: 10%;")
               )
@@ -315,9 +316,9 @@ server <- function(input, output, session) {
   ScExploreR::enrichment_analysis_Shiny(
     id = "enrich")
   
-  output$downloadData <- 
+  output$downloadData <-
     shiny::downloadHandler(
-      filename = function() { 
+      filename = function() {
         paste("AbuNahia2022_", "markers_all", ".csv", sep="")
         },
       content = function(file) {
