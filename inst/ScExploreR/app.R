@@ -23,6 +23,16 @@ ui <-
         #shiny::tags$head(shiny::tags$style(".shiny-plot-output{height:50vh !important;}")),
         shiny::tags$style(".main-header .logo {height: 100px;}")
         ),
+      shiny::tags$li(
+        class="dropdown",
+        tags$a(href="https://www.linkedin.com/in/kanahia/", shiny::icon("linkedin"), 
+               "LinkedIn", target="_blank")
+        ),
+      shiny::tags$li(
+        class="dropdown",
+        tags$a(href="https://github.com/kanahia", shiny::icon("github"), 
+               "GitHub", target="_blank")
+        ),
       title = header_title,
       titleWidth = 220
       ),
