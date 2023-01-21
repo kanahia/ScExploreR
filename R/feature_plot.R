@@ -46,7 +46,8 @@ FeaturePlotShiny <- function(id, metadata = NULL, data_slot = NULL, identity) {
                     identity = identity, # TODO add identity choice?
                     order = FALSE,
                     label = TRUE
-                )
+                ) + 
+                ScExploreR::one_theme()
             })
         }
     )

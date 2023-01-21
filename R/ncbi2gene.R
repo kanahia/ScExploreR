@@ -5,7 +5,6 @@
 #' @return
 #' @export
 #'
-#' @examples
 ncbi2gene <- function(enrichResult){
   vec <- setNames(drerio_mart_ids$`Gene name`, drerio_mart_ids$NCBI)
   vec <- vec[!is.na(names(vec))]

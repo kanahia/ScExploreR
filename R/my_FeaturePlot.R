@@ -11,7 +11,11 @@ one_theme <- function() {
         axis.title.y = ggplot2::element_text(size = 16),
         legend.text = ggplot2::element_text(size = 14),
         legend.title = ggplot2::element_blank(),
-        plot.title = ggplot2::element_text(hjust = 0.5, face = "bold"))
+        plot.title = ggplot2::element_text(hjust = 0.5, face = "bold"),
+        panel.grid.minor = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.background = element_rect(fill='transparent'),
+        plot.background = element_rect(fill='transparent', color=NA))
 }
 
 #' Custom FeaturePlot
@@ -83,15 +87,15 @@ my_FeaturePlot <- function(metadata,
     ggplot2::geom_point(
       data = metadata[metadata$color == "negative", ],
       ggplot2::aes(x = UMAP_1 , y = UMAP_2, color = slot_data), alpha = 0.9, size = 0.04) +
-    ScExploreR::one_theme() +
     ggplot2::theme_minimal() +
+    ScExploreR::one_theme() +
     ggplot2::geom_point(
       data = metadata[metadata$color != "negative", ],
       ggplot2::aes(x = UMAP_1 , y = UMAP_2, color = slot_data), alpha = 0.9, size = 0.04) +
     #scale_color_manual(values = c("positive" = "#414487FF" , "negative" = "#FDE725FF")) +
     ggplot2::ggtitle(gene) +
-    ScExploreR::one_theme() +
-    ggplot2::theme_minimal()
+      ggplot2::theme_minimal() +
+      ScExploreR::one_theme()
   
   if(order == TRUE) {
     FT.plot <-
@@ -99,15 +103,15 @@ my_FeaturePlot <- function(metadata,
       ggplot2::geom_point(
         data = metadata[metadata$color == "negative", ],
         ggplot2::aes(x = UMAP_1 , y = UMAP_2, color = slot_data), alpha = 0.9, size = 0.04) +
-      ScExploreR::one_theme() +
       ggplot2::theme_minimal() +
+      ScExploreR::one_theme() +
       ggplot2::geom_point(
         data = metadata[metadata$color != "negative", ],
         ggplot2::aes(x = UMAP_1 , y = UMAP_2, color = slot_data), alpha = 0.9, size = 0.04) +
       #scale_color_manual(values = c("positive" = "#414487FF" , "negative" = "#FDE725FF")) +
       ggplot2::ggtitle(gene) +
-      ScExploreR::one_theme() +
-      ggplot2::theme_minimal()
+        ggplot2::theme_minimal() +
+        ScExploreR::one_theme()
   } else {
     set.seed(42)
     shuffled_metadata <- metadata[sample(1:nrow(metadata)), ]
@@ -117,8 +121,9 @@ my_FeaturePlot <- function(metadata,
                           ggplot2::aes(x = UMAP_1 , y = UMAP_2, color = slot_data, fill = color), alpha = 0.9, size = 0.04) +
       ggplot2::ggtitle(gene) +
       ggplot2::scale_fill_discrete(guide = "none") +
-      ScExploreR::one_theme() +
-      ggplot2::theme_minimal()
+      ggplot2::theme_minimal() +
+      ScExploreR::one_theme()
+      
   }
   
   # plot umap
@@ -131,17 +136,20 @@ my_FeaturePlot <- function(metadata,
                         y = position_label$u2,
                         size = 4.5) +
       viridis::scale_color_viridis(direction = -1) +
-      ScExploreR::one_theme() +
-      ggplot2::theme_minimal()
+      ggplot2::theme_minimal() +
+      ScExploreR::one_theme()
   } else {
     FT.plot <-
       FT.plot +
       viridis::scale_color_viridis(direction = -1) +
-      ScExploreR::one_theme() +
-      ggplot2::theme_minimal()
+      ggplot2::theme_minimal() +
+      ScExploreR::one_theme()
   }
   
-  FT.plot <- FT.plot + ggplot2::theme(legend.title=element_blank())
+  FT.plot <- FT.plot + 
+    ggplot2::theme(legend.title=element_blank()) +
+    ggplot2::theme_minimal() +
+    ScExploreR::one_theme()
   
   return(FT.plot)
 }

@@ -280,7 +280,7 @@ MultiPlot_UI <- function(id,
       width = '180px'),
       shinycustomloader::withLoader(type = "html",
                                     loader = "dnaspin",
-                                    shiny::plotOutput(ns("Multiplot"), width = "85%", height = "500"))
+                                    shiny::plotOutput(ns("Multiplot"), width = "85%", height = "520"))
     )
 }
 
