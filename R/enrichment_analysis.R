@@ -38,7 +38,7 @@ enrichment_analysis_UI <- function(id,
                             label = "Submit!", 
                             icon = shiny::icon("file-upload", lib = "glyphicon"), 
                             width = NULL,
-                            style="color: #fff; background-color: #3c8dbc; border-radius: 15%;")
+                            style="color: #fff; background-color: #3c8dbc; border-radius: 360px;")
       ),
       shiny::column(
         width = 5,

@@ -69,8 +69,7 @@ ui <-
       shinydashboard::tabItems(
         shinydashboard::tabItem(
           tabName = "welcome",
-          main_text
-        ),
+          main_text),
         shinydashboard::tabItem(
           "visualization_all",
           shiny::tabPanel(
@@ -80,38 +79,41 @@ ui <-
                 "Overview",
                 shiny::wellPanel(
                   shiny::fluidRow(
-                    shiny::column(
-                      width = 6,
+                    shinydashboard::box(
+                      width = 6, 
+                      align = "center",
                       shinycustomloader::withLoader(
                         type = "html",
                         loader = "dnaspin",
                         shiny::plotOutput("DimPlot", width = "85%", height = "600")
                         )
                       ),
-                    shiny::column(width = 6,
-                                  ScExploreR::MultiPlot_UI("Multiplot"))
+                    shinydashboard::box(width = 6,
+                                        ScExploreR::MultiPlot_UI("Multiplot"))
+                    
+                                  
                     )
                   ),
-                shiny::wellPanel(
+                #shiny::wellPanel(
                   shiny::fluidRow(
-                    shiny::column(
+                    shinydashboard::box(
                       width = 6,
-                      style = 'padding-top:0px; height:200px;',
+                      style = 'padding-top:0px; color: white',
                       ScExploreR::FeaturePlotShinyUI(
                         "all_featureplot_1",
                         value = "myh6",
                         placeholder = "myh6")
                       ),
-                    shiny::column(
+                    shinydashboard::box(
                       width = 6,
-                      style = 'padding-top:0px;',
+                      style = 'padding-top:0px; color: white;',
                       ScExploreR::FeaturePlotShinyUI(
                         "all_featureplot_2",
                         value = "myh7l",
                         placeholder = "myh7l")
                       )
                     )
-                  )
+                 # )
                 ),
               shiny::tabPanel(
                 "Test tab",
@@ -137,7 +139,7 @@ ui <-
               shiny::downloadButton(
                 outputId = "downloadData",
                 label = "Download",
-                style = "color: #fff; background-color: #27AE60; border-radius: 10%;")
+                style = "color: #fff; background-color: #27AE60; border-radius: 360px;")
               )
             ),
           shiny::fluidPage(shiny::h1("Marker genes")),
@@ -335,6 +337,7 @@ server <- function(input, output, session) {
         write.csv(markers_all, file, row.names = FALSE)
         }
       )
+  
 }
 
 shiny::shinyApp(ui, server)

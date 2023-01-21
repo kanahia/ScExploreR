@@ -3,6 +3,8 @@
 export("%>%")
 export(FeaturePlotShiny)
 export(FeaturePlotShinyUI)
+export(LR_panel_Shiny)
+export(LR_panel_UI)
 export(MultiPlot_Shiny)
 export(MultiPlot_UI)
 export(contribution_theme)
