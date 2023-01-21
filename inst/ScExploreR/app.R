@@ -1,18 +1,5 @@
 devtools::load_all()
 
-title <- "ScExploreR" # name to display in title bar
-header_title <- # logo to display in header bar
-  shiny::tags$a(
-    href = 'https://zdglab.iimcb.gov.pl/',
-    shiny::tags$img(
-      src = "zdg_logo.png",
-      height = '100',
-      width = '200',
-      align = "center"
-    ),
-    target = "_blank"
-  )
-
 ui <- 
   shinydashboard::dashboardPage(
     skin = "blue",
@@ -33,10 +20,8 @@ ui <-
         tags$a(href="https://github.com/kanahia", shiny::icon("github"), 
                "GitHub", target="_blank")
         ),
-      title = header_title,
-      titleWidth = 220,
-      shiny::markdown("
-                      blablablajsahfkajshfsklahfaklsf")
+      title = header_title, #in css formating
+      titleWidth = 220
       ),
     shinydashboard::dashboardSidebar(
       shiny::tags$style(".left-side, .main-sidebar {padding-top: 100px}"),
@@ -68,6 +53,8 @@ ui <-
         )
       ),
     shinydashboard::dashboardBody(
+      #added in css_formating
+      skin_colors,
       shinydashboard::tabItems(
         shinydashboard::tabItem(
           tabName = "welcome",
@@ -141,7 +128,7 @@ ui <-
               shiny::downloadButton(
                 outputId = "downloadData",
                 label = "Download",
-                style = "color: #fff; background-color: #27AE60; border-radius: 10%;")
+                style = "color: #fff; background-color: #27AE60; border-radius: 360px;")
               )
             ),
           shiny::fluidPage(shiny::h1("Marker genes")),
