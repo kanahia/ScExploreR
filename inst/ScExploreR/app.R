@@ -53,12 +53,22 @@ ui <-
         )
       ),
     shinydashboard::dashboardBody(
+      shiny::tags$head(shiny::tags$link(rel = "stylesheet", type = "text/css", href = "mystyle.css")),
       #added in css_formating
       skin_colors,
       shinydashboard::tabItems(
         shinydashboard::tabItem(
           tabName = "welcome",
-          main_text),
+          shiny::fluidRow(
+            main_text,
+            shiny::br()
+            ),
+          shiny::fluidRow(
+            shiny::column(width = 9,
+                          experiment),
+            shiny::column(width = 3)
+            )
+          ),
         shinydashboard::tabItem(
           "visualization_all",
           shiny::tabPanel(
@@ -74,7 +84,7 @@ ui <-
                       shinycustomloader::withLoader(
                         type = "html",
                         loader = "dnaspin",
-                        shiny::plotOutput("DimPlot", width = "85%", height = "600")
+                        shiny::plotOutput("DimPlot", width = "auto", height = "600")
                         )
                       ),
                     shinydashboard::box(width = 6,
@@ -83,7 +93,7 @@ ui <-
                                   
                     )
                   ),
-                #shiny::wellPanel(
+                shiny::wellPanel(
                   shiny::fluidRow(
                     shinydashboard::box(
                       width = 6,
@@ -100,17 +110,6 @@ ui <-
                         "all_featureplot_2",
                         value = "myh7l",
                         placeholder = "myh7l")
-                      )
-                    )
-                 # )
-                ),
-              shiny::tabPanel(
-                "Test tab",
-                shiny::wellPanel(
-                  shiny::fluidRow(
-                    shiny::column(
-                      width = 6,
-                      shiny::plotOutput("test_plot", width = "85%", height = "600")
                       )
                     )
                   )
@@ -131,8 +130,13 @@ ui <-
                 style = "color: #fff; background-color: #27AE60; border-radius: 360px;")
               )
             ),
-          shiny::fluidPage(shiny::h1("Marker genes")),
-          DT::dataTableOutput("markers_all")
+          shiny::fluidRow(
+            shiny::h1("Marker genes", style = "margin: 15px;"),
+            shinydashboard::box(
+              DT::dataTableOutput("markers_all"),
+              width = 12
+              )
+            )
         ),
         shinydashboard::tabItem(
           tabName = "enrichment_analysis",
@@ -171,7 +175,11 @@ ui <-
         ),
         shinydashboard::tabItem(
           tabName = "DE",
-          shiny::wellPanel(
+          #shiny::wellPanel(
+          shiny::h1("Differential expression"),
+          shiny::p(rep("some text some text", times = 50) %>% paste0(collapse = " "), 
+                   style = "font-size: 18px; align: justify;"),
+          shiny::br(),
             shiny::fluidRow(
               shiny::column(width = 2,
                             shiny::selectInput(inputId = "cluster_1", 
@@ -196,22 +204,29 @@ ui <-
                                     selected = "avg_log2FC",
                                     inline = FALSE)
                        ),
-              shiny::column(width = 5,
-                     shinycustomloader::withLoader(
-                       type = "html",
-                       loader = "dnaspin",
-                       shiny::plotOutput(outputId = "Volcano_plot", width = "85%", height = "700"))
-                                         #shiny::tags$style(".shiny-plot-output{height:50vh !important;}")))
-                     ),
-              shiny::column(width = 5,
-                     DT::dataTableOutput("DE_cluster", width = "100%"))
-            )
+              shinydashboard::box(
+                shiny::tags$style(class = 'volcano-plot'),
+              #shiny::column(
+                width = 5,
+                shinycustomloader::withLoader(
+                  type = "html",
+                  loader = "dnaspin",
+                  shiny::plotOutput(outputId = "Volcano_plot", width = "100%", height = "700"))
+                #shiny::tags$style(".shiny-plot-output{height:50vh !important;}")))
+                ),
+              shinydashboard::box(
+              #shiny::column(
+                width = 5,
+                DT::dataTableOutput("DE_cluster", width = "100%", height = "700"),
+                style = "overflow-y: auto; height: 718px;"
+                )
+              )
+            #)
           )
-        )
-      ) # end of tabItems
-    ), #dashboard body
+        ) # end of tabItems
+      ), #dashboard body
     title = title
-  )
+    )
 
 
 server <- function(input, output, session) {
@@ -285,32 +300,42 @@ server <- function(input, output, session) {
   # testing plots
   output$Volcano_plot <- shiny::renderPlot({
     
-    volcano_plot(integrated_data,
-                 markers = DE_list[[paste0(input$cluster_1, "_vs_", input$cluster_2)]],
-                 ident.1 = input$cluster_1,
-                 ident.2 = input$cluster_2,
-                 avg_log2FC.1 = -3,
-                 avg_log2FC.2 = 3,
-                 plot_top = if(input$sort_by == "avg_log2FC") {TRUE} else if(input$sort_by == "p_val_adj") {FALSE},
-                 n_genes = input$slider,
-                 height = 45,
-                 # pos.label.1 = 1,
-                 # pos.label.2 = -1,
-                 label.title.size = 6.5 ,
-                 ann_text_size = 6) 
-      #theme(plot.margin = unit(c(0.1,8.5,0.1,8.5), "cm")) +
-      #ggplot2::scale_x_continuous(limits = c(-2.5, 2.5), breaks = seq(-2.5, 2.5, by = 1)) +
-      #ggplot2::coord_fixed(ratio = 0.0163)
+    if(input$cluster_1 == input$cluster_2){
+      shinyalert::shinyalert("Oops!",
+                             "Make sure to choose different clusters!",
+                             type = "error",
+                             className = "my_alert")
+    } else {
+      volcano_plot(integrated_data,
+                   markers = DE_list[[paste0(input$cluster_1, "_vs_", input$cluster_2)]],
+                   ident.1 = input$cluster_1,
+                   ident.2 = input$cluster_2,
+                   avg_log2FC.1 = NULL,
+                   avg_log2FC.2 = NULL,
+                   plot_top = if(input$sort_by == "avg_log2FC") {TRUE} else if(input$sort_by == "p_val_adj") {FALSE},
+                   n_genes = input$slider,
+                   height = 45,
+                   # pos.label.1 = 1,
+                   # pos.label.2 = -1,
+                   label.title.size = 6.5 ,
+                   ann_text_size = 6)
+      }
+      
+    }) %>%  shiny::bindCache(input$cluster_1, input$cluster_2, input$sort_by, input$slider)
     
-    #ggplot2::ggplot(data=iris, aes(x = Sepal.Length, y = Sepal.Width)) +
-    #ggplot2::geom_point(aes(color=Species, shape=Species))
-    
-  })
-  
   output$DE_cluster <- DT::renderDataTable(
 
     DE_list[[paste0(input$cluster_1, "_vs_", input$cluster_2)]][, c(2:5,7)] %>%
-      DT::datatable(options = list(pageLength = 15, filter = "top",  width = "100%", height = "auto"))
+      DT::datatable(options = list(pageLength = 15, 
+                                   filter = "top",
+                                   height = "700",
+                                   autoWidth = TRUE, 
+                                   scrollX = FALSE,
+                                   #scrollY = "400px",
+                                   columnDefs = list(list(width = "75px", targets = 0),
+                                                     list(width = "40px", targets = 1:4),
+                                                     list(width = "100px", targets = 5),
+                                                     list(className = 'dt-left', targets = "_all"))))
       #DT::formatRound(columns = c(1, 2), digits = 2)
     )
   

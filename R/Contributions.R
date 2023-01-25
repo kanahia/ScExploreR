@@ -69,8 +69,10 @@ metadata_prop <- function(metadata,
 #' @export
 plot_contribution <- function(metadata,
                               main_group = "edited_res.1.5",
-                              feature = c("line", "stage", "DataSet", "iris", "Phase", "Phase_timepoint", "nFeature_RNA", "percent.mt"),
-                              choice){
+                              feature = c("line", "stage", "DataSet", "iris", "Phase", 
+                                          "Phase_timepoint", "nFeature_RNA", "percent.mt",
+                                          "test")
+                              ){
   if(feature == "DataSet") {
     
     p <- 
@@ -240,6 +242,30 @@ plot_contribution <- function(metadata,
       ) +
       ggplot2::scale_x_discrete(guide =  ggplot2::guide_axis(n.dodge = 2)) +
       Seurat::NoLegend()
+  #} else if( feature == "test") {
+    
+    # p <- 
+    #   metadata %>%
+    #       dplyr::filter(!! sym(main_group) %in% c(!! sym(cluster))) %>%
+    #       dplyr::select(!! sym(main_group), nFeature_RNA, nCount_RNA, stage) %>%
+    #       dplyr::rename(`Number of genes` = nFeature_RNA, `Number of UMI` = nCount_RNA) %>%
+    #       tidyr::gather("metadata", "value", -c(stage, !!sym(main_group))) %>%
+    #       ggplot2::ggplot(.,  
+    #                       ggplot2::aes(x = edited_res.1.5,
+    #                                    y = value,
+    #                                    fill = stage)) +
+    #       introdataviz::geom_split_violin(alpha = .4, trim = FALSE) +
+    #       geom_boxplot(width = .2, alpha = .6, fatten = NULL, show.legend = FALSE) +
+    #       stat_summary(fun.data = "mean_se", geom = "pointrange", show.legend = F, 
+    #                    position = position_dodge(.175)) +
+    #       scale_fill_brewer(palette = "Dark2") +
+    #       facet_wrap(metadata ~., scales = "free_y") +
+    #       #theme(axis.text.x=element_blank(),
+    #       #      axis.ticks.x=element_blank()
+    #       #) +
+    #       xlab("")+
+    #       ylab("Number of genes") +
+    #       theme(strip.text.x = element_text(size = 14))
   }
       
   return(p)
@@ -268,37 +294,67 @@ MultiPlot_UI <- function(id,
                            "Number of UMI" = "log10_UMI",
                            "Percent mt" = "percent.mt",
                            "Cell cycle" = "Phase",
-                           "Cell cycle-timepoint" = "Phase_timepoint")
+                           "Cell cycle-timepoint" = "Phase_timepoint",
+                           "Test" = "test"),
+                         metadata = metadata_all,
+                         clusters = levels(metadata_all$edited_res.1.5)
                          ) {
   ns <- shiny::NS(id)
   shiny::tags$div(
+    shiny::fluidRow(
+   shiny::column(width=4,
     shiny::selectInput(
-      inputId = ns("type_of_data"),
-      label = label,
-      choices = choices,
-      selected = selected,
-      width = '180px'),
+        inputId = ns("type_of_data"),
+        label = label,
+        choices = choices,
+        selected = selected,
+        width = '180px'
+        )),
+  shiny::column(width = 4, offset = 0,
+      shiny::conditionalPanel(
+        ns = ns,
+        condition = "input.type_of_data == 'test'",
+        shiny::selectInput(ns("cluster"), "Cluster:", 
+                            choices = clusters,
+                            multiple = FALSE)
+      ))),
       shinycustomloader::withLoader(type = "html",
                                     loader = "dnaspin",
-                                    shiny::plotOutput(ns("Multiplot"), width = "85%", height = "520"))
+                                    plotly::plotlyOutput(ns("Multiplot"), width = "100%", height = "520"))
+                                    #shiny::plotOutput(ns("Multiplot"), width = "100%", height = "520"))
     )
+  
 }
-
 
 #' MultiPlot_Shiny
 #'
 #' @param id 
 #'
 #' @export
-MultiPlot_Shiny <- function(id, feature = NULL, metadata = NULL) {
+MultiPlot_Shiny <- function(id, feature = NULL, metadata = NULL, cluster = NULL) {
   shiny::moduleServer(
     id,
     function(input, output, session) {
-      output$Multiplot <- shiny::renderPlot({
-        ScExploreR::plot_contribution(feature = input$type_of_data,
-                          metadata = metadata)
-      })
-    }
-  )
+      output$Multiplot <-
+        plotly::renderPlotly({
+        #shiny::renderPlot({
+          
+          if(input$type_of_data != "test") {
+            plotly::ggplotly(
+            ScExploreR::plot_contribution(
+              feature = input$type_of_data,
+              metadata = metadata))
+            
+          } else {
+            
+            ScExploreR::violin_plotly(CLUSTERS = input$cluster)[[1]]
+            ScExploreR::violin_plotly(CLUSTERS = input$cluster)[[2]]
+            ScExploreR::violin_plotly(CLUSTERS = input$cluster)[[3]]
+       
+          }
+          
+        }) %>%  shiny::bindCache(input$type_of_data)
+      }
+    )
 }
 

@@ -1,5 +1,7 @@
 main_text <-
   shiny::mainPanel(
+    shiny::h1("scRNA-seq delineates major lineages and sublineages of cardiac cell types in the zebrafish", 
+              style = "font-size: 34px; font-weight: bold; margin-top: 10px"),
     shiny::p("p creates a paragraph of text."),
     shiny::p("A new p() command starts a new paragraph. Supply a style attribute to change the format of the entire paragraph.",
       style = "font-family: 'times'; font-si16pt"),
@@ -13,5 +15,7 @@ main_text <-
     shiny::p("span does the same thing as div, but it works with",
     shiny::span("groups of words", 
            style = "color:blue"),
-      "that appear inside a paragraph.")
+      "that appear inside a paragraph."),
+    shiny::h2("Methods", style = "font-size: 26px; font-weight: bold; margin-top: 10px"),
+    width = 12
   )

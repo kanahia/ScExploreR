@@ -23,8 +23,8 @@ volcano_plot <- function(seurat_object,
                          markers = NULL,
                          ident.1 = NULL,
                          ident.2 = NULL,
-                         avg_log2FC.1 = 2,
-                         avg_log2FC.2 = -2,
+                         avg_log2FC.1 = NULL,
+                         avg_log2FC.2 = NULL,
                          plot_pval = 1e-296,
                          height = 15,
                          label.ident.1 = ident.1,
@@ -32,7 +32,7 @@ volcano_plot <- function(seurat_object,
                          pos.label.1 = pos_label_1,
                          pos.label.2 = pos_label_2,
                          label.title.size = 5.5,
-                         ann_text_size = 5,
+                         ann_text_size = 4.5,
                          plot_top = FALSE,
                          n_genes = 5,
                          point.size = 3,
@@ -48,12 +48,16 @@ volcano_plot <- function(seurat_object,
         only.pos = FALSE)
   }
   
+  lim_1 <- max(markers$avg_log2FC)
+  lim_2 <- min(markers$avg_log2FC)
+  
+  
   pos_label_1 <- max(markers$avg_log2FC[markers$avg_log2FC > 0])/2 +0.15
   pos_label_2 <- min(markers$avg_log2FC[markers$avg_log2FC < 0])/2 - 0.15
 
-  if(!is.numeric(c(avg_log2FC.1, avg_log2FC.2))) {
-    stop("log2FC is not numeric")
-  }
+  # if(!is.numeric(c(avg_log2FC.1, avg_log2FC.2))) {
+  #   stop("log2FC is not numeric")
+  # }
 
   markers <- markers %>%
     dplyr::mutate(p_val_adj = base::ifelse(p_val_adj == 0e+00, 1e-299, p_val_adj))
@@ -162,7 +166,9 @@ volcano_plot <- function(seurat_object,
                       y = -log10(p_val_adj),
                       label = ifelse(gene %in% t2, gene, "")),
         size = ann_text_size,
-        max.overlaps = 100)
+        max.overlaps = 100) +
+      ggplot2::coord_cartesian(xlim = c(lim_1 + 1, lim_2 -1))
+    
   } else {
     
     t <- markers %>%
@@ -191,7 +197,8 @@ volcano_plot <- function(seurat_object,
                                              y = -log10(p_val_adj),
                                              label = ifelse(gene %in% t2, gene, "")),
                                size = ann_text_size,
-                               max.overlaps = 100)
+                               max.overlaps = 100) +
+      ggplot2::coord_cartesian(xlim = c(lim_1 + 1, lim_2 -1))
     }
   return(p.volcano.ann.final)
 }

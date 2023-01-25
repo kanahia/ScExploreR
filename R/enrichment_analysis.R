@@ -10,15 +10,18 @@ enrichment_analysis_UI <- function(id,
                                    placeholder =  "myh6\ncmlc2\nisl1\ntbx2a\n..."){
   ns <- shiny::NS(id)
   
+  shiny::fluidRow(
+    width = 12,
+    shiny::h1("Enrichment analysis", style = "margin-left: 15px;"),
+    shiny::p(rep("some text some text", times = 50) %>% 
+               paste0(collapse = " "), 
+             style = "font-size: 18px; margin-left: 15px; align: justify;"),
+  
   shiny::wellPanel(
     shiny::fluidRow(
+      #shinydashboard::box(
       shiny::column(
-        width = 12,
-        shiny::h1(info,
-                  style = "font-size:20px;")
-      ),
-      shiny::column(
-        width = 2,
+       width = 2,
         shiny::radioButtons(inputId = ns("choose_reference"), 
                             label = "Annotate by:",
                             choices = c("Single cell heart data" = "scData",
@@ -29,8 +32,8 @@ enrichment_analysis_UI <- function(id,
         shiny::textAreaInput(
           inputId = ns("caption"), 
           label = label, 
-          width = "100%", 
-          height = "400px",
+          width = "auto", 
+          height = "489px",
           value = "", 
           placeholder = placeholder
         ),
@@ -40,17 +43,20 @@ enrichment_analysis_UI <- function(id,
                             width = NULL,
                             style="color: #fff; background-color: #3c8dbc; border-radius: 360px;")
       ),
-      shiny::column(
+      shinydashboard::box(
+      #shiny::column(
         width = 5,
         shiny::plotOutput(outputId = ns("text_output"),
-                          height = "600px",
-                          width = "85%")),
-      shiny::column(
+                          height = "600px",  #"600px",
+                          width = "auto")),
+      shinydashboard::box(
+      #shiny::column(
         width = 5,
         DT::dataTableOutput(outputId = ns("enrich_table"),
-                            height = "100%",
-                            width = "100%")
-        )
+                            height = "100%", #"100%",
+                            width =  "auto"), 
+        style = "overflow-y: auto; height: 620px;") #"100%")
+    )
     )
   )
 }

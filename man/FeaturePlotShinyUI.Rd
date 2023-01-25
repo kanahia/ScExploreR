@@ -8,7 +8,7 @@ FeaturePlotShinyUI(
   id,
   label = "Choose gene",
   value = "",
-  placeholder = "",
+  placeholder = "myh6",
   width = "100px"
 )
 }

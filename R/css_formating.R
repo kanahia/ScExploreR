@@ -32,3 +32,12 @@ skin_colors <-
       )
     )
 
+experiment <-
+  shiny::tags$img(
+    src = "10x_workflow3.png",
+    #style = "margin-left: 22.5%;",
+    #height = 'auto',
+    width = '75%',
+    align = "center"
+  )
+

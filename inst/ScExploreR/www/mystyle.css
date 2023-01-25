@@ -1,0 +1,53 @@
+.skin-blue .main-header .logo .navbar .navbar-static-top {
+    background-color: #222d32;
+}
+
+.box {
+  position: relative;
+  border-radius: 3px;
+  background: #fff;
+    /* border-top: 3px solid #d2d6de; */
+  margin-bottom: 20px;
+  width: 100%;
+  /* box-shadow: 1px 1px 1px 1px rgb(0 0 0 / 10%); */
+  border: 1px solid #dddddd;
+}
+
+button.confirm {
+  background-color: rgb(90 181 223);
+}
+
+my_alert {font-size: 28px}
+
+button.sweet-alert p {
+    color: #ed4f4f;
+    font-size: 28px;
+    font-weight: 300;
+    position: relative;
+    text-align: inherit;
+    float: none;
+    margin: 0;
+    padding: 0;
+    line-height: normal;
+}
+
+.shin-blue col-sm-5 box {
+    border: 20px solid #ff0707;
+}
+
+/*
+.well {
+    min-height: 20px;
+    padding: 19px;
+    margin-bottom: 20px;
+    background-color: #ededed;
+    border: 1px solid #d2d6de;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.05);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.05);
+}
+*/
+
+.volcano_plot {
+    border: 1px solid red;
+}
