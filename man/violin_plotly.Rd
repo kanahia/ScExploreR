@@ -2,15 +2,15 @@
 % Please edit documentation in R/plotly_plots.R
 \name{violin_plotly}
 \alias{violin_plotly}
-\title{Violin_plotly}
+\title{Violin plot plotly}
 \usage{
-violin_plotly(metadata = metadata_all, CLUSTERS = NULL)
+violin_plotly(metadata, CLUSTERS)
 }
 \arguments{
 \item{metadata}{}
 
-\item{cluster}{}
+\item{CLUSTERS}{}
 }
 \description{
-Violin_plotly
+Violin plot plotly
 }

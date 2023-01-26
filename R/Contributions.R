@@ -69,9 +69,7 @@ metadata_prop <- function(metadata,
 #' @export
 plot_contribution <- function(metadata,
                               main_group = "edited_res.1.5",
-                              feature = c("line", "stage", "DataSet", "iris", "Phase", 
-                                          "Phase_timepoint", "nFeature_RNA", "percent.mt",
-                                          "test")
+                              feature = "DataSet"
                               ){
   if(feature == "DataSet") {
     
@@ -295,35 +293,65 @@ MultiPlot_UI <- function(id,
                            "Percent mt" = "percent.mt",
                            "Cell cycle" = "Phase",
                            "Cell cycle-timepoint" = "Phase_timepoint",
-                           "Test" = "test"),
-                         metadata = metadata_all,
-                         clusters = levels(metadata_all$edited_res.1.5)
+                           "Test" = "test") 
                          ) {
   ns <- shiny::NS(id)
-  shiny::tags$div(
-    shiny::fluidRow(
-   shiny::column(width=4,
-    shiny::selectInput(
-        inputId = ns("type_of_data"),
-        label = label,
-        choices = choices,
-        selected = selected,
-        width = '180px'
-        )),
-  shiny::column(width = 4, offset = 0,
-      shiny::conditionalPanel(
-        ns = ns,
-        condition = "input.type_of_data == 'test'",
-        shiny::selectInput(ns("cluster"), "Cluster:", 
-                            choices = clusters,
-                            multiple = FALSE)
-      ))),
-      shinycustomloader::withLoader(type = "html",
-                                    loader = "dnaspin",
-                                    plotly::plotlyOutput(ns("Multiplot"), width = "100%", height = "520"))
-                                    #shiny::plotOutput(ns("Multiplot"), width = "100%", height = "520"))
-    )
   
+  shiny::tagList(
+    shiny::tags$div(
+      shiny::fluidRow(shiny::column(
+        width = 4,
+        shiny::selectInput(
+          inputId = ns("type_of_data"),
+          label = label,
+          choices = choices,
+          selected = selected,
+          width = '180px'
+        )
+      ),
+      shiny::column(
+        width = 4,
+        offset = 0,
+        shiny::conditionalPanel(
+          ns = ns,
+          condition = "input.type_of_data == 'test'",
+          shiny::selectInput(
+            ns("cluster"),
+            "Cluster:",
+            choices =
+              c(
+                "Myocardium"  = "Myocardium",
+                "Bulbus arteriosus" = "Bulbus arteriosus",
+                "Epicardium" = "Epicardium",
+                "Mesoderm progenitors" = "Mesoderm progenitors",
+                "AV endocardium"  = "AV endocardium",
+                "AV cushion" = "AV cushion",
+                "Neural crest" = "Neural crest",
+                "Red blood cells" = "Red blood cells",
+                "Hematopoietic precursor" = "Hematopoietic precursor",
+                "Mesenchymal fibroblasts" = "Mesenchymal fibroblasts",
+                "Cardiac peripheral nerves" = "Cardiac peripheral nerves",
+                "Neuropeptide secreting neurons" = "Neuropeptide secreting neurons",
+                "Leukocytes" = "Leukocytes",
+                "Resident fibroblasts" = "Resident fibroblasts",
+                "Endothelial precursors" = "Endothelial precursors",
+                "Proliferating cells" = "Proliferating cells",
+                "Endothelial cells" = "Endothelial cells",
+                "Unclassified" = "Unclassified"
+              ),
+            selected = "Myocardium",
+            multiple = FALSE
+          )
+        )
+      )),
+      shinycustomloader::withLoader(
+        type = "html",
+        loader = "dnaspin",
+        plotly::plotlyOutput(ns("Multiplot"), width = "100%", height = "520")
+      )
+      #shiny::plotOutput(ns("Multiplot"), width = "100%", height = "520"))
+    )
+  )
 }
 
 #' MultiPlot_Shiny
@@ -331,10 +359,13 @@ MultiPlot_UI <- function(id,
 #' @param id 
 #'
 #' @export
-MultiPlot_Shiny <- function(id, feature = NULL, metadata = NULL, cluster = NULL) {
-  shiny::moduleServer(
-    id,
+MultiPlot_Shiny <- function(id,
+                            metadata = NULL) {
+  
+  shiny::moduleServer(id,
     function(input, output, session) {
+     
+      
       output$Multiplot <-
         plotly::renderPlotly({
         #shiny::renderPlot({
@@ -347,13 +378,11 @@ MultiPlot_Shiny <- function(id, feature = NULL, metadata = NULL, cluster = NULL)
             
           } else {
             
-            ScExploreR::violin_plotly(CLUSTERS = input$cluster)[[1]]
-            ScExploreR::violin_plotly(CLUSTERS = input$cluster)[[2]]
-            ScExploreR::violin_plotly(CLUSTERS = input$cluster)[[3]]
-       
+            violin_plotly(metadata = metadata, CLUSTERS = input$cluster)[[1]]
+          
           }
           
-        }) %>%  shiny::bindCache(input$type_of_data)
+        }) %>%  shiny::bindCache(input$type_of_data, input$cluster)
       }
     )
 }

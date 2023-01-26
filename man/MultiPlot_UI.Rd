@@ -11,9 +11,7 @@ MultiPlot_UI(
   choices = c("Overview", Dataset = "DataSet", Stage = "stage", Line = "line", `Number
     of genes` = "nFeature_RNA", `Number of UMI` = "log10_UMI", `Percent mt` =
     "percent.mt", `Cell cycle` = "Phase", `Cell cycle-timepoint` = "Phase_timepoint",
-    Test = "test"),
-  metadata = metadata_all,
-  cluster_ui = unique(metadata_all$edited_res.1.5)
+    Test = "test")
 )
 }
 \arguments{

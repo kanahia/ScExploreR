@@ -89,8 +89,6 @@ ui <-
                       ),
                     shinydashboard::box(width = 6,
                                         ScExploreR::MultiPlot_UI("Multiplot"))
-                    
-                                  
                     )
                   ),
                 shiny::wellPanel(
@@ -138,36 +136,31 @@ ui <-
               )
             )
         ),
-        shinydashboard::tabItem(
-          tabName = "enrichment_analysis",
-          ScExploreR::enrichment_analysis_UI(id = "enrich")
-          
-         ),
-        shinydashboard::tabItem(
-          "visualization_myo",
-          shiny::fluidRow(
-            shiny::column(
-              #offset = 1,
-              width = 6,
-              style = 'padding-top:0px; height:200px;',
-              ScExploreR::FeaturePlotShinyUI(
-                "myo_featureplot_1",
-                value = "myh6",
-                placeholder = "myh6"
-              )
-            ),
-            shiny::column(
-              width = 6,
-              #offset = 1,
-              style = 'padding-top:0px;',
-              ScExploreR::FeaturePlotShinyUI(
-                "myo_featureplot_2",
-                value = "myh7l",
-                placeholder = "myh7l"
-              )
-            )
-          )
-        ),
+        shinydashboard::tabItem(tabName = "enrichment_analysis",
+                                ScExploreR::enrichment_analysis_UI(id = "enrich")), 
+        shinydashboard::tabItem("visualization_myo",
+                                shiny::fluidRow(
+                                  shiny::column(
+                                    #offset = 1,
+                                    width = 6,
+                                    style = 'padding-top:0px; height:200px;',
+                                    ScExploreR::FeaturePlotShinyUI(
+                                      "myo_featureplot_1",
+                                      value = "myh6",
+                                      placeholder = "myh6"
+                                    )
+                                  ),
+                                  shiny::column(
+                                    width = 6,
+                                    #offset = 1,
+                                    style = 'padding-top:0px;',
+                                    ScExploreR::FeaturePlotShinyUI(
+                                      "myo_featureplot_2",
+                                      value = "myh7l",
+                                      placeholder = "myh7l"
+                                    )
+                                  )
+                                )), 
         shinydashboard::tabItem(
           "gene_table_myo",
           shiny::fluidPage(shiny::h1("Marker genes: Myocardium")),
@@ -177,56 +170,72 @@ ui <-
           tabName = "DE",
           #shiny::wellPanel(
           shiny::h1("Differential expression"),
-          shiny::p(rep("some text some text", times = 50) %>% paste0(collapse = " "), 
-                   style = "font-size: 18px; align: justify;"),
+          shiny::p(
+            rep("some text some text", times = 50) %>% paste0(collapse = " "),
+            style = "font-size: 18px; align: justify;"
+          ),
           shiny::br(),
-            shiny::fluidRow(
-              shiny::column(width = 2,
-                            shiny::selectInput(inputId = "cluster_1", 
-                                   label = "Cluster 1:",
-                                   choices = sort(levels(metadata_all$edited_res.1.5)),
-                                   width = "240px"
-                                   ),
-                            shiny::selectInput(inputId = "cluster_2", 
-                                   label = "Cluster 2:",
-                                   choices = sort(levels(metadata_all$edited_res.1.5)),
-                                   width = "240px",
-                                   selected = "Bulbus arteriosus"),
-                       shinyWidgets::chooseSliderSkin("Modern", color = "#3C8DBC"),
-                       #shinyWidgets::setSliderColor(c("lightsalmon1"), c(1)),
-                       shiny::sliderInput(inputId = "slider",
-                                   label = "Number of genes",
-                                   min = 1, max = 20, value = 10, step = 1),
-                       shiny::radioButtons(inputId = "sort_by", 
-                                    label = "Label genes by:",
-                                    choices = c("log2FoldChange" = "avg_log2FC",
-                                                "Significance" = "p_val_adj"),
-                                    selected = "avg_log2FC",
-                                    inline = FALSE)
-                       ),
-              shinydashboard::box(
-                shiny::tags$style(class = 'volcano-plot'),
+          shiny::fluidRow(
+            shiny::column(
+              width = 2,
+              shiny::selectInput(
+                inputId = "cluster_1",
+                label = "Cluster 1:",
+                choices = sort(levels(metadata_all$edited_res.1.5)),
+                width = "240px"
+              ),
+              shiny::selectInput(
+                inputId = "cluster_2",
+                label = "Cluster 2:",
+                choices = sort(levels(metadata_all$edited_res.1.5)),
+                width = "240px",
+                selected = "Bulbus arteriosus"
+              ),
+              shinyWidgets::chooseSliderSkin("Modern", color = "#3C8DBC"),
+              #shinyWidgets::setSliderColor(c("lightsalmon1"), c(1)),
+              shiny::sliderInput(
+                inputId = "slider",
+                label = "Number of genes",
+                min = 1,
+                max = 20,
+                value = 10,
+                step = 1
+              ),
+              shiny::radioButtons(
+                inputId = "sort_by",
+                label = "Label genes by:",
+                choices = c("log2FoldChange" = "avg_log2FC",
+                            "Significance" = "p_val_adj"),
+                selected = "avg_log2FC",
+                inline = FALSE
+              )
+            ),
+            shinydashboard::box(
+              shiny::tags$style(class = 'volcano-plot'),
               #shiny::column(
-                width = 5,
-                shinycustomloader::withLoader(
-                  type = "html",
-                  loader = "dnaspin",
-                  shiny::plotOutput(outputId = "Volcano_plot", width = "100%", height = "700"))
-                #shiny::tags$style(".shiny-plot-output{height:50vh !important;}")))
-                ),
-              shinydashboard::box(
-              #shiny::column(
-                width = 5,
-                DT::dataTableOutput("DE_cluster", width = "100%", height = "700"),
-                style = "overflow-y: auto; height: 718px;"
+              width = 5,
+              shinycustomloader::withLoader(
+                type = "html",
+                loader = "dnaspin",
+                shiny::plotOutput(
+                  outputId = "Volcano_plot",
+                  width = "100%",
+                  height = "700"
                 )
               )
-            #)
+            ), 
+            shinydashboard::box(
+              #shiny::column(
+              width = 5,
+              DT::dataTableOutput("DE_cluster", width = "100%", height = "700"),
+              style = "overflow-y: auto; height: 718px;"
+            )
           )
-        ) # end of tabItems
-      ), #dashboard body
+        )
+      ) # end of tabItems
+    ), #dashboard body
     title = title
-    )
+  )
 
 
 server <- function(input, output, session) {
@@ -351,6 +360,25 @@ server <- function(input, output, session) {
         write.csv(markers_all, file, row.names = FALSE)
         }
       )
+  
+  output$plot <- plotly::renderPlotly({
+    if (input$plotType == "scatter") {
+      plotly::plot_ly(data = mtcars, 
+                      x = ~mpg, 
+                      y = ~disp, 
+                      type = "scatter", 
+                      mode = "markers", 
+                      marker = list(size = 10, color = "red")) %>% 
+        plotly::layout(title = "Miles per gallon versus displacement", 
+                       xaxis = list(title = "Miles per gallon"), 
+                       yaxis = list(title = "Displacement"))
+    } else {
+      
+      #plotly::plot_ly(data = mtcars, x = input$breaks, type = "histogram", nbinsx=20)
+      violin_plotly(metadata = ScExploreR::metadata_all, CLUSTERS = input$breaks)[[1]]
+    }
+  })
+  
   
 }
 

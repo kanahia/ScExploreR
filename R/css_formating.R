@@ -20,9 +20,9 @@ header_title <-
 #skin color
 
 skin_colors <-
-  tags$head(
-    tags$style(
-      HTML(
+  shiny::tags$head(
+    shiny::tags$style(
+      shiny::HTML(
         "
         .skin-blue .main-header .logo {background-color: #222d32;}
         .skin-blue .main-header .navbar {background-color: #222d32;}

@@ -1,13 +1,15 @@
 
-#' Violin_plotly
+#' Violin plot plotly
 #'
 #' @param metadata 
-#' @param cluster 
+#' @param CLUSTERS 
+#'
+#' @import plotly
 #'
 #' @export
 #'
-violin_plotly <- function(metadata = metadata_all,
-                          CLUSTERS = NULL) {
+violin_plotly <- function(metadata,
+                          CLUSTERS) {
   
   df <- 
     metadata %>%
@@ -23,7 +25,7 @@ violin_plotly <- function(metadata = metadata_all,
     
     
     plotly_list[[i]] <-
-      plotly_build(
+      plotly::plotly_build(
         df %>%
           dplyr::filter(metadata == unique(metadata)[i]) %>%
           plotly::plot_ly(type = 'violin') %>%
