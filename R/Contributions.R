@@ -16,6 +16,40 @@ contribution_theme <- function() {
   )
 }
 
+#' Get metrics for feature
+#'
+#' @param metadata data to use
+#' @param main_group  cluster order to use
+#' @param feature  metric to use
+#' @param split_by option if want to split by that feature
+#'
+#' @return summarized grouped data 
+#' @export
+#'
+get_data_metrics <- function(metadata = metadata_all,
+                             main_group = "edited_res.1.5",
+                             feature,
+                             split_by = NULL){
+  
+  if(is.null(split_by)) {
+    metadata <-
+      metadata %>%
+      dplyr::group_by_(main_group, feature) %>%
+      dplyr::summarise(n = dplyr::n()) %>%
+      dplyr::mutate(percent = prop.table(n) * 100)
+    
+  } else {
+    metadata <-
+      metadata %>%
+      dplyr::group_by_(main_group, feature, split_by) %>%
+      dplyr::summarise(n = dplyr::n()) %>%
+      dplyr::mutate(percent = prop.table(n) * 100)
+    
+  }
+  
+  return(metadata)
+}
+
 #' metadata_prop
 #'
 #' @param metadata metadata
@@ -69,7 +103,7 @@ metadata_prop <- function(metadata,
 #' @export
 plot_contribution <- function(metadata,
                               main_group = "edited_res.1.5",
-                              feature = "DataSet"
+                              feature
                               ){
   if(feature == "DataSet") {
     
@@ -109,7 +143,7 @@ plot_contribution <- function(metadata,
         ggplot2::scale_x_discrete(guide = ggplot2::guide_axis(n.dodge = 2))
   } else if(feature == "Overview") {
     p <- 
-      ScExploreR::raw_ngene_mt(input_metadata = "/home/jason/data/shiny_dashboard/heart10x/data/metadata_raw_object.csv")
+      ScExploreR::raw_ngene_mt(input_metadata = overview_metadata)
 
   } else if (feature == "Phase"){
     
@@ -280,11 +314,12 @@ plot_contribution <- function(metadata,
 #' @importFrom shiny selectInput NS
 #'
 #' @export
+#' 
 MultiPlot_UI <- function(id,
                          label = "Metadata:",
                          selected = "Overview",
                          choices =  c(
-                           "Overview",
+                           "Overview" = "Overview",
                            "Dataset" = "DataSet",
                            "Stage" = "stage",
                            "Line" = "line",
@@ -297,61 +332,90 @@ MultiPlot_UI <- function(id,
                          ) {
   ns <- shiny::NS(id)
   
+  shiny::tabsetPanel(id = ns("hidden_panel"), 
+                     type = "hidden",
+                     shiny::wellPanel(
+                       shiny::fluidRow(
+                         shinydashboard::box(
+                           tabPanelBody("panel1", 
+                                        plotlyOutput(ns("hidden_plotly")))
+                         )
+                       )
+                     )
+                    )
+  
   shiny::tagList(
     shiny::tags$div(
-      shiny::fluidRow(shiny::column(
-        width = 4,
-        shiny::selectInput(
-          inputId = ns("type_of_data"),
-          label = label,
-          choices = choices,
-          selected = selected,
-          width = '180px'
-        )
-      ),
-      shiny::column(
-        width = 4,
-        offset = 0,
-        shiny::conditionalPanel(
-          ns = ns,
-          condition = "input.type_of_data == 'test'",
+      shiny::fluidRow(
+        shiny::column(
+          width = 4,
           shiny::selectInput(
-            ns("cluster"),
-            "Cluster:",
-            choices =
-              c(
-                "Myocardium"  = "Myocardium",
-                "Bulbus arteriosus" = "Bulbus arteriosus",
-                "Epicardium" = "Epicardium",
-                "Mesoderm progenitors" = "Mesoderm progenitors",
-                "AV endocardium"  = "AV endocardium",
-                "AV cushion" = "AV cushion",
-                "Neural crest" = "Neural crest",
-                "Red blood cells" = "Red blood cells",
-                "Hematopoietic precursor" = "Hematopoietic precursor",
-                "Mesenchymal fibroblasts" = "Mesenchymal fibroblasts",
-                "Cardiac peripheral nerves" = "Cardiac peripheral nerves",
-                "Neuropeptide secreting neurons" = "Neuropeptide secreting neurons",
-                "Leukocytes" = "Leukocytes",
-                "Resident fibroblasts" = "Resident fibroblasts",
-                "Endothelial precursors" = "Endothelial precursors",
-                "Proliferating cells" = "Proliferating cells",
-                "Endothelial cells" = "Endothelial cells",
-                "Unclassified" = "Unclassified"
-              ),
-            selected = "Myocardium",
-            multiple = FALSE
+            inputId = ns("type_of_data"),
+            label = label,
+            choices = choices,
+            selected = selected,
+            width = '180px'
+            )
+          ),
+        shiny::column(
+          width = 4,
+          offset = 0,
+          shiny::conditionalPanel(
+            ns = ns,
+            condition = "input.type_of_data == 'test'",
+            shiny::selectInput(
+              ns("cluster"),
+              "Cluster:",
+              choices = levels(metadata_all$edited_res.1.5),
+              selected = "Myocardium",
+              multiple = FALSE,
+              width = '180px'
+              )
+            )
           )
+        ), 
+shiny::conditionalPanel(condition = "input.type_of_data == 'Overview' || input.type_of_data == 'nFeature_RNA' || 
+                        input.type_of_data == 'log10_UMI' || input.type_of_data == 'Phase_timepoint'",
+                        ns = ns,
+                        shinycustomloader::withLoader(
+                          type = "html",
+                          loader = "dnaspin",
+                          plotOutput(ns("plot"), width = "100%", height = "520")
+                          )
+                        ),
+shiny::conditionalPanel(condition = "input.type_of_data == 'line' || 
+                        input.type_of_data == 'stage' || input.type_of_data == 'Phase' || 
+                        input.type_of_data == 'DataSet'",
+                        ns = ns,
+                        shinycustomloader::withLoader(
+                          type = "html",
+                          loader = "dnaspin",
+                          plotlyOutput(ns("plotly"), width = "100%", height = "520")
+                          )
+                        ),
+shiny::conditionalPanel(condition = "input.type_of_data == 'test'",
+                        ns = ns,
+                        # shinycustomloader::withLoader(
+                        #   type = "html",
+                        #   loader = "dnaspin",
+                        shiny::tagList(
+                          shiny::column(4, plotlyOutput(ns("plot_violin1"), width = "100%", height = "520")),
+                          shiny::column(4, plotlyOutput(ns("plot_violin2"), width = "100%", height = "520")),
+                          shiny::column(4, plotlyOutput(ns("plot_violin3"), width = "100%", height = "520")),
+                          height = "620")
+                        # )
+                        ),
+shiny::conditionalPanel(condition = "input.type_of_data == 'percent.mt'",
+                        ns = ns,
+                        shinycustomloader::withLoader(
+                          type = "html",
+                          loader = "dnaspin",
+                          plotlyOutput(ns("plotly_mt"), width = "100%", height = "520")
+                          )
+                        )
+                 ) 
         )
-      )),
-      shinycustomloader::withLoader(
-        type = "html",
-        loader = "dnaspin",
-        plotly::plotlyOutput(ns("Multiplot"), width = "100%", height = "520")
-      )
-      #shiny::plotOutput(ns("Multiplot"), width = "100%", height = "520"))
-    )
-  )
+      
 }
 
 #' MultiPlot_Shiny
@@ -359,30 +423,55 @@ MultiPlot_UI <- function(id,
 #' @param id 
 #'
 #' @export
+#' 
 MultiPlot_Shiny <- function(id,
                             metadata = NULL) {
   
   shiny::moduleServer(id,
     function(input, output, session) {
-     
       
-      output$Multiplot <-
-        plotly::renderPlotly({
-        #shiny::renderPlot({
-          
-          if(input$type_of_data != "test") {
-            plotly::ggplotly(
-            ScExploreR::plot_contribution(
-              feature = input$type_of_data,
-              metadata = metadata))
-            
-          } else {
-            
-            violin_plotly(metadata = metadata, CLUSTERS = input$cluster)[[1]]
-          
-          }
-          
-        }) %>%  shiny::bindCache(input$type_of_data, input$cluster)
+      ns <- shiny::NS(id)
+      
+      output$plotly <- renderPlotly({
+        if (input$type_of_data %in% c('line', 'stage', 'DataSet', 'Phase')) {
+          stacked_bar_plotly(feature = input$type_of_data,
+                             metadata = metadata_all,
+                             main_group = "edited_res.1.5")
+        }
+      }) %>%  shiny::bindCache(input$type_of_data)
+      
+      output$plot <- renderPlot({
+        if (input$type_of_data %in% c('Overview', 'nFeature_RNA', 'log10_UMI', 'Phase_timepoint')) {
+          plot_contribution(feature = input$type_of_data, metadata = metadata_all)
+        }
+      }) %>%  shiny::bindCache(input$type_of_data)
+      
+      output$plot_violin1 <- renderPlotly({
+        if (input$type_of_data == 'test') {
+          violin_plotly(metadata = metadata_all, CLUSTERS = input$cluster)[[1]]
+        }
+      }) %>%  shiny::bindCache(input$type_of_data, input$cluster)
+      
+      output$plot_violin2 <- renderPlotly({
+        if (input$type_of_data == 'test') {
+          violin_plotly(metadata = metadata_all, CLUSTERS = input$cluster)[[2]]
+        }
+      })  %>%  shiny::bindCache(input$type_of_data, input$cluster)
+      
+      output$plot_violin3 <- renderPlotly({
+        if (input$type_of_data == 'test') {
+          violin_plotly(metadata = metadata_all, CLUSTERS = input$cluster)[[3]]
+        }
+      })  %>%  shiny::bindCache(input$type_of_data, input$cluster)
+      
+      output$plotly_mt <- renderPlotly({
+        if (input$type_of_data == 'percent.mt') {
+          violin_metadata_stage(feature = "percent.mt") %>%
+            layout(title = 'Percent Mt-genes',
+                   xaxis = list(title = ""))
+        }
+      })  %>%  shiny::bindCache(input$type_of_data)
+      
       }
     )
 }

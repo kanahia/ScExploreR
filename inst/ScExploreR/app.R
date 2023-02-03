@@ -79,7 +79,7 @@ ui <-
                 shiny::wellPanel(
                   shiny::fluidRow(
                     shinydashboard::box(
-                      width = 6, 
+                      width = 5, 
                       align = "center",
                       shinycustomloader::withLoader(
                         type = "html",
@@ -87,8 +87,9 @@ ui <-
                         shiny::plotOutput("DimPlot", width = "auto", height = "600")
                         )
                       ),
-                    shinydashboard::box(width = 6,
-                                        ScExploreR::MultiPlot_UI("Multiplot"))
+                    shinydashboard::box(width = 7,
+                                        ScExploreR::MultiPlot_UI("Multiplot"),
+                                        height = "620")
                     )
                   ),
                 shiny::wellPanel(
@@ -379,6 +380,63 @@ server <- function(input, output, session) {
     }
   })
   
+  ##########
+  # output$hist1 <- plotly::renderPlotly(violin_plotly(metadata = metadata_all, CLUSTERS = input$test_id)[[1]])
+  # output$hist2 <- plotly::renderPlotly(violin_plotly(metadata = metadata_all, CLUSTERS = input$test_id)[[2]])
+  # output$hist3 <- plotly::renderPlotly(violin_plotly(metadata = metadata_all, CLUSTERS = input$test_id)[[3]])
+  # output$test_out <- 
+  #   renderUI(
+  #     if (input$test_id == "AV cushion") {
+  #       shinydashboard::box(
+  #         width = 12,
+  #         shiny::fluidRow(shiny::column(4, plotly::plotlyOutput("hist1", width = "100%", height = "520")),
+  #                         shiny::column(4, plotly::plotlyOutput("hist2", width = "100%", height = "520")),
+  #                         shiny::column(4, plotly::plotlyOutput("hist3", width = "100%", height = "520")))
+  #       )
+  #       } 
+  #     else if (input$test_id != "AV cushion") {
+  #       shinydashboard::box(
+  #         width = 12,
+  #         plotly::plotlyOutput("hist2", width = "100%", height = "520"))
+  #       })
+  
+  
+  output$plotly <- renderPlotly({
+    if (input$test_id %in% c('line', 'stage', 'DataSet')) {
+           stacked_bar_plotly(feature = input$test_id,
+                              metadata = metadata_all,
+                              main_group = "edited_res.1.5")
+    }
+  }) %>%  shiny::bindCache(input$test_id)
+  
+  output$plot <- renderPlot({
+    if (input$test_id %in% c('Overview', 'nFeature_RNA', 'log10_UMI', 'Phase_timepoint')) {
+           plot_contribution(feature = input$test_id, metadata = metadata_all)
+    }
+  }) %>%  shiny::bindCache(input$test_id)
+  
+  output$plot_violin1 <- renderPlotly({
+    if (input$test_id == 'test') {
+      violin_plotly(metadata = metadata_all, CLUSTERS = input$cluster)[[1]]
+    }
+  }) %>%  shiny::bindCache(input$test_id, input$cluster)
+  
+  output$plot_violin2 <- renderPlotly({
+    if (input$test_id == 'test') {
+      violin_plotly(metadata = metadata_all, CLUSTERS = input$cluster)[[2]]
+    }
+  })  %>%  shiny::bindCache(input$test_id, input$cluster)
+  
+  output$plot_violin3 <- renderPlotly({
+    if (input$test_id == 'test') {
+      violin_plotly(metadata = metadata_all, CLUSTERS = input$cluster)[[3]]
+    }
+  })  %>%  shiny::bindCache(input$test_id, input$cluster)
+  
+  
+  
+  
+  ##########
   
 }
 

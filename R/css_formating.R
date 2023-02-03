@@ -20,17 +20,15 @@ header_title <-
 #skin color
 
 skin_colors <-
-  shiny::tags$head(
-    shiny::tags$style(
-      shiny::HTML(
-        "
-        .skin-blue .main-header .logo {background-color: #222d32;}
-        .skin-blue .main-header .navbar {background-color: #222d32;}
-        .skin-blue .main-sidebar {background-color: #222d32;}
-        "
-        )
-      )
+  shiny::tags$head(shiny::tags$style(
+    shiny::HTML(
+      "
+      .skin-blue .main-header .logo {background-color: #222d32;}
+      .skin-blue .main-header .navbar {background-color: #222d32;}
+      .skin-blue .main-sidebar {background-color: #222d32;}
+      "
     )
+    ))
 
 experiment <-
   shiny::tags$img(

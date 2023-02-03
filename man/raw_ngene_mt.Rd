@@ -2,16 +2,16 @@
 % Please edit documentation in R/raw_ngene_mt.R
 \name{raw_ngene_mt}
 \alias{raw_ngene_mt}
-\title{Function description... TODO}
+\title{Reading raw metadata for all cells}
 \usage{
-raw_ngene_mt(input_metadata)
+raw_ngene_mt(input_metadata = overview_metadata)
 }
 \arguments{
-\item{input_metadata}{... TODO}
+\item{input_metadata}{overview_metadata loaded from all data}
 }
 \value{
-... TODO ggplot object?
+... ggplot object
 }
 \description{
-Function description... TODO
+Reading raw metadata for all cells
 }

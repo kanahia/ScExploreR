@@ -4,7 +4,7 @@
 \alias{plot_contribution}
 \title{Plot contributions}
 \usage{
-plot_contribution(metadata, main_group = "edited_res.1.5", feature = "DataSet")
+plot_contribution(metadata, main_group = "edited_res.1.5", feature)
 }
 \arguments{
 \item{metadata}{}

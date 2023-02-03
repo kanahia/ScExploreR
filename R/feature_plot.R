@@ -10,6 +10,7 @@ FeaturePlotShinyUI <- function(id,
                                placeholder="myh6",
                                width="100px") {
     ns <- shiny::NS(id)
+    
     shiny::tags$div(
         style = "background-color: gray99;box-shadow: 1px 2px;",
         shiny::textInput(
@@ -39,6 +40,12 @@ FeaturePlotShiny <- function(id, metadata = NULL, data_slot = NULL, identity) {
         id,
         function(input, output, session) {
             output$feature_plot <- shiny::renderPlot({
+              
+              # shiny::validate(
+              #   shiny::need(
+              #     is.null(input$gene_selector), "LOOOOOOOOOOOOOL")
+              #   )
+              
                 my_FeaturePlot(
                     metadata = metadata,
                     data_slot = data_slot,

@@ -1,8 +1,8 @@
-#' Function description... TODO
+#' Reading raw metadata for all cells
 #'
-#' @param input_metadata ... TODO
+#' @param input_metadata overview_metadata loaded from all data
 #'
-#' @return ... TODO ggplot object?
+#' @return ... ggplot object
 #'
 #' @importFrom data.table fread
 #' @importFrom ggplot2 aes annotate arrow element_text ggplot geom_point geom_hline geom_segment geom_vline labs scale_color_gradientn theme theme_minimal unit
@@ -10,10 +10,10 @@
 #' @importFrom ggExtra ggMarginal
 #'
 #' @export
-raw_ngene_mt <- function(input_metadata) {
-  t <- data.table::fread(input_metadata)
+raw_ngene_mt <- function(input_metadata = overview_metadata) {
+  #t <- data.table::fread(input_metadata)
   t2 <-
-    t %>%
+    input_metadata %>%
     ggplot(aes(x = log10(nFeature_RNA), y = percent.mt, color = percent.mt)) +
     geom_point(alpha = 0.1, shape = 19) +
     #scale_colour_gradientn(colours = wes_palette(n = 5, name = "Zissou1")) +
