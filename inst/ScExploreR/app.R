@@ -240,6 +240,8 @@ ui <-
 
 
 server <- function(input, output, session) {
+  
+  shinyOptions(cache = cachem::cache_mem(max_size = 500e6))
 
   output$markers_all <-
     DT::renderDataTable(markers_all, options = list(pageLength = 10), filter = "top")

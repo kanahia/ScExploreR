@@ -318,17 +318,13 @@ plot_contribution <- function(metadata,
 MultiPlot_UI <- function(id,
                          label = "Metadata:",
                          selected = "Overview",
-                         choices =  c(
+                         choices =  
+                           c(
                            "Overview" = "Overview",
-                           "Dataset" = "DataSet",
-                           "Stage" = "stage",
-                           "Line" = "line",
-                           "Number of genes" = "nFeature_RNA",
-                           "Number of UMI" = "log10_UMI",
-                           "Percent mt" = "percent.mt",
-                           "Cell cycle" = "Phase",
-                           "Cell cycle-timepoint" = "Phase_timepoint",
-                           "Test" = "test") 
+                           "Contribution" = "contribution",
+                           "General QC" = "qc",
+                           "QC in cluster" = "qc_cluster"
+                           ) 
                          ) {
   ns <- shiny::NS(id)
   
@@ -339,10 +335,10 @@ MultiPlot_UI <- function(id,
                          shinydashboard::box(
                            tabPanelBody("panel1", 
                                         plotlyOutput(ns("hidden_plotly")))
+                           )
                          )
                        )
                      )
-                    )
   
   shiny::tagList(
     shiny::tags$div(
@@ -357,12 +353,47 @@ MultiPlot_UI <- function(id,
             width = '180px'
             )
           ),
+        # QC clusters
         shiny::column(
           width = 4,
           offset = 0,
+          
+          #Contribution
           shiny::conditionalPanel(
             ns = ns,
-            condition = "input.type_of_data == 'test'",
+            condition = "input.type_of_data == 'contribution'",
+            shiny::selectInput(
+              ns("select_contribution"),
+              "Choose data:",
+              choices = c("Dataset" = "DataSet",
+                          "Stage" = "stage",
+                          "Line" = "line",
+                          "Cell-cycle" = "Phase",
+                          "Cell-cycle by stage" = "cc_stage"), # dopisać Phase_timepoint
+              selected = "DataSet",
+              multiple = FALSE,
+              width = '180px'
+            )
+          ),
+          #General QC
+          shiny::conditionalPanel(
+            ns = ns,
+            condition = "input.type_of_data == 'qc'",
+            shiny::selectInput(
+              ns("qc_global"),
+              "Choose data:",
+              choices = c("Global Number of genes" = "nFeature_RNA",
+                          "Global Number of UMI" = "log10_UMI",
+                          "Global Percent mt" = "percent.mt"),
+              selected = "nFeature_RNA",
+              multiple = FALSE,
+              width = '180px'
+            )
+          ),
+          # QC in individual cluster
+          shiny::conditionalPanel(
+            ns = ns,
+            condition = "input.type_of_data == 'qc_cluster'",
             shiny::selectInput(
               ns("cluster"),
               "Cluster:",
@@ -370,12 +401,12 @@ MultiPlot_UI <- function(id,
               selected = "Myocardium",
               multiple = FALSE,
               width = '180px'
-              )
             )
           )
+          )
         ), 
-shiny::conditionalPanel(condition = "input.type_of_data == 'Overview' || input.type_of_data == 'nFeature_RNA' || 
-                        input.type_of_data == 'log10_UMI' || input.type_of_data == 'Phase_timepoint'",
+shiny::conditionalPanel(condition = "input.type_of_data == 'Overview' || 
+                                     input.type_of_data == 'qc'",
                         ns = ns,
                         shinycustomloader::withLoader(
                           type = "html",
@@ -383,9 +414,7 @@ shiny::conditionalPanel(condition = "input.type_of_data == 'Overview' || input.t
                           plotOutput(ns("plot"), width = "100%", height = "520")
                           )
                         ),
-shiny::conditionalPanel(condition = "input.type_of_data == 'line' || 
-                        input.type_of_data == 'stage' || input.type_of_data == 'Phase' || 
-                        input.type_of_data == 'DataSet'",
+shiny::conditionalPanel(condition = "input.type_of_data == 'contribution'",
                         ns = ns,
                         shinycustomloader::withLoader(
                           type = "html",
@@ -393,7 +422,7 @@ shiny::conditionalPanel(condition = "input.type_of_data == 'line' ||
                           plotlyOutput(ns("plotly"), width = "100%", height = "520")
                           )
                         ),
-shiny::conditionalPanel(condition = "input.type_of_data == 'test'",
+shiny::conditionalPanel(condition = "input.type_of_data == 'qc_cluster'",
                         ns = ns,
                         # shinycustomloader::withLoader(
                         #   type = "html",
@@ -433,33 +462,41 @@ MultiPlot_Shiny <- function(id,
       ns <- shiny::NS(id)
       
       output$plotly <- renderPlotly({
-        if (input$type_of_data %in% c('line', 'stage', 'DataSet', 'Phase')) {
-          stacked_bar_plotly(feature = input$type_of_data,
-                             metadata = metadata_all,
-                             main_group = "edited_res.1.5")
+        if (input$type_of_data %in% c('contribution')) {
+          if(input$select_contribution %in% c("DataSet", "line", "stage", "Phase")){
+            stacked_bar_plotly(feature = input$select_contribution,
+                               metadata = metadata_all,
+                               main_group = "edited_res.1.5")
+            
+          } else if(input$select_contribution == "cc_stage") {
+            plotly_cc_stage()
+          }
+          
         }
-      }) %>%  shiny::bindCache(input$type_of_data)
+      }) %>%  shiny::bindCache(input$type_of_data, input$select_contribution)
       
       output$plot <- renderPlot({
-        if (input$type_of_data %in% c('Overview', 'nFeature_RNA', 'log10_UMI', 'Phase_timepoint')) {
+        if (input$type_of_data %in% c('Overview')) {
           plot_contribution(feature = input$type_of_data, metadata = metadata_all)
+        } else if (input$type_of_data %in% c('qc')){
+          plot_contribution(feature = input$qc_global, metadata = metadata_all)
         }
-      }) %>%  shiny::bindCache(input$type_of_data)
+      }) %>%  shiny::bindCache(input$type_of_data, input$qc_global)
       
       output$plot_violin1 <- renderPlotly({
-        if (input$type_of_data == 'test') {
+        if (input$type_of_data == 'qc_cluster') {
           violin_plotly(metadata = metadata_all, CLUSTERS = input$cluster)[[1]]
         }
       }) %>%  shiny::bindCache(input$type_of_data, input$cluster)
       
       output$plot_violin2 <- renderPlotly({
-        if (input$type_of_data == 'test') {
+        if (input$type_of_data == 'qc_cluster') {
           violin_plotly(metadata = metadata_all, CLUSTERS = input$cluster)[[2]]
         }
       })  %>%  shiny::bindCache(input$type_of_data, input$cluster)
       
       output$plot_violin3 <- renderPlotly({
-        if (input$type_of_data == 'test') {
+        if (input$type_of_data == 'qc_cluster') {
           violin_plotly(metadata = metadata_all, CLUSTERS = input$cluster)[[3]]
         }
       })  %>%  shiny::bindCache(input$type_of_data, input$cluster)
