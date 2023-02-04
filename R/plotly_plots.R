@@ -5,6 +5,7 @@
 #' @param CLUSTERS 
 #'
 #' @import plotly
+#' @import dplyr
 #'
 #' @export
 #'
@@ -39,6 +40,7 @@ violin_plotly <- function(metadata,
             scalegroup = '48h',
             name = '48h',
             side = 'negative',
+            hoveron = "violins",
             opacity = 0.4,
             box = list(
               visible = T
@@ -55,6 +57,7 @@ violin_plotly <- function(metadata,
             scalegroup = '72h',
             name = '72h',
             side = 'positive',
+            hoveron = "violins",
             box = list(
               visible = T
             ),
@@ -91,7 +94,8 @@ violin_plotly <- function(metadata,
 #' @param feature feature
 #' @param main_group metric
 #' 
-#' @import plotly dplyr
+#' @import plotly
+#' @import dplyr
 #'
 #' @return plotly object
 #' @export
@@ -100,38 +104,27 @@ stacked_bar_plotly <- function(metadata = metadata_all,
                                feature,
                                main_group = "edited_res.1.5"){
   
-  df <-
-    get_data_metrics(metadata = metadata,
-                     feature = feature,
-                     main_group = main_group)
-  
-  #x = enquo(feature)
-  
-  # colors <- list("DataSet" = 
-  #                  c("lemonchiffon3", "lightsalmon3",
-  #                    wesanderson::wes_palette(n = 4, 
-  #                                             name = "Rushmore1")[c(3)], "#edae49"),
-  #                "stage" = c("palegreen4", "#edae49"),
-  #                "line" = 
-  #                    
-  #             )
-  # if(any(colnames(df) == "DataSet")){
-  #   df <-
-  #     df %>%
-  #     dplyr::mutate(
-  #       feature =
-  #         dplyr::case_when(
-  #           !!sym(feature) == "et31_48h_raw" ~ "48 hpf rep 1",
-  #           !!sym(feature) == "et33_48h_raw" ~ "48 hpf rep 2",
-  #           !!sym(feature) == "et31_72h_raw" ~ "72 hpf rep 1",
-  #           !!sym(feature) == "et33_72h_raw" ~ "72 hpf rep 2",
-  #           TRUE ~ 'F'
-  #         )
-  #     )
-  # } else {
-  #   df <- df
-  # }
+  if(feature == "DataSet") {
+    df <-
+      get_data_metrics(metadata = metadata,
+                       feature = feature,
+                       main_group = main_group) %>%
+      dplyr::mutate(
+        DataSet = 
+          dplyr::case_when(
+            DataSet == "et31_48h_raw" ~ "48h rep 1",
+            DataSet == "et33_48h_raw" ~ "48h rep 2",
+            DataSet == "et31_72h_raw" ~ "72h rep 1",
+            DataSet == "et33_72h_raw" ~ "72h rep 2")
+        )
     
+  } else {
+    df <-
+      get_data_metrics(metadata = metadata,
+                       feature = feature,
+                       main_group = main_group)
+  }
+  
   plot <- 
     df %>% 
     plot_ly(
@@ -151,7 +144,8 @@ stacked_bar_plotly <- function(metadata = metadata_all,
     layout(
       yaxis = list(title = 'Percent (%)'),
       xaxis = list(title= ""),
-      barmode = 'stack') %>%
+      barmode = 'stack',
+      hovermode = 'x') %>%
     layout(legend = list(traceorder = "normal"))
     
   
@@ -167,7 +161,8 @@ stacked_bar_plotly <- function(metadata = metadata_all,
 #' @param main_group metric
 #' @param split_by split plot by 
 #' 
-#' @import plotly dplyr
+#' @import plotly
+#' @import dplyr
 #'
 #' @return plotly object
 #' @export
@@ -228,10 +223,99 @@ violin_metadata_stage <- function(metadata = metadata_all,
               ),
           violingap = 10,
           violingroupgap = 10,
-          violinmode = 'overlay'
+          violinmode = 'overlay',
+          hovermode = 'x'
         ) 
       
     )
   
   return(p)
+}
+
+
+# plotly_cc_stage ---------------------------------------------------------
+
+#' Cell-cycle bar chart in plotly
+#'
+#' @param data metadata
+#' @param identity main clustering group
+#' @param stage condition for grouping
+#' @param feature condition to plot
+#' @param my_colors colors
+#' 
+#' @import dplyr
+#' @import plotly
+#'
+#' @return 
+#' @export
+#'
+plotly_cc_stage <- function(data = metadata_all,
+                            identity = "edited_res.1.5",
+                            stage = "stage",
+                            feature = "Phase",
+                            my_colors = c("#ff7f0eeb", "#2ca02ca6", "#d62728d4")){
+  
+  make_plotly <- function(timepoint) {
+    dfA <-
+      data %>%
+      dplyr::group_by_(identity, stage, feature) %>%
+      dplyr::summarise(n = dplyr::n()) %>%
+      dplyr::mutate(percent = prop.table(n) * 100) %>%
+      dplyr::filter(stage == timepoint)
+    
+    with(data = dfA, {
+      p <-
+        plotly::plot_ly(x = ~dfA[[identity]],
+                        y = ~percent,
+                        color = ~as.factor(dfA[[feature]]),
+                        colors = my_colors,
+                        opacity = c(0.7, 0.7, 0.7),
+                        type = "bar",
+                        legendgroup= ~ dfA[[feature]],
+                        hoverinfo = "text",
+                        hovertext = paste(dfA[[identity]],
+                                          "<br>",
+                                          paste0("Stage: ", dfA[[feature]]),
+                                          "<br>",
+                                          paste0("Percent: ", round(percent, digits = 2), " %")
+                                          )
+                        ) %>%
+        plotly::layout(barmode = "stack",
+                       yaxis = list(title = 'Percent (%)'),
+                       xaxis = list(title= "")
+                       )
+    })
+  }
+  
+  A <- make_plotly("48h")
+  
+  B <- make_plotly("72h")
+  
+  plotly::subplot(
+    style(A, showlegend = FALSE),
+    #A,
+    B,
+    nrows = 2,
+    shareX = TRUE) %>%
+    plotly::layout(annotations =
+                     list(
+                       list(
+                         x = -0.09 ,
+                         y = 0.5,
+                         text = "Percent %",
+                         font = list(color = "black", size = 18),
+                         textangle = 270,
+                         showarrow = F,
+                         xref = 'paper',
+                         yref = 'paper',
+                         size = 48
+                       )
+                     ),
+                   xaxis= list(title = ""),
+                   hovermode = 'x',
+                   legend = 
+                     list(title = list(text='Phase')),
+                   title = 
+                     list(title = list(text='Phase'))
+    )
 }

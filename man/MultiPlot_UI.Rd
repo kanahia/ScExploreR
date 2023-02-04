@@ -8,10 +8,8 @@ MultiPlot_UI(
   id,
   label = "Metadata:",
   selected = "Overview",
-  choices = c(Overview = "Overview", Dataset = "DataSet", Stage = "stage", Line =
-    "line", `Number of genes` = "nFeature_RNA", `Number of UMI` = "log10_UMI", `Percent
-    mt` = "percent.mt", `Cell cycle` = "Phase", `Cell cycle-timepoint` =
-    "Phase_timepoint", Test = "test")
+  choices = c(Overview = "Overview", Contribution = "contribution", `General QC` =
+    "qc", `QC in cluster` = "qc_cluster")
 )
 }
 \arguments{
