@@ -1,4 +1,7 @@
 
+
+# Violin plot plotly ------------------------------------------------------
+
 #' Violin plot plotly
 #'
 #' @param metadata 
@@ -87,6 +90,7 @@ violin_plotly <- function(metadata,
 }
 
 
+# Stacked plotly bar plot -------------------------------------------------
 
 #' Stacked plotly bar plot
 #'
@@ -118,12 +122,32 @@ stacked_bar_plotly <- function(metadata = metadata_all,
             DataSet == "et33_72h_raw" ~ "72h rep 2")
         )
     
+    my_colors <-
+      c("lightsalmon3",
+        wesanderson::wes_palette(n = 4, name = "Rushmore1")[c(3)],
+        "lemonchiffon3",
+        "#edae49")
+    
   } else {
     df <-
       get_data_metrics(metadata = metadata,
                        feature = feature,
                        main_group = main_group)
-  }
+    if(feature == "line") {
+      my_colors <-
+        c(wesanderson::wes_palette(n = 4, name = "Rushmore1")[c(3)], 
+          "#edae49")
+      
+    } else if(feature == "stage") {
+      my_colors <- c("lemonchiffon3", "lightsalmon3")
+    } else if(feature == "Phase"){
+      my_colors <- c("#ee6a5b", 
+                     "#edae49",
+                     wesanderson::wes_palette(n = 4, name = "Rushmore1")[c(3)]
+                     )
+    }
+      
+  } 
   
   plot <- 
     df %>% 
@@ -132,8 +156,8 @@ stacked_bar_plotly <- function(metadata = metadata_all,
       y = ~ round(percent, digits = 2),
       text = ~ n,
       color = ~ df[[feature]],
-      colors = c("lemonchiffon3", "lightsalmon3",
-                 wesanderson::wes_palette(n = 4, name = "Rushmore1")[c(3)], "#edae49"),
+      colors = my_colors,
+      opacity = rep(0.7, times = length(my_colors)),
       type = 'bar',
       hoverinfo = "text",
       hovertext = paste(.$edited_res.1.5,
@@ -142,15 +166,32 @@ stacked_bar_plotly <- function(metadata = metadata_all,
                         "<br> Count :", .$n)
       ) %>% 
     layout(
-      yaxis = list(title = 'Percent (%)'),
+      yaxis = list(title = ''),
       xaxis = list(title= ""),
       barmode = 'stack',
-      hovermode = 'x') %>%
-    layout(legend = list(traceorder = "normal"))
+      hovermode = 'x',
+      legend = list(traceorder = "normal"),
+      annotations =
+        list(
+          list(
+            x = -0.09 ,
+            y = 0.5,
+            text = "Percent %",
+            font = list(color = "black", size = 18),
+            textangle = 270,
+            showarrow = F,
+            xref = 'paper',
+            yref = 'paper',
+            size = 48
+          ))
+      )
     
   
   return(plot)
 }
+
+
+# Violin plot between one metadata split by stage -------------------------
 
 
 
@@ -317,5 +358,38 @@ plotly_cc_stage <- function(data = metadata_all,
                      list(title = list(text='Phase')),
                    title = 
                      list(title = list(text='Phase'))
-    )
+                   ) %>%
+    plotly::layout(annotations =
+                     list(
+                       list(
+                         x = c(1.03),
+                         y = c(0.78),
+                         text = c("48h"),
+                         font = list(color = "black", size = 18),
+                         textangle = -270,
+                         showarrow = F,
+                         xref = 'paper',
+                         yref = 'paper',
+                         size = 30
+                       )
+                     )) %>%
+    plotly::layout(annotations =
+                     list(
+                       list(
+                         x = c(1.03),
+                         y = c(0.23),
+                         text = c("72h"),
+                         font = list(color = "black", size = 18),
+                         textangle = -270,
+                         showarrow = F,
+                         xref = 'paper',
+                         yref = 'paper',
+                         size = 30
+                       )
+                     ))
 }
+
+
+
+
+

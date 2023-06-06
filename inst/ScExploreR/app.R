@@ -3,238 +3,253 @@ devtools::load_all()
 ui <- 
   shinydashboard::dashboardPage(
     skin = "blue",
-    shinydashboard::dashboardHeader(
-      shiny::tags$li(
-        class = "dropdown",
-        shiny::tags$style(".main-header {max-height: 100px}"),
-        #shiny::tags$head(shiny::tags$style(".shiny-plot-output{height:50vh !important;}")),
-        shiny::tags$style(".main-header .logo {height: 100px;}")
-        ),
-      shiny::tags$li(
-        class="dropdown",
-        tags$a(href="https://www.linkedin.com/in/kanahia/", shiny::icon("linkedin"), 
-               "LinkedIn", target="_blank")
-        ),
-      shiny::tags$li(
-        class="dropdown",
-        tags$a(href="https://github.com/kanahia", shiny::icon("github"), 
-               "GitHub", target="_blank")
-        ),
-      title = header_title, #in css formating
-      titleWidth = 220
-      ),
-    shinydashboard::dashboardSidebar(
-      shiny::tags$style(".left-side, .main-sidebar {padding-top: 100px}"),
-      width = 220,
-      shinydashboard::sidebarMenu(
-        shinydashboard::menuItem(
-          "Welcome panel",
-          tabName = "welcome",
-          icon = shiny::icon("stats", lib = "glyphicon")
-        ),
-        shinydashboard::menuItem(
-          "Whole heart",
-          tabName = "whole_heart",
-          icon = shiny::icon("heart", lib = "glyphicon"),
-          shinydashboard::menuSubItem("Visualization", tabName = "visualization_all"),
-          shinydashboard::menuSubItem("Differential expression", tabName = "DE"),
-          shinydashboard::menuSubItem("Cell markers", tabName = "gene_table_all"),
-          shinydashboard::menuSubItem("Enrichment analysis", 
-                                      tabName = "enrichment_analysis",  
-                                      icon = shiny::icon("blackberry", lib = "font-awesome"))
+      shinydashboard::dashboardHeader(
+        shiny::tags$li(
+          class = "dropdown",
+          shiny::tags$style(".main-header {max-height: 100px}"),
+          #shiny::tags$head(shiny::tags$style(".shiny-plot-output{height:50vh !important;}")),
+          shiny::tags$style(".main-header .logo {height: 100px;}")
           ),
-        shinydashboard::menuItem(
-          "Myocardium",
-          tabName = "myocardium",
-          icon = shiny::icon("triangle-top", lib = "glyphicon"),
-          shinydashboard::menuSubItem("Visualization", tabName = "visualization_myo"),
-          shinydashboard::menuSubItem("Cell markers", tabName = "gene_table_myo")
-          )
-        )
-      ),
-    shinydashboard::dashboardBody(
-      shiny::tags$head(shiny::tags$link(rel = "stylesheet", type = "text/css", href = "mystyle.css")),
-      #added in css_formating
-      skin_colors,
-      shinydashboard::tabItems(
-        shinydashboard::tabItem(
-          tabName = "welcome",
-          shiny::fluidRow(
-            main_text,
-            shiny::br()
+        shiny::tags$li(class="dropdown",
+                       tags$a(href="https://www.linkedin.com/in/kanahia/", 
+                              shiny::icon("linkedin"), 
+                              "LinkedIn", target="_blank")
+                       ),
+        shiny::tags$li(class="dropdown",
+                       tags$a(href="https://github.com/kanahia", 
+                              shiny::icon("github"), 
+                              "GitHub", target="_blank")
+                       ),
+        title = header_title, #in css formating
+        titleWidth = 220
+        ),
+      shinydashboard::dashboardSidebar(
+        shiny::tags$style(".left-side, .main-sidebar {padding-top: 100px}"),
+        width = 220,
+        shinydashboard::sidebarMenu(
+          shinydashboard::menuItem(
+            "Welcome panel",
+            tabName = "welcome",
+            icon = shiny::icon("stats", lib = "glyphicon")
             ),
-          shiny::fluidRow(
-            shiny::column(width = 9,
-                          experiment),
-            shiny::column(width = 3)
-            )
+          shinydashboard::menuItem(
+            "Whole heart",
+            tabName = "whole_heart",
+            icon = shiny::icon("heart", lib = "glyphicon"),
+            startExpanded = TRUE,
+            shinydashboard::menuSubItem("Visualization", tabName = "visualization_all"),
+            shinydashboard::menuSubItem("Differential expression", tabName = "DE"),
+            shinydashboard::menuSubItem("Cell markers", tabName = "gene_table_all"),
+            shinydashboard::menuSubItem("Enrichment analysis", 
+                                        tabName = "enrichment_analysis",  
+                                        icon = shiny::icon("blackberry", lib = "font-awesome"))
           ),
-        shinydashboard::tabItem(
-          "visualization_all",
-          shiny::tabPanel(
-            "Visualization",
-            shiny::tabsetPanel(
-              shiny::tabPanel(
-                "Overview",
-                shiny::wellPanel(
-                  shiny::fluidRow(
-                    shinydashboard::box(
-                      width = 5, 
-                      align = "center",
-                      shinycustomloader::withLoader(
-                        type = "html",
-                        loader = "dnaspin",
-                        shiny::plotOutput("DimPlot", width = "auto", height = "600")
+          shinydashboard::menuItem(
+            "Myocardium",
+            tabName = "myocardium",
+            icon = shiny::icon("triangle-top", lib = "glyphicon"),
+            shinydashboard::menuSubItem("Visualization", tabName = "visualization_myo"),
+            shinydashboard::menuSubItem("Cell markers", tabName = "gene_table_myo")
+            )
+          )
+        ),
+      shinydashboard::dashboardBody(
+        shiny::tags$head(shiny::tags$link(rel = "stylesheet", 
+                                          type = "text/css", 
+                                          href = "mystyle.css")),
+        #added in css_formating
+        skin_colors,
+        shinydashboard::tabItems(
+          shinydashboard::tabItem(
+            tabName = "welcome",
+            shiny::fluidRow(main_text, shiny::br()),
+            shiny::fluidRow(
+              shiny::column(width = 9, experiment),
+              shiny::column(width = 3)
+              )
+            ),
+          shinydashboard::tabItem(
+            "visualization_all",
+            shiny::tabPanel(
+              "Visualization",
+              shiny::tabsetPanel(
+                shiny::tabPanel(
+                  "Overview",
+                  shiny::wellPanel(
+                    shiny::fluidRow(
+                      shinydashboard::box(
+                        width = 5, 
+                        align = "center",
+                        shinycustomloader::withLoader(
+                          type = "html",
+                          loader = "dnaspin",
+                          shiny::plotOutput("DimPlot", width = "auto", height = "600")
+                          )
+                        ),
+                      shinydashboard::box(width = 7,
+                                          ScExploreR::MultiPlot_UI("Multiplot"),
+                                          height = "620")
+                      )
+                    ),
+                  shiny::wellPanel(
+                    shiny::fluidRow(
+                      shinydashboard::box(
+                        width = 6,
+                        style = 'padding-top:0px; color: white',
+                        ScExploreR::FeaturePlotShinyUI(
+                          "all_featureplot_1",
+                          value = "myh6",
+                          placeholder = "myh6")
+                        ),
+                      shinydashboard::box(
+                        width = 6,
+                        style = 'padding-top:0px; color: white;',
+                        ScExploreR::FeaturePlotShinyUI(
+                          "all_featureplot_2",
+                          value = "myh7l",
+                          placeholder = "myh7l")
                         )
-                      ),
-                    shinydashboard::box(width = 7,
-                                        ScExploreR::MultiPlot_UI("Multiplot"),
-                                        height = "620")
-                    )
-                  ),
-                shiny::wellPanel(
-                  shiny::fluidRow(
-                    shinydashboard::box(
-                      width = 6,
-                      style = 'padding-top:0px; color: white',
-                      ScExploreR::FeaturePlotShinyUI(
-                        "all_featureplot_1",
-                        value = "myh6",
-                        placeholder = "myh6")
-                      ),
-                    shinydashboard::box(
-                      width = 6,
-                      style = 'padding-top:0px; color: white;',
-                      ScExploreR::FeaturePlotShinyUI(
-                        "all_featureplot_2",
-                        value = "myh7l",
-                        placeholder = "myh7l")
                       )
                     )
+                  ),
+                shiny::tabPanel(
+                  title = "test",
+                  selectInput("test_id", "TEST: ", choices = c("A", "B", "C"), selected = "C"),
+                  conditionalPanel(condition = "input.test_id == 'A'",
+                                   shinydashboard::box(
+                                     plotlyOutput("test_plot1", width = "100%", height = "520"),
+                                     width = 6
+                                   )),
+                  conditionalPanel(condition = "input.test_id == 'B'",
+                                   shinydashboard::box(
+                                     plotlyOutput("test_plot2", width = "100%", height = "520"),
+                                     width = 12
+                                   ))
+                  
+                    
+                  )
+                ) # tabsetPanel end
+              ) # the end of TabPanel
+            ),
+          shinydashboard::tabItem(
+            "gene_table_all",
+            shiny::fluidRow(
+              shiny::column(
+                width = 1,
+                offset = 11, 
+                #downloadButton_UI(id = "all_m", label = "Download")
+                shiny::downloadButton(
+                  outputId = "downloadData",
+                  label = "Download",
+                  style = "color: #fff; background-color: #27AE60; border-radius: 360px;")
+                )
+              ),
+            shiny::fluidRow(
+              shiny::h1("Marker genes", style = "margin: 15px;"),
+              shinydashboard::box(
+                DT::dataTableOutput("markers_all"),
+                width = 12
+                )
+              )
+          ),
+          shinydashboard::tabItem(tabName = "enrichment_analysis",
+                                  ScExploreR::enrichment_analysis_UI(id = "enrich")), 
+          shinydashboard::tabItem("visualization_myo",
+                                  shiny::fluidRow(
+                                    shiny::column(
+                                      #offset = 1,
+                                      width = 6,
+                                      style = 'padding-top:0px; height:200px;',
+                                      ScExploreR::FeaturePlotShinyUI(
+                                        "myo_featureplot_1",
+                                        value = "myh6",
+                                        placeholder = "myh6"
+                                      )
+                                    ),
+                                    shiny::column(
+                                      width = 6,
+                                      #offset = 1,
+                                      style = 'padding-top:0px;',
+                                      ScExploreR::FeaturePlotShinyUI(
+                                        "myo_featureplot_2",
+                                        value = "myh7l",
+                                        placeholder = "myh7l"
+                                      )
+                                    )
+                                  )), 
+          shinydashboard::tabItem(
+            "gene_table_myo",
+            shiny::fluidPage(shiny::h1("Marker genes: Myocardium")),
+            DT::dataTableOutput("markers_myo")
+          ),
+          shinydashboard::tabItem(
+            tabName = "DE",
+            #shiny::wellPanel(
+            shiny::h1("Differential expression"),
+            shiny::p(
+              rep("some text some text", times = 50) %>% paste0(collapse = " "),
+              style = "font-size: 18px; align: justify;"
+            ),
+            shiny::br(),
+            shiny::fluidRow(
+              shiny::column(
+                width = 2,
+                shiny::selectInput(
+                  inputId = "cluster_1",
+                  label = "Cluster 1:",
+                  choices = sort(levels(metadata_all$edited_res.1.5)),
+                  width = "240px"
+                ),
+                shiny::selectInput(
+                  inputId = "cluster_2",
+                  label = "Cluster 2:",
+                  choices = sort(levels(metadata_all$edited_res.1.5)),
+                  width = "240px",
+                  selected = "Bulbus arteriosus"
+                ),
+                shinyWidgets::chooseSliderSkin("Modern", color = "#3C8DBC"),
+                #shinyWidgets::setSliderColor(c("lightsalmon1"), c(1)),
+                shiny::sliderInput(
+                  inputId = "slider",
+                  label = "Number of genes",
+                  min = 1,
+                  max = 20,
+                  value = 10,
+                  step = 1
+                ),
+                shiny::radioButtons(
+                  inputId = "sort_by",
+                  label = "Label genes by:",
+                  choices = c("log2FoldChange" = "avg_log2FC",
+                              "Significance" = "p_val_adj"),
+                  selected = "avg_log2FC",
+                  inline = FALSE
+                )
+              ),
+              shinydashboard::box(
+                shiny::tags$style(class = 'volcano-plot'),
+                #shiny::column(
+                width = 5,
+                shinycustomloader::withLoader(
+                  type = "html",
+                  loader = "dnaspin",
+                  shiny::plotOutput(
+                    outputId = "Volcano_plot",
+                    width = "100%",
+                    height = "700"
                   )
                 )
-              ) # tabsetPanel end
-            ) # the end of TabPanel
-          ),
-        shinydashboard::tabItem(
-          "gene_table_all",
-          shiny::fluidRow(
-            shiny::column(
-              width = 1,
-              offset = 11, 
-              #downloadButton_UI(id = "all_m", label = "Download")
-              shiny::downloadButton(
-                outputId = "downloadData",
-                label = "Download",
-                style = "color: #fff; background-color: #27AE60; border-radius: 360px;")
+              ), 
+              shinydashboard::box(
+                #shiny::column(
+                width = 5,
+                DT::dataTableOutput("DE_cluster", width = "100%", height = "700"),
+                style = "overflow-y: auto; height: 718px;"
               )
-            ),
-          shiny::fluidRow(
-            shiny::h1("Marker genes", style = "margin: 15px;"),
-            shinydashboard::box(
-              DT::dataTableOutput("markers_all"),
-              width = 12
-              )
-            )
-        ),
-        shinydashboard::tabItem(tabName = "enrichment_analysis",
-                                ScExploreR::enrichment_analysis_UI(id = "enrich")), 
-        shinydashboard::tabItem("visualization_myo",
-                                shiny::fluidRow(
-                                  shiny::column(
-                                    #offset = 1,
-                                    width = 6,
-                                    style = 'padding-top:0px; height:200px;',
-                                    ScExploreR::FeaturePlotShinyUI(
-                                      "myo_featureplot_1",
-                                      value = "myh6",
-                                      placeholder = "myh6"
-                                    )
-                                  ),
-                                  shiny::column(
-                                    width = 6,
-                                    #offset = 1,
-                                    style = 'padding-top:0px;',
-                                    ScExploreR::FeaturePlotShinyUI(
-                                      "myo_featureplot_2",
-                                      value = "myh7l",
-                                      placeholder = "myh7l"
-                                    )
-                                  )
-                                )), 
-        shinydashboard::tabItem(
-          "gene_table_myo",
-          shiny::fluidPage(shiny::h1("Marker genes: Myocardium")),
-          DT::dataTableOutput("markers_myo")
-        ),
-        shinydashboard::tabItem(
-          tabName = "DE",
-          #shiny::wellPanel(
-          shiny::h1("Differential expression"),
-          shiny::p(
-            rep("some text some text", times = 50) %>% paste0(collapse = " "),
-            style = "font-size: 18px; align: justify;"
-          ),
-          shiny::br(),
-          shiny::fluidRow(
-            shiny::column(
-              width = 2,
-              shiny::selectInput(
-                inputId = "cluster_1",
-                label = "Cluster 1:",
-                choices = sort(levels(metadata_all$edited_res.1.5)),
-                width = "240px"
-              ),
-              shiny::selectInput(
-                inputId = "cluster_2",
-                label = "Cluster 2:",
-                choices = sort(levels(metadata_all$edited_res.1.5)),
-                width = "240px",
-                selected = "Bulbus arteriosus"
-              ),
-              shinyWidgets::chooseSliderSkin("Modern", color = "#3C8DBC"),
-              #shinyWidgets::setSliderColor(c("lightsalmon1"), c(1)),
-              shiny::sliderInput(
-                inputId = "slider",
-                label = "Number of genes",
-                min = 1,
-                max = 20,
-                value = 10,
-                step = 1
-              ),
-              shiny::radioButtons(
-                inputId = "sort_by",
-                label = "Label genes by:",
-                choices = c("log2FoldChange" = "avg_log2FC",
-                            "Significance" = "p_val_adj"),
-                selected = "avg_log2FC",
-                inline = FALSE
-              )
-            ),
-            shinydashboard::box(
-              shiny::tags$style(class = 'volcano-plot'),
-              #shiny::column(
-              width = 5,
-              shinycustomloader::withLoader(
-                type = "html",
-                loader = "dnaspin",
-                shiny::plotOutput(
-                  outputId = "Volcano_plot",
-                  width = "100%",
-                  height = "700"
-                )
-              )
-            ), 
-            shinydashboard::box(
-              #shiny::column(
-              width = 5,
-              DT::dataTableOutput("DE_cluster", width = "100%", height = "700"),
-              style = "overflow-y: auto; height: 718px;"
             )
           )
-        )
-      ) # end of tabItems
-    ), #dashboard body
+        ) # end of tabItems
+      ), #dashboard body
     title = title
   )
 
@@ -259,7 +274,6 @@ server <- function(input, output, session) {
         alpha = 0.9,
         size = 0.1
       ) +
-      ggplot2::theme_minimal() +
       ScExploreR::one_theme() +
       Seurat::NoLegend() +
       ggplot2::scale_color_manual(values = ScExploreR::colors_main_umap) + # TODO improve color scheme name
@@ -282,13 +296,15 @@ server <- function(input, output, session) {
               id = "all_featureplot_1",
               metadata = metadata_all,
               data_slot = slot_data_all,
-              identity = "edited_res.1.5")
+              identity = "edited_res.1.5",
+              order = FALSE)
   
   ScExploreR::FeaturePlotShiny(
               id = "all_featureplot_2",
               metadata = metadata_all,
               data_slot = slot_data_all,
-              identity = "edited_res.1.5")
+              identity = "edited_res.1.5",
+              order = FALSE)
 
   # FT plots for myocardium  
   ScExploreR::FeaturePlotShiny(
@@ -439,6 +455,15 @@ server <- function(input, output, session) {
   
   
   ##########
+  
+  output$test_plot1 <- renderPlotly({
+      plotly_cc_stage()
+
+  })
+  
+  output$test_plot2 <- renderPlotly({
+    plotly_cc_stage()
+  })
   
 }
 

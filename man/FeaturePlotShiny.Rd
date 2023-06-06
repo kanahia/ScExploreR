@@ -4,7 +4,14 @@
 \alias{FeaturePlotShiny}
 \title{FeaturePlotShiny}
 \usage{
-FeaturePlotShiny(id, metadata = NULL, data_slot = NULL, identity)
+FeaturePlotShiny(
+  id,
+  metadata = NULL,
+  data_slot = NULL,
+  identity,
+  order = FALSE,
+  stage
+)
 }
 \description{
 FeaturePlotShiny

@@ -6,10 +6,11 @@
 \usage{
 MultiPlot_UI(
   id,
-  label = "Metadata:",
+  label = "Data:",
   selected = "Overview",
   choices = c(Overview = "Overview", Contribution = "contribution", `General QC` =
-    "qc", `QC in cluster` = "qc_cluster")
+    "qc", `QC in cluster` = "qc_cluster"),
+  width = "100\%"
 )
 }
 \arguments{

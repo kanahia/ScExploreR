@@ -1,3 +1,7 @@
+
+
+# Function needed for Contribution module ---------------------------------
+
 #' Contribution theme
 #'
 #' @importFrom ggplot2 theme
@@ -274,35 +278,14 @@ plot_contribution <- function(metadata,
       ) +
       ggplot2::scale_x_discrete(guide =  ggplot2::guide_axis(n.dodge = 2)) +
       Seurat::NoLegend()
-  #} else if( feature == "test") {
-    
-    # p <- 
-    #   metadata %>%
-    #       dplyr::filter(!! sym(main_group) %in% c(!! sym(cluster))) %>%
-    #       dplyr::select(!! sym(main_group), nFeature_RNA, nCount_RNA, stage) %>%
-    #       dplyr::rename(`Number of genes` = nFeature_RNA, `Number of UMI` = nCount_RNA) %>%
-    #       tidyr::gather("metadata", "value", -c(stage, !!sym(main_group))) %>%
-    #       ggplot2::ggplot(.,  
-    #                       ggplot2::aes(x = edited_res.1.5,
-    #                                    y = value,
-    #                                    fill = stage)) +
-    #       introdataviz::geom_split_violin(alpha = .4, trim = FALSE) +
-    #       geom_boxplot(width = .2, alpha = .6, fatten = NULL, show.legend = FALSE) +
-    #       stat_summary(fun.data = "mean_se", geom = "pointrange", show.legend = F, 
-    #                    position = position_dodge(.175)) +
-    #       scale_fill_brewer(palette = "Dark2") +
-    #       facet_wrap(metadata ~., scales = "free_y") +
-    #       #theme(axis.text.x=element_blank(),
-    #       #      axis.ticks.x=element_blank()
-    #       #) +
-    #       xlab("")+
-    #       ylab("Number of genes") +
-    #       theme(strip.text.x = element_text(size = 14))
   }
       
   return(p)
   
 }
+
+
+# Multiplot UI ------------------------------------------------------------
 
 #' MultiPlot_UI
 #'
@@ -316,7 +299,7 @@ plot_contribution <- function(metadata,
 #' @export
 #' 
 MultiPlot_UI <- function(id,
-                         label = "Metadata:",
+                         label = "Data:",
                          selected = "Overview",
                          choices =  
                            c(
@@ -324,21 +307,10 @@ MultiPlot_UI <- function(id,
                            "Contribution" = "contribution",
                            "General QC" = "qc",
                            "QC in cluster" = "qc_cluster"
-                           ) 
+                           ),
+                         width = "100%"
                          ) {
   ns <- shiny::NS(id)
-  
-  shiny::tabsetPanel(id = ns("hidden_panel"), 
-                     type = "hidden",
-                     shiny::wellPanel(
-                       shiny::fluidRow(
-                         shinydashboard::box(
-                           tabPanelBody("panel1", 
-                                        plotlyOutput(ns("hidden_plotly")))
-                           )
-                         )
-                       )
-                     )
   
   shiny::tagList(
     shiny::tags$div(
@@ -364,12 +336,13 @@ MultiPlot_UI <- function(id,
             condition = "input.type_of_data == 'contribution'",
             shiny::selectInput(
               ns("select_contribution"),
-              "Choose data:",
+              "Group by:",
               choices = c("Dataset" = "DataSet",
-                          "Stage" = "stage",
-                          "Line" = "line",
+                          "Developmental stage" = "stage",
+                          "Transgenic line" = "line",
                           "Cell-cycle" = "Phase",
-                          "Cell-cycle by stage" = "cc_stage"), # dopisać Phase_timepoint
+                          "Cell-cycle by stage" = "cc_stage",
+                          "MT-content" = "percent.mt2"), # dopisać Phase_timepoint
               selected = "DataSet",
               multiple = FALSE,
               width = '180px'
@@ -381,7 +354,7 @@ MultiPlot_UI <- function(id,
             condition = "input.type_of_data == 'qc'",
             shiny::selectInput(
               ns("qc_global"),
-              "Choose data:",
+              "Displaying:",
               choices = c("Global Number of genes" = "nFeature_RNA",
                           "Global Number of UMI" = "log10_UMI",
                           "Global Percent mt" = "percent.mt"),
@@ -430,22 +403,26 @@ shiny::conditionalPanel(condition = "input.type_of_data == 'qc_cluster'",
                         shiny::tagList(
                           shiny::column(4, plotlyOutput(ns("plot_violin1"), width = "100%", height = "520")),
                           shiny::column(4, plotlyOutput(ns("plot_violin2"), width = "100%", height = "520")),
-                          shiny::column(4, plotlyOutput(ns("plot_violin3"), width = "100%", height = "520")),
-                          height = "620")
-                        # )
-                        ),
-shiny::conditionalPanel(condition = "input.type_of_data == 'percent.mt'",
-                        ns = ns,
-                        shinycustomloader::withLoader(
-                          type = "html",
-                          loader = "dnaspin",
-                          plotlyOutput(ns("plotly_mt"), width = "100%", height = "520")
+                          shiny::column(4, plotlyOutput(ns("plot_violin3"), width = "100%", height = "520"))
                           )
+                        # )
                         )
+# shiny::conditionalPanel(condition = "input.type_of_data == 'contribution'",
+#                         ns = ns,
+#                         shinycustomloader::withLoader(
+#                           type = "html",
+#                           loader = "dnaspin",
+#                           plotlyOutput(ns("plotly_mt"), width = "100%", height = "520")
+#                           )
+#                         )
                  ) 
         )
       
 }
+
+
+# Multiplot Server --------------------------------------------------------
+
 
 #' MultiPlot_Shiny
 #'
@@ -464,12 +441,18 @@ MultiPlot_Shiny <- function(id,
       output$plotly <- renderPlotly({
         if (input$type_of_data %in% c('contribution')) {
           if(input$select_contribution %in% c("DataSet", "line", "stage", "Phase")){
-            stacked_bar_plotly(feature = input$select_contribution,
-                               metadata = metadata_all,
-                               main_group = "edited_res.1.5")
+            # stacked_bar_plotly(feature = input$select_contribution,
+            #                    metadata = metadata_all,
+            #                    main_group = "edited_res.1.5")
+            
+            ClusterComposition(data = metadata_all,condition = input$select_contribution)
             
           } else if(input$select_contribution == "cc_stage") {
             plotly_cc_stage()
+          } else if(input$select_contribution == "percent.mt2") {
+            violin_metadata_stage(feature = "percent.mt") %>%
+              layout(title = 'Percent Mt-genes',
+                     xaxis = list(title = ""))
           }
           
         }
@@ -501,13 +484,15 @@ MultiPlot_Shiny <- function(id,
         }
       })  %>%  shiny::bindCache(input$type_of_data, input$cluster)
       
-      output$plotly_mt <- renderPlotly({
-        if (input$type_of_data == 'percent.mt') {
-          violin_metadata_stage(feature = "percent.mt") %>%
-            layout(title = 'Percent Mt-genes',
-                   xaxis = list(title = ""))
-        }
-      })  %>%  shiny::bindCache(input$type_of_data)
+      # output$plotly_mt <- renderPlotly({
+      #   if (input$type_of_data == 'contribution') {
+      #     if(input$select_contribution == "percent.mt2") {
+      #       violin_metadata_stage(feature = "percent.mt") %>%
+      #         layout(title = 'Percent Mt-genes',
+      #                xaxis = list(title = "")) 
+      #       }
+      #     }
+      # })  %>%  shiny::bindCache(input$type_of_data)
       
       }
     )
