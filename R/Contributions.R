@@ -145,7 +145,7 @@ plot_contribution <- function(metadata,
         contribution_theme() +
         ggplot2::scale_fill_manual(values = c("lemonchiffon3", "lightsalmon3")) +
         ggplot2::scale_x_discrete(guide = ggplot2::guide_axis(n.dodge = 2))
-  } else if(feature == "Overview") {
+  } else if(feature == "selected_cells") {
     p <- 
       ScExploreR::raw_ngene_mt(input_metadata = overview_metadata)
 
@@ -300,13 +300,14 @@ plot_contribution <- function(metadata,
 #' 
 MultiPlot_UI <- function(id,
                          label = "Data:",
-                         selected = "Overview",
+                         selected = "selected_cells",
                          choices =  
                            c(
+                           "Selected cells" = "selected_cells", 
                            "Overview" = "Overview",
+                           "QC per cluster" = "qc_cluster",
                            "Contribution" = "contribution",
-                           "General QC" = "qc",
-                           "QC in cluster" = "qc_cluster"
+                           "Global QC" = "qc"
                            ),
                          width = "100%"
                          ) {
@@ -329,6 +330,20 @@ MultiPlot_UI <- function(id,
         shiny::column(
           width = 4,
           offset = 0,
+          # Overview choices
+          shiny::conditionalPanel(
+            ns = ns,
+            condition = "input.type_of_data == 'Overview'",
+            shiny::selectInput(
+              ns("select_global_contribution"),
+              "Show:",
+              choices = c("Number of genes" = "nFeature_RNA",
+                          "Number of UMI" = "nCount_RNA",
+                          "Percent mt" = "percent.mt"),
+              selected = "nFeature_RNA",
+              multiple = FALSE,
+              width = '180px')
+          ),
           
           #Contribution
           shiny::conditionalPanel(
@@ -337,54 +352,59 @@ MultiPlot_UI <- function(id,
             shiny::selectInput(
               ns("select_contribution"),
               "Group by:",
-              choices = c("Dataset" = "DataSet",
-                          "Developmental stage" = "stage",
+              choices = c("Developmental stage" = "stage",
                           "Transgenic line" = "line",
+                          "Dataset" = "DataSet",
                           "Cell-cycle" = "Phase",
                           "Cell-cycle by stage" = "cc_stage",
                           "MT-content" = "percent.mt2"), # dopisać Phase_timepoint
-              selected = "DataSet",
+              selected = "stage",
               multiple = FALSE,
-              width = '180px'
-            )
-          ),
-          #General QC
-          shiny::conditionalPanel(
-            ns = ns,
-            condition = "input.type_of_data == 'qc'",
-            shiny::selectInput(
-              ns("qc_global"),
-              "Displaying:",
-              choices = c("Global Number of genes" = "nFeature_RNA",
-                          "Global Number of UMI" = "log10_UMI",
-                          "Global Percent mt" = "percent.mt"),
-              selected = "nFeature_RNA",
-              multiple = FALSE,
-              width = '180px'
-            )
-          ),
-          # QC in individual cluster
-          shiny::conditionalPanel(
-            ns = ns,
-            condition = "input.type_of_data == 'qc_cluster'",
-            shiny::selectInput(
-              ns("cluster"),
-              "Cluster:",
-              choices = levels(metadata_all$edited_res.1.5),
-              selected = "Myocardium",
-              multiple = FALSE,
-              width = '180px'
-            )
-          )
+              width = '180px')
+            ),
+            #General QC
+            shiny::conditionalPanel(
+              ns = ns,
+              condition = "input.type_of_data == 'qc'",
+              shiny::selectInput(
+                ns("qc_global"),
+                "Show:",
+                choices = c("Global Number of genes" = "nFeature_RNA",
+                            "Global Number of UMI" = "log10_UMI",
+                            "Global Percent mt" = "percent.mt"),
+                selected = "nFeature_RNA",
+                multiple = FALSE,
+                width = '180px')
+              ),
+            # QC in individual cluster
+            shiny::conditionalPanel(
+              ns = ns,
+              condition = "input.type_of_data == 'qc_cluster'",
+              shiny::selectInput(
+                ns("cluster"),
+                "Cluster:",
+                choices = levels(metadata_all$edited_res.1.5),
+                selected = "Myocardium",
+                multiple = FALSE,
+                width = '180px')
+              )
           )
         ), 
-shiny::conditionalPanel(condition = "input.type_of_data == 'Overview' || 
+shiny::conditionalPanel(condition = "input.type_of_data == 'selected_cells' || 
                                      input.type_of_data == 'qc'",
                         ns = ns,
                         shinycustomloader::withLoader(
                           type = "html",
                           loader = "dnaspin",
                           plotOutput(ns("plot"), width = "100%", height = "520")
+                          )
+                        ),
+shiny::conditionalPanel(condition = "input.type_of_data == 'Overview'",
+                        ns = ns,
+                        shinycustomloader::withLoader(
+                          type = "html",
+                          loader = "dnaspin",
+                          plotlyOutput(ns("stacked_plotly"), width = "100%", height = "520")
                           )
                         ),
 shiny::conditionalPanel(condition = "input.type_of_data == 'contribution'",
@@ -455,11 +475,19 @@ MultiPlot_Shiny <- function(id,
                      xaxis = list(title = ""))
           }
           
-        }
+        } 
       }) %>%  shiny::bindCache(input$type_of_data, input$select_contribution)
       
+      output$stacked_plotly <- renderPlotly({
+        if(input$type_of_data %in% c("Overview")) {
+          StackedMetrics(data = metadata_all, 
+                         clustering = "edited_res.1.5",
+                         condition = input$select_global_contribution)
+        }
+      })
+      
       output$plot <- renderPlot({
-        if (input$type_of_data %in% c('Overview')) {
+        if (input$type_of_data %in% c('selected_cells')) {
           plot_contribution(feature = input$type_of_data, metadata = metadata_all)
         } else if (input$type_of_data %in% c('qc')){
           plot_contribution(feature = input$qc_global, metadata = metadata_all)
