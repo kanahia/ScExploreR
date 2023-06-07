@@ -7,21 +7,23 @@
 FeaturePlotShinyUI <- function(id, 
                                label="Select gene:",
                                value="",
-                               placeholder="myh6",
+                               selected = "myh6",
+                               #placeholder="myh6",
                                width="100px",
-                               label_radio = "Stage:") {
+                               label_radio = "Stage:"
+                               ) {
     ns <- shiny::NS(id)
-    
     shiny::tags$div(
        style = "background-color: gray99; color: black; padding-top: 6px",
         shiny::fluidRow(
           shiny::column(
             width = 3,
-            shiny::textInput(
+            shiny::selectizeInput( #textInput(
                 inputId = ns("gene_selector"), 
                 label = label,
-                value = value,
-                placeholder = placeholder,
+                choices = NULL,
+                selected = selected,
+                #placeholder = placeholder,
                 width = width)
                 ),
           shiny::column(
@@ -58,10 +60,19 @@ FeaturePlotShiny <- function(id,
                              data_slot = NULL, 
                              identity, 
                              order = FALSE, 
-                             stage) {
+                             stage,
+                             selected = "myh6",
+                             pt.size = 1,
+                             pt.size_pos = 0.001) {
     shiny::moduleServer(
         id,
         function(input, output, session) {
+          
+          updateSelectizeInput(session = session, 
+                               inputId =  "gene_selector", 
+                               choices = unique(rownames(slot_data_all)),
+                               selected = selected,
+                               server = TRUE)
           
           rec_metadata <- reactive({
             if(input$stage_FT_plot == "dpf2") {
@@ -88,7 +99,9 @@ FeaturePlotShiny <- function(id,
                     gene = input$gene_selector,
                     identity = identity, # TODO add identity choice?
                     order = order,
-                    label = TRUE
+                    label = TRUE,
+                    pt.size = pt.size,
+                    pt.size_pos = pt.size_pos
                 )
             }) %>% shiny::bindCache(input$gene_selector,
                                     input$stage_FT_plot)

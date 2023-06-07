@@ -98,16 +98,17 @@ ui <-
                         style = 'padding-top:0px; color: white',
                         ScExploreR::FeaturePlotShinyUI(
                           "all_featureplot_1",
-                          value = "myh6",
-                          placeholder = "myh6")
+                          value = "myh6"
+                          #placeholder = "myh6"
+                          )
                         ),
                       shinydashboard::box(
                         width = 6,
                         style = 'padding-top:0px; color: white;',
                         ScExploreR::FeaturePlotShinyUI(
                           "all_featureplot_2",
-                          value = "myh7l",
-                          placeholder = "myh7l")
+                          value = "myh7l")
+                          #placeholder = "myh7l")
                         )
                       )
                     )
@@ -162,8 +163,8 @@ ui <-
                                       style = 'padding-top:0px; height:200px;',
                                       ScExploreR::FeaturePlotShinyUI(
                                         "myo_featureplot_1",
-                                        value = "myh6",
-                                        placeholder = "myh6"
+                                        value = "myh6"
+                                        #placeholder = "myh6"
                                       )
                                     ),
                                     shiny::column(
@@ -172,8 +173,8 @@ ui <-
                                       style = 'padding-top:0px;',
                                       ScExploreR::FeaturePlotShinyUI(
                                         "myo_featureplot_2",
-                                        value = "myh7l",
-                                        placeholder = "myh7l"
+                                        value = "myh7l"
+                                        #placeholder = "myh7l"
                                       )
                                     )
                                   )), 
@@ -297,27 +298,33 @@ server <- function(input, output, session) {
               metadata = metadata_all,
               data_slot = slot_data_all,
               identity = "edited_res.1.5",
-              order = FALSE)
+              order = FALSE,
+              selected = "myh6",
+              pt.size = 1,
+              pt.size_pos = 0.001)
   
   ScExploreR::FeaturePlotShiny(
               id = "all_featureplot_2",
               metadata = metadata_all,
               data_slot = slot_data_all,
               identity = "edited_res.1.5",
-              order = FALSE)
+              order = FALSE,
+              selected = "myh7l")
 
   # FT plots for myocardium  
   ScExploreR::FeaturePlotShiny(
               id = "myo_featureplot_1",
               metadata = metadata_myo,
               data_slot = myo_slot_data,
-              identity = "custom_int_res2")
+              identity = "custom_int_res2",
+              selected = "myh6")
   
   ScExploreR::FeaturePlotShiny(
               id = "myo_featureplot_2",
               metadata = metadata_myo,
               data_slot = myo_slot_data,
-              identity = "custom_int_res2")
+              identity = "custom_int_res2",
+              selected = "myh7l")
   
   output$test_plot <- shiny::renderPlot({
     

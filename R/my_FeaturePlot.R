@@ -40,6 +40,7 @@ my_FeaturePlot <- function(metadata,
                            gene,
                            identity,
                            pt.size =0.0005,
+                           pt.size_pos = 0.5,
                            label = FALSE,
                            order = FALSE) {
   
@@ -93,10 +94,10 @@ my_FeaturePlot <- function(metadata,
   FT.plot <-
     ggplot2::ggplot() +
     ggplot2::geom_point(
-      data = metadata[metadata$color == "negative", ],
-      ggplot2::aes(x = UMAP_1 , y = UMAP_2, color = slot_data), alpha = 0.9, size = pt.size) +
-    ggplot2::geom_point(
       data = metadata[metadata$color != "negative", ],
+      ggplot2::aes(x = UMAP_1 , y = UMAP_2, color = slot_data), alpha = 0.9, size = pt.size_pos) +
+    ggplot2::geom_point(
+      data = metadata[metadata$color == "negative", ],
       ggplot2::aes(x = UMAP_1 , y = UMAP_2, color = slot_data), alpha = 0.9, size = pt.size) +
     #scale_color_manual(values = c("positive" = "#414487FF" , "negative" = "#FDE725FF")) +
     ggplot2::ggtitle(gene) +
