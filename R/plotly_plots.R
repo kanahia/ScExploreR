@@ -294,7 +294,8 @@ plotly_cc_stage <- function(data = metadata_all,
                             identity = "edited_res.1.5",
                             stage = "stage",
                             feature = "Phase",
-                            my_colors = c("#ff7f0eeb", "#2ca02ca6", "#d62728d4")){
+                            my_colors = rev(c("#0B775E", "#DC863B"))#c("#ff7f0eeb", "#2ca02ca6", "#d62728d4")
+                            ){
   
   make_plotly <- function(timepoint) {
     dfA <-
@@ -310,8 +311,9 @@ plotly_cc_stage <- function(data = metadata_all,
                         y = ~percent,
                         color = ~as.factor(dfA[[feature]]),
                         colors = my_colors,
-                        opacity = c(0.7, 0.7, 0.7),
+                        #opacity = c(0.7, 0.7, 0.7),
                         type = "bar",
+                        alpha = 0.5,
                         legendgroup= ~ dfA[[feature]],
                         hoverinfo = "text",
                         hovertext = paste(dfA[[identity]],

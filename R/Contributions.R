@@ -255,29 +255,69 @@ plot_contribution <- function(metadata,
       viridis::scale_color_viridis(direction = -1)
   } else if (feature == "percent.mt") {
     
+    metadata_p.mt <- metadata %>% dplyr::mutate(`MT content` = percent.mt)
+    
     p <-
-      metadata %>%
-      dplyr::group_by_(main_group, feature) %>%
-      dplyr::summarise(n = dplyr::n()) %>%
-      dplyr::mutate(percent = prop.table(n) * 100) %>%
-      ggplot2::ggplot(aes(x = stringr::str_wrap(!! sym(main_group), width = 5), 
-                 y = percent.mt, 
-                 fill = !!sym(main_group))) + 
-      ggplot2::geom_violin(trim=FALSE)+
-      ggplot2::geom_boxplot(width=0.1, fill="white")+
-      labs(x = "", y = "Percent [%]") +
+      ggplot2::ggplot(data = metadata_p.mt) + 
+      ggplot2::geom_point(data = metadata_p.mt %>% dplyr::filter(`MT content` < 3),
+                          aes(x = UMAP_1, 
+                              y = UMAP_2,
+                              color = `MT content`), 
+                          size = 0.5) + 
+      viridis::scale_color_viridis(direction = -1) +
+      ggplot2::geom_point(data = metadata_p.mt %>% dplyr::filter(`MT content` > 3),
+                          aes(x = UMAP_1, 
+                              y = UMAP_2,
+                              color = `MT content`), 
+                          size = 0.5) + 
+      viridis::scale_color_viridis(direction = -1) +
+      ggplot2::guides(colour = ggplot2::guide_colourbar(title.position="top", title.hjust = 0.5),
+                      size = ggplot2::guide_legend(title.position="top", title.hjust = 0.5)) +
       ggplot2::theme_minimal() +
       ggplot2::theme(
-        legend.text = element_text(size = 16),
-        legend.title = element_text(size = 18),
-        axis.text.y = element_text(size = 12),
-        axis.text.x = element_text(size = 11.2),
+        #plot.margin=unit(c(-1, -0.5, -1, -0.5), units="line"),
+        #legend.margin=unit(-1,"lines")
+        legend.title = element_text(size = 14),
+        legend.text = element_text(size = 12),
+        axis.text = element_text(size = 16),
         axis.title = element_text(size = 16),
-        plot.title = element_text(hjust = 0.5, size = 22),
-        strip.text.y = element_text(size = 16)
-      ) +
-      ggplot2::scale_x_discrete(guide =  ggplot2::guide_axis(n.dodge = 2)) +
-      Seurat::NoLegend()
+        legend.position = "top",
+        legend.title.align=0.5,
+        legend.key.width= unit(2.2, 'cm'),
+        legend.key.height = unit(0.3, 'cm')
+        
+      ) + 
+      # #labs(color = "Library size (log10 scale)") +
+      ggplot2::guides(fill =  ggplot2::guide_legend(
+        title = "MT content",
+        title.position = "top",
+        title.hjust = 0.5,
+        title.vjust = 0.5)) +
+      ggplot2::scale_alpha_manual(values=c(0.4),guide=F) +
+      viridis::scale_color_viridis(direction = -1)
+    # p <-
+    #   metadata %>%
+    #   dplyr::group_by_(main_group, feature) %>%
+    #   dplyr::summarise(n = dplyr::n()) %>%
+    #   dplyr::mutate(percent = prop.table(n) * 100) %>%
+    #   ggplot2::ggplot(aes(x = stringr::str_wrap(!! sym(main_group), width = 5), 
+    #              y = percent.mt, 
+    #              fill = !!sym(main_group))) + 
+    #   ggplot2::geom_violin(trim=FALSE)+
+    #   ggplot2::geom_boxplot(width=0.1, fill="white")+
+    #   labs(x = "", y = "Percent [%]") +
+    #   ggplot2::theme_minimal() +
+    #   ggplot2::theme(
+    #     legend.text = element_text(size = 16),
+    #     legend.title = element_text(size = 18),
+    #     axis.text.y = element_text(size = 12),
+    #     axis.text.x = element_text(size = 11.2),
+    #     axis.title = element_text(size = 16),
+    #     plot.title = element_text(hjust = 0.5, size = 22),
+    #     strip.text.y = element_text(size = 16)
+    #   ) +
+    #   ggplot2::scale_x_discrete(guide =  ggplot2::guide_axis(n.dodge = 2)) +
+    #   Seurat::NoLegend()
   }
       
   return(p)
@@ -356,8 +396,7 @@ MultiPlot_UI <- function(id,
                           "Transgenic line" = "line",
                           "Dataset" = "DataSet",
                           "Cell-cycle" = "Phase",
-                          "Cell-cycle by stage" = "cc_stage",
-                          "MT-content" = "percent.mt2"), # dopisać Phase_timepoint
+                          "Cell-cycle by stage" = "cc_stage"), # dopisać Phase_timepoint
               selected = "stage",
               multiple = FALSE,
               width = '180px')
@@ -469,10 +508,10 @@ MultiPlot_Shiny <- function(id,
             
           } else if(input$select_contribution == "cc_stage") {
             plotly_cc_stage()
-          } else if(input$select_contribution == "percent.mt2") {
-            violin_metadata_stage(feature = "percent.mt") %>%
-              layout(title = 'Percent Mt-genes',
-                     xaxis = list(title = ""))
+          # } else if(input$select_contribution == "percent.mt2") {
+          #   violin_metadata_stage(feature = "percent.mt") %>%
+          #     layout(title = 'Percent Mt-genes',
+          #            xaxis = list(title = ""))
           }
           
         } 
