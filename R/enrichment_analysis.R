@@ -12,10 +12,9 @@ enrichment_analysis_UI <- function(id,
   
   shiny::fluidRow(
     width = 12,
-    shiny::h1("Enrichment analysis", style = "margin-left: 15px;"),
-    shiny::p(rep("some text some text", times = 50) %>% 
-               paste0(collapse = " "), 
-             style = "font-size: 18px; margin-left: 15px; align: justify;"),
+    shiny::h1("Enrichment analysis", 
+              style = "margin-left: 15px; margin-right: 15px;font-weight: bold;"),
+    enrichment_text,
   
   shiny::wellPanel(
     shiny::fluidRow(
@@ -57,7 +56,7 @@ enrichment_analysis_UI <- function(id,
                             width =  "auto"), 
         style = "overflow-y: auto; height: 620px;") #"100%")
     )
-    )
+    ,style = "margin: 15px")
   )
 }
 

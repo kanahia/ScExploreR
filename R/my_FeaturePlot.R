@@ -40,10 +40,10 @@ my_FeaturePlot <- function(metadata,
                            gene,
                            identity,
                            pt.size =0.0005,
-                           pt.size_pos = 0.5,
+                           pt.size_pos = 0.005,
                            label = FALSE,
                            order = FALSE) {
-  
+  #browser()
   metadata <- metadata
   # check if identity is a string
   stopifnot(is.character(identity) & identity %in% colnames(metadata))
@@ -119,18 +119,29 @@ my_FeaturePlot <- function(metadata,
   } else {
     set.seed(42)
     shuffled_metadata <- metadata[sample(1:nrow(metadata)), ]
-    FT.plot <-
-      ggplot2::ggplot() +
-      ggplot2::geom_point(data = shuffled_metadata,
-                          ggplot2::aes(x = UMAP_1 , 
-                                       y = UMAP_2, 
-                                       color = slot_data, 
-                                       fill = color), 
-                          alpha = 0.9, 
-                          size = pt.size) +
-      ggplot2::ggtitle(gene) +
-      ggplot2::scale_fill_discrete(guide = "none") +
-      one_theme()
+    # FT.plot <-
+    #   ggplot2::ggplot() +
+    #   ggplot2::geom_point(data = shuffled_metadata,
+    #                       ggplot2::aes(x = UMAP_1 , 
+    #                                    y = UMAP_2, 
+    #                                    color = slot_data, 
+    #                                    fill = color), 
+    #                       alpha = 0.9, 
+    #                       size = pt.size) +
+    #   ggplot2::ggtitle(gene) +
+    #   ggplot2::scale_fill_discrete(guide = "none") +
+    #   one_theme()
+      FT.plot <-
+        ggplot2::ggplot() +
+        ggplot2::geom_point(
+          data = metadata[metadata$color != "negative", ],
+          ggplot2::aes(x = UMAP_1 , y = UMAP_2, color = slot_data), alpha = 0.9, size = pt.size_pos) +
+        ggplot2::geom_point(
+          data = metadata[metadata$color == "negative", ],
+          ggplot2::aes(x = UMAP_1 , y = UMAP_2, color = slot_data), alpha = 0.9, size = pt.size) +
+        #scale_color_manual(values = c("positive" = "#414487FF" , "negative" = "#FDE725FF")) +
+        ggplot2::ggtitle(gene) +
+        one_theme()
       
   }
   

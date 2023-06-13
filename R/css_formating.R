@@ -35,7 +35,8 @@ experiment <-
     src = "10x_workflow3.png",
     #style = "margin-left: 22.5%;",
     #height = 'auto',
-    width = '75%',
+    width = "65%",
+    height = "auto",
     align = "center"
   )
 

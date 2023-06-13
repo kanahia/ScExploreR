@@ -64,7 +64,7 @@ ui <-
             tabName = "welcome",
             shiny::fluidRow(main_text, shiny::br()),
             shiny::fluidRow(
-              shiny::column(width = 9, experiment),
+              shiny::column(offset = 3, width = 10, experiment),
               shiny::column(width = 3)
               )
             ),
@@ -107,7 +107,7 @@ ui <-
                         style = 'padding-top:0px; color: white;',
                         ScExploreR::FeaturePlotShinyUI(
                           "all_featureplot_2",
-                          value = "myh7l")
+                          value = "myh7")
                           #placeholder = "myh7l")
                         )
                       )
@@ -173,7 +173,7 @@ ui <-
                                       style = 'padding-top:0px;',
                                       ScExploreR::FeaturePlotShinyUI(
                                         "myo_featureplot_2",
-                                        value = "myh7l"
+                                        value = "myh7"
                                         #placeholder = "myh7l"
                                       )
                                     )
@@ -189,7 +189,7 @@ ui <-
             shiny::h1("Differential expression"),
             shiny::p(
               rep("some text some text", times = 50) %>% paste0(collapse = " "),
-              style = "font-size: 18px; align: justify;"
+              style = "font-size: 17px; margin-top: 10px; text-align: justify;"
             ),
             shiny::br(),
             shiny::fluidRow(
@@ -300,8 +300,7 @@ server <- function(input, output, session) {
               identity = "edited_res.1.5",
               order = FALSE,
               selected = "myh6",
-              pt.size = 1,
-              pt.size_pos = 0.001)
+              pt.size_pos = 0.02)
   
   ScExploreR::FeaturePlotShiny(
               id = "all_featureplot_2",
@@ -309,7 +308,8 @@ server <- function(input, output, session) {
               data_slot = slot_data_all,
               identity = "edited_res.1.5",
               order = FALSE,
-              selected = "myh7l")
+              selected = "myh7l",
+              pt.size_pos = 0.04)
 
   # FT plots for myocardium  
   ScExploreR::FeaturePlotShiny(
@@ -317,14 +317,16 @@ server <- function(input, output, session) {
               metadata = metadata_myo,
               data_slot = myo_slot_data,
               identity = "custom_int_res2",
-              selected = "myh6")
+              selected = "myh6",
+              pt.size_pos = 0.01)
   
   ScExploreR::FeaturePlotShiny(
               id = "myo_featureplot_2",
               metadata = metadata_myo,
               data_slot = myo_slot_data,
               identity = "custom_int_res2",
-              selected = "myh7l")
+              selected = "myh7l",
+              pt.size_pos = 0.01)
   
   output$test_plot <- shiny::renderPlot({
     
