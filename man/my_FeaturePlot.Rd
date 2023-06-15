@@ -10,6 +10,7 @@ my_FeaturePlot(
   gene,
   identity,
   pt.size = 5e-04,
+  pt.size_pos = 0.005,
   label = FALSE,
   order = FALSE
 )

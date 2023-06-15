@@ -70,7 +70,7 @@ FeaturePlotShiny <- function(id,
           
           updateSelectizeInput(session = session, 
                                inputId =  "gene_selector", 
-                               choices = unique(rownames(slot_data_all)),
+                               choices = sort(unique(rownames(slot_data_all))),
                                selected = selected,
                                server = TRUE)
           
@@ -102,9 +102,8 @@ FeaturePlotShiny <- function(id,
                     label = TRUE,
                     pt.size = pt.size,
                     pt.size_pos = pt.size_pos
-                )
-            }) %>% shiny::bindCache(input$gene_selector,
-                                    input$stage_FT_plot)
+                    )
+            }) #%>% shiny::bindCache(input$gene_selector,input$stage_FT_plot)
         }
     )
 }

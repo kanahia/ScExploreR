@@ -8,7 +8,7 @@ FeaturePlotShinyUI(
   id,
   label = "Select gene:",
   value = "",
-  placeholder = "myh6",
+  selected = "myh6",
   width = "100px",
   label_radio = "Stage:"
 )

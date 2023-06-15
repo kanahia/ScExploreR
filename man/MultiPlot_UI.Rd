@@ -7,9 +7,9 @@
 MultiPlot_UI(
   id,
   label = "Data:",
-  selected = "Overview",
-  choices = c(Overview = "Overview", Contribution = "contribution", `General QC` =
-    "qc", `QC in cluster` = "qc_cluster"),
+  selected = "selected_cells",
+  choices = c(`Selected cells` = "selected_cells", Overview = "Overview", `QC per
+    cluster` = "qc_cluster", Contribution = "contribution", `Global QC` = "qc"),
   width = "100\%"
 )
 }

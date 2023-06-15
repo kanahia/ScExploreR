@@ -4,10 +4,12 @@
 \alias{ncbi2gene}
 \title{ncbi2gene}
 \usage{
-ncbi2gene(enrichResult)
+ncbi2gene(enrichResult, gene_id_type = NULL)
 }
 \arguments{
 \item{enrichResult}{}
+
+\item{gene_name_type}{ensembl or extrenal gene name}
 }
 \value{
 

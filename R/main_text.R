@@ -67,9 +67,10 @@ enrichment_text <-
     on a gene list provided by the user which can be further annotated by single-cell
     clusters representing embryonic zebrafish heart or ZFIN anatomical terms.
     The gene enrichment analysis is visualized by dotplot as well as summary table reflecting
-    all the metrics, including enriched genes.",
+    all the metrics, including enriched genes. At the moment, the ", shiny::tags$b("Ensembl Gene IDs"), "and", 
+    shiny::tags$b("Gene names"), "are supported.",
     shiny::span(
-      shiny::tags$ul("1. Please, paste your genes of interests.", 
+      shiny::tags$ul("1. Paste your genes of interests (", shiny::tags$u("one gene per line"),").", 
                      style = "margin-left: 15px; margin-right:15px; font-size: 17px;"),
       shiny::tags$ul("2. Select annotation type.", 
                      style = "margin-left: 15px; margin-right:15px; font-size: 17px;"),
@@ -79,3 +80,15 @@ enrichment_text <-
     style = "font-size: 17px; margin-top: 10px; text-align:justify; margin-left:15px; 
             margin-right: 15px;"
   )
+
+
+diff_exp_text <-
+  shiny::p("This panel allows for performing differential gene expression analysis between selected clusters. 
+           The results are visualized by a volcano plot and a summary table with respective metrics.
+           Genes can be labeled based on the significance level or log2FoldChange. 
+           The slider can be used to specify the number of gene labels to show." ,
+            style = "font-size: 17px; margin-top: 10px; text-align:justify;")
+
+heart_markers <-
+  shiny::p("Marker genes between clusters were calculated according to Seurat FindMarkers function using default parameters.",
+           style = "font-size: 17px; margin-top: 10px; text-align:justify; margin-left: 15px;")

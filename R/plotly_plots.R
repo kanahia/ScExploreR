@@ -393,5 +393,136 @@ plotly_cc_stage <- function(data = metadata_all,
 
 
 
+#' ViolinGeneExpStage
+#'
+#' @param gene gene of interests
+#' @param cluster cluste rof interests
+#' @param clustering metadata column with cluster names 
+#' @param metadata metadata
+#' @param slot_data slot data(SCT here)
+#' @param only_boxplot plot boxplot or violin
+#'
+#' @return plotly plot
+#' @import plotly dplyr ggplot2
+#' @export
+#'
+ViolinGeneExpStage <- function(gene = NULL,
+                               cluster = NULL,
+                               clustering,
+                               metadata,
+                               slot_data,
+                               only_boxplot = FALSE
+                               ) {
+
+  chosen_cells <- 
+    names(slot_data[gene, ][metadata$cell[metadata[[clustering]] == cluster]])
+  stage <- metadata$stage[metadata$cell %in% chosen_cells]
+    
+  data <-
+    data.frame(
+      "cells" = chosen_cells,
+      "normalized_counts" = slot_data[gene, ][chosen_cells],
+      "stage" = stage,
+      "cluster" = cluster
+      )
+  
+  data <- data[data$normalized_counts != 0, ]
+  data$normalized_counts <- round(data$normalized_counts, digits = 2)
+  
+  if(only_boxplot) {
+  #plot
+  fig <- 
+    data %>%
+    plotly::plot_ly(type = 'violin')
+  
+  fig <- fig %>%
+    add_trace(
+      x = ~cluster[data$stage == '48h'],
+      y = ~normalized_counts[data$stage == '48h'],
+      legendgroup = '48h',
+      scalegroup = '48h',
+      name = '48h',
+      side = 'negative',
+      opacity = 0.4,
+      box = 
+        list(visible = T),
+      meanline = 
+        list(visible = T),
+      color = I("#1B9E77")
+    ) 
+  
+  fig <- fig %>%
+    add_trace(
+      x = ~cluster[data$stage == '72h'],
+      y = ~normalized_counts[data$stage == '72h'],
+      legendgroup = '72h',
+      scalegroup = '72h',
+      name = '72h',
+      side = 'positive',
+      opacity = 0.9,
+      box = 
+        list(visible = T),
+      meanline = 
+        list(visible = T),
+      color = I("#D95F02")
+    )
+  
+  fig <- fig %>%
+    layout(
+      xaxis = list(
+        title = "" 
+        ),
+      yaxis = 
+        list(
+          title = "normalized counts",
+          zeroline = F
+        ),
+      violingap = 10,
+      violingroupgap = 10,
+      violinmode = 'overlay'
+    ) 
+  } else {
+    
+    # fig <-  
+    #   plot_ly(
+    #     data = data,
+    #     y = ~normalized_counts,
+    #     x = ~stage,
+    #     type = "box",
+    #     color = ~stage,
+    #     showlegend = FALSE
+    #   )
+    
+    fig <- 
+      ggplot2::ggplot(data = data %>%
+                        dplyr::mutate(`normalized counts` = round(normalized_counts, digits = 2)), 
+                      ggplot2::aes(x=stage, 
+                                   y= `normalized counts`, 
+                                   fill = stage)) + 
+      ggplot2::geom_boxplot() +
+      ggplot2::theme_minimal() +
+      ggplot2::ylab("normalized counts")+
+      ggplot2::ggtitle(gene)+
+      ggplot2::theme(axis.title = element_text(size = 14),
+                     axis.title.x = element_blank(),
+                     axis.text = element_text(size = 14),
+                     legend.text = element_text(size = 12),
+                     legend.title = element_text(size = 14),
+                     plot.title = element_text(size = 14, face = "bold", hjust = 0.5))+
+      ggplot2::scale_fill_brewer(palette="Dark2") +
+      ggplot2::geom_jitter(width = 0.25)
+    
+    fig <- plotly::ggplotly(fig)
+  }
+  
+  
+  return(fig)
+  
+}
+
+
+
+
+
 
 

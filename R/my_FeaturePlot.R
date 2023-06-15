@@ -50,10 +50,10 @@ my_FeaturePlot <- function(metadata,
   
   #filter matrix
   m_data <- data_slot
-  if(any(rownames(m_data) %in% gene)) {
+  if(gene %in% rownames(m_data)) {
     m_gene <- m_data[gene, ]
   } else {
-    stop() 
+    stop("Gene not found in the current assay") 
     
   }
  
@@ -149,11 +149,20 @@ my_FeaturePlot <- function(metadata,
   if(label == TRUE) {
     FT.plot <-
       FT.plot +
-      ggplot2::annotate(geom = "text",
-                        label = position_label[[identity]],
-                        x = position_label$u1,
-                        y = position_label$u2,
-                        size = 4.5) +
+      ggrepel::geom_label_repel(
+        data = position_label,
+        x = position_label$u1,
+        y = position_label$u2,
+        label = position_label[[identity]] %>% stringr::str_wrap(., width = 10),
+        #fill = labels_all$color,
+        alpha = 0.8,
+        size = 4.3
+      ) +
+      # ggplot2::annotate(geom = "text",
+      #                   label = position_label[[identity]],
+      #                   x = position_label$u1,
+      #                   y = position_label$u2,
+      #                   size = 4.5) +
       viridis::scale_color_viridis(direction = -1) +
       one_theme()
   } else {

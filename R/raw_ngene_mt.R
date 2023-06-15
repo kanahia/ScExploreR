@@ -14,8 +14,9 @@ raw_ngene_mt <- function(input_metadata = overview_metadata) {
   #t <- data.table::fread(input_metadata)
   t2 <-
     input_metadata %>%
+    dplyr::slice_sample(n = floor(nrow(input_metadata) *0.6)) %>%
     ggplot(aes(x = log10(nFeature_RNA), y = percent.mt, color = percent.mt)) +
-    geom_point(alpha = 0.1, shape = 19) +
+    geom_point(alpha = 0.1, shape = 19, size =3) +
     #scale_colour_gradientn(colours = wes_palette(n = 5, name = "Zissou1")) +
     scale_color_gradientn(colors = viridis(256, option = "D")) +
     # scale_x_log10() +

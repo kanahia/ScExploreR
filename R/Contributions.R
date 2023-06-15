@@ -171,19 +171,19 @@ plot_contribution <- function(metadata,
     
   } else if(feature == "nFeature_RNA") {
     
-    metadata_nGenes <- metadata %>% dplyr::mutate(`n Genes` = nFeature_RNA)
+    metadata_nGenes <- metadata %>% dplyr::mutate(`Number of genes` = nFeature_RNA)
     p <-
       ggplot2::ggplot(data = metadata_nGenes) + 
-      ggplot2::geom_point(data = metadata_nGenes %>% dplyr::filter(`n Genes` < 1000),
+      ggplot2::geom_point(data = metadata_nGenes %>% dplyr::filter(`Number of genes` < 1000),
                           aes(x = UMAP_1, 
                               y = UMAP_2,
-                              color = `n Genes`), 
+                              color = `Number of genes`), 
                           size = 0.5) + 
       viridis::scale_color_viridis(direction = -1) +
-      ggplot2::geom_point(data = metadata_nGenes %>% dplyr::filter(`n Genes` > 1000),
+      ggplot2::geom_point(data = metadata_nGenes %>% dplyr::filter(`Number of genes` > 1000),
                           aes(x = UMAP_1, 
                               y = UMAP_2,
-                              color = `n Genes`),
+                              color = `Number of genes`),
                           size = 0.5) + 
       viridis::scale_color_viridis(direction = -1) +
       ggplot2::guides(colour = ggplot2::guide_colourbar(title.position="top", title.hjust = 0.5),
@@ -204,7 +204,7 @@ plot_contribution <- function(metadata,
       ) +
       # #labs(color = "Library size (log10 scale)") +
       ggplot2::guides(fill =  ggplot2::guide_legend(
-        title = "n Genes",
+        title = "Number of genes",
         title.position = "top",
         title.hjust = 0.5,
         title.vjust = 0.5)) +
@@ -255,20 +255,20 @@ plot_contribution <- function(metadata,
       viridis::scale_color_viridis(direction = -1)
   } else if (feature == "percent.mt") {
     
-    metadata_p.mt <- metadata %>% dplyr::mutate(`MT content` = percent.mt)
+    metadata_p.mt <- metadata %>% dplyr::mutate(`Mitochondrial gene content [%]` = percent.mt)
     
     p <-
       ggplot2::ggplot(data = metadata_p.mt) + 
-      ggplot2::geom_point(data = metadata_p.mt %>% dplyr::filter(`MT content` < 3),
+      ggplot2::geom_point(data = metadata_p.mt %>% dplyr::filter(`Mitochondrial gene content [%]` < 3),
                           aes(x = UMAP_1, 
                               y = UMAP_2,
-                              color = `MT content`), 
+                              color = `Mitochondrial gene content [%]`), 
                           size = 0.5) + 
       viridis::scale_color_viridis(direction = -1) +
-      ggplot2::geom_point(data = metadata_p.mt %>% dplyr::filter(`MT content` > 3),
+      ggplot2::geom_point(data = metadata_p.mt %>% dplyr::filter(`Mitochondrial gene content [%]` > 3),
                           aes(x = UMAP_1, 
                               y = UMAP_2,
-                              color = `MT content`), 
+                              color = `Mitochondrial gene content [%]`), 
                           size = 0.5) + 
       viridis::scale_color_viridis(direction = -1) +
       ggplot2::guides(colour = ggplot2::guide_colourbar(title.position="top", title.hjust = 0.5),
@@ -289,7 +289,7 @@ plot_contribution <- function(metadata,
       ) + 
       # #labs(color = "Library size (log10 scale)") +
       ggplot2::guides(fill =  ggplot2::guide_legend(
-        title = "MT content",
+        title = "Mitochondrial gene content [%]",
         title.position = "top",
         title.hjust = 0.5,
         title.vjust = 0.5)) +

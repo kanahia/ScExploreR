@@ -10,7 +10,10 @@ FeaturePlotShiny(
   data_slot = NULL,
   identity,
   order = FALSE,
-  stage
+  stage,
+  selected = "myh6",
+  pt.size = 5e-04,
+  pt.size_pos = 0.5
 )
 }
 \description{

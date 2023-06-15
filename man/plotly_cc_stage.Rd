@@ -9,7 +9,7 @@ plotly_cc_stage(
   identity = "edited_res.1.5",
   stage = "stage",
   feature = "Phase",
-  my_colors = c("#ff7f0eeb", "#2ca02ca6", "#d62728d4")
+  my_colors = rev(c("#0B775E", "#DC863B"))
 )
 }
 \arguments{
