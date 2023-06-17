@@ -345,9 +345,9 @@ MultiPlot_UI <- function(id,
                            c(
                            "Selected cells" = "selected_cells", 
                            "Overview" = "Overview",
-                           "QC per cluster" = "qc_cluster",
                            "Contribution" = "contribution",
-                           "Global QC" = "qc"
+                           "Cluster metrics" = "qc_cluster",
+                           "Global metrics" = "qc"
                            ),
                          width = "100%"
                          ) {

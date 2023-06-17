@@ -92,3 +92,11 @@ diff_exp_text <-
 heart_markers <-
   shiny::p("Marker genes between clusters were calculated according to Seurat FindMarkers function using default parameters.",
            style = "font-size: 17px; margin-top: 10px; text-align:justify; margin-left: 15px;")
+
+
+cell_matrix_info <-
+  shiny::p(
+    "Click the dot in the dot plot to display the gene expression matrix for the cell of interest",
+    style = "font-size: 17px; color: black; font-weight: bold; text-decoration: underline; margin-top: -70px;
+             margin-bottom: 45px; margin-left: -8px; text-align: justify;")
+

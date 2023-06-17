@@ -18,7 +18,7 @@ ExpressionLevelUI <- function(id,
     shiny::tags$div(
       shiny::fluidRow(
         shiny::column(
-          width = 3,
+          width = 2,
           shiny::selectizeInput( 
             inputId = ns("gene_selector"), 
             label = gene_label,
@@ -27,8 +27,8 @@ ExpressionLevelUI <- function(id,
             width = width)
         ),
         shiny::column(
-          width = 4,
-          offset = -2,
+          width = 3,
+          offset = 0,
           shiny::selectInput(
             inputId = ns("cluster"),
             label = cluster_label,
@@ -40,16 +40,14 @@ ExpressionLevelUI <- function(id,
         ),
       
       shiny::fluidRow(
-        #shiny::column(width=10,
           shinydashboard::box(plotly::plotlyOutput(ns("test_violin"), 
                                                    width = "auto", 
                                                    height = plot_height)
-                              )
-          ,
-       # shiny::column(width=8,
-          shinydashboard::box(DT::dataTableOutput(ns('exp_genes_in_cell'),
-                                                     width = "auto",
-                                                     height = plot_height)
+                              ),
+          shinydashboard::box(cell_matrix_info,
+                              DT::dataTableOutput(ns('exp_genes_in_cell'),
+                                                  width = "auto",
+                                                  height = plot_height)
 
                               )
        
@@ -99,17 +97,18 @@ ExpressionLevelShiny <- function(id,
       
       output$exp_genes_in_cell <- DT::renderDataTable({ #shiny::renderPrint({
         event.data <- plotly::event_data("plotly_click", source = "click")
-        
+
         if(is.null(event.data) == T) return(NULL)
         # Find selected cell
         whichCell <- unique(event.data[1,5])[[1]]
-        
+
         res <- data.frame("cell" = whichCell,
                           "cluster" = metadata[[clustering]][metadata$cell == whichCell],
                           "norm.counts" = round(sort(Data2extractCell[, whichCell], decreasing = T), 4)
                           )
         #res <- whichCell
         return(res)
+      
         })
       }
     )

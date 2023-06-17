@@ -53,7 +53,7 @@ my_FeaturePlot <- function(metadata,
   if(gene %in% rownames(m_data)) {
     m_gene <- m_data[gene, ]
   } else {
-    stop("Gene not found in the current assay") 
+    stop() 
     
   }
  

@@ -414,8 +414,13 @@ ViolinGeneExpStage <- function(gene = NULL,
                                only_boxplot = TRUE
                                ) {
   
+  if(! gene %in% rownames(slot_data)) {
+    stop()
+  }
+  
   chosen_cells <- 
     names(slot_data[gene, ][metadata$cell[metadata[[clustering]] == cluster]])
+  
   stage <- metadata$stage[metadata$cell %in% chosen_cells]
     
   data <-
