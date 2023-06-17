@@ -63,7 +63,8 @@ FeaturePlotShiny <- function(id,
                              stage,
                              selected = "myh6",
                              pt.size = 0.0005,
-                             pt.size_pos = 0.5) {
+                             pt.size_pos = 0.5
+                             ) {
     shiny::moduleServer(
         id,
         function(input, output, session) {

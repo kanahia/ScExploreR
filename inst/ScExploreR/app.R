@@ -111,12 +111,13 @@ ui <-
                     ),
                   shiny::wellPanel(
                     shiny::fluidRow(
-                      shiny::column(
-                        offset = 3, width = 12,
+                    #  shiny::column(
+                        #offset = 3, width = 9,
+                    #    offset =2, width =10,
                         shinydashboard::box(
                           ScExploreR::ExpressionLevelUI(id = "random_violin"),
-                          width = 6)
-                        )
+                          width = 12)
+                     #   )
                       )
                     )
                   ),
@@ -140,24 +141,9 @@ ui <-
                       shinydashboard::box(
                         DT::dataTableOutput("markers_all"),
                         width = 12
+                        )
                       )
                     )
-                  )),
-                shiny::tabPanel(
-                  title = "test",
-                  selectInput("test_id", "TEST: ", choices = c("A", "B", "C"), selected = "C"),
-                  conditionalPanel(condition = "input.test_id == 'A'",
-                                   shinydashboard::box(
-                                     plotlyOutput("test_plot1", width = "100%", height = "520"),
-                                     width = 6
-                                   )),
-                  conditionalPanel(condition = "input.test_id == 'B'",
-                                   shinydashboard::box(
-                                     plotlyOutput("test_plot2", width = "100%", height = "520"),
-                                     width = 12
-                                   ))
-                  
-                    
                   )
                 ) # tabsetPanel end
               ) # the end of TabPanel
@@ -321,7 +307,7 @@ ui <-
 server <- function(input, output, session) {
   
   shinyOptions(cache = cachem::cache_mem(max_size = 500e6))
-
+  
   output$markers_all <-
     DT::renderDataTable(markers_all, options = list(pageLength = 10), filter = "top")
   
@@ -561,14 +547,14 @@ server <- function(input, output, session) {
   })  %>%  shiny::bindCache(input$test_id, input$cluster)
   
   
-  
-  
   ##########
   ScExploreR::ExpressionLevelShiny(
     id = "random_violin",
     metadata = metadata_all,
     slot_data = slot_data_all,
-    clustering = "edited_res.1.5")
+    clustering = "edited_res.1.5",
+    boxplot = TRUE,
+    Data2extractCell = slot_data_all)
   
   # output$test_violin <- renderPlotly({
   #   ViolinGeneExpStage(gene = "myh6", 
@@ -578,15 +564,6 @@ server <- function(input, output, session) {
   #                      slot_data = myo_slot_data)
     
   #})
-  
-  output$test_plot1 <- renderPlotly({
-      plotly_cc_stage()
-
-  })
-  
-  output$test_plot2 <- renderPlotly({
-    plotly_cc_stage()
-  })
   
 }
 

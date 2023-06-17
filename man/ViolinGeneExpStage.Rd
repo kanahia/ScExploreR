@@ -10,7 +10,7 @@ ViolinGeneExpStage(
   clustering,
   metadata,
   slot_data,
-  only_boxplot = FALSE
+  only_boxplot = TRUE
 )
 }
 \arguments{

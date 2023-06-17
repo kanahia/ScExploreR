@@ -28,7 +28,7 @@ ExpressionLevelUI <- function(id,
         ),
         shiny::column(
           width = 4,
-          offset = 0,
+          offset = -2,
           shiny::selectInput(
             inputId = ns("cluster"),
             label = cluster_label,
@@ -39,7 +39,24 @@ ExpressionLevelUI <- function(id,
           )
         ),
       
-      plotly::plotlyOutput(ns("test_violin"), width = "auto", height = plot_height)
+      shiny::fluidRow(
+        #shiny::column(width=10,
+          shinydashboard::box(plotly::plotlyOutput(ns("test_violin"), 
+                                                   width = "auto", 
+                                                   height = plot_height)
+                              )
+          ,
+       # shiny::column(width=8,
+          shinydashboard::box(DT::dataTableOutput(ns('exp_genes_in_cell'),
+                                                     width = "auto",
+                                                     height = plot_height)
+
+                              )
+       
+       #shinydashboard::box(shiny::verbatimTextOutput(ns('exp_genes_in_cell')))
+         # )
+        )
+      
       
       )
     )
@@ -57,7 +74,9 @@ ExpressionLevelShiny <- function(id,
                                  clustering,
                                  selected = "myh6",
                                  metadata = NULL, 
-                                 slot_data = NULL) {
+                                 slot_data = NULL,
+                                 boxplot = TRUE,
+                                 Data2extractCell = NULL) {
   shiny::moduleServer(
     id,
     function(input, output, session) {
@@ -74,7 +93,23 @@ ExpressionLevelShiny <- function(id,
                                        cluster = input$cluster,
                                        clustering = clustering,
                                        metadata = metadata, 
-                                       slot_data = slot_data)
+                                       slot_data = slot_data, 
+                                       only_boxplot = boxplot)
+        })
+      
+      output$exp_genes_in_cell <- DT::renderDataTable({ #shiny::renderPrint({
+        event.data <- plotly::event_data("plotly_click", source = "click")
+        
+        if(is.null(event.data) == T) return(NULL)
+        # Find selected cell
+        whichCell <- unique(event.data[1,5])[[1]]
+        
+        res <- data.frame("cell" = whichCell,
+                          "cluster" = metadata[[clustering]][metadata$cell == whichCell],
+                          "norm.counts" = round(sort(Data2extractCell[, whichCell], decreasing = T), 4)
+                          )
+        #res <- whichCell
+        return(res)
         })
       }
     )

@@ -10,7 +10,8 @@ ExpressionLevelUI(
   cluster_label = "Cluster:",
   selected = "myh6",
   choices = levels(metadata_all$edited_res.1.5),
-  width = "100px"
+  width = "100px",
+  plot_height = 450
 )
 }
 \description{

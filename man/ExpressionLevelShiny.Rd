@@ -9,7 +9,8 @@ ExpressionLevelShiny(
   clustering,
   selected = "myh6",
   metadata = NULL,
-  slot_data = NULL
+  slot_data = NULL,
+  boxplot = TRUE
 )
 }
 \description{
