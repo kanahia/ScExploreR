@@ -40,16 +40,24 @@ ExpressionLevelUI <- function(id,
         ),
       
       shiny::fluidRow(
-          shinydashboard::box(plotly::plotlyOutput(ns("test_violin"), 
+          shinydashboard::box(
+            shinycustomloader::withLoader(
+              type = "html",
+              loader = "dnaspin",plotly::plotlyOutput(ns("test_violin"), 
                                                    width = "auto", 
                                                    height = plot_height)
-                              ),
-          shinydashboard::box(cell_matrix_info,
-                              DT::dataTableOutput(ns('exp_genes_in_cell'),
-                                                  width = "auto",
-                                                  height = plot_height)
-
-                              )
+              )
+            ),
+          shinydashboard::box(
+            cell_matrix_info,
+            shinycustomloader::withLoader(
+              type = "html",
+              loader = "dnaspin",
+              DT::dataTableOutput(ns('exp_genes_in_cell'),
+                                  width = "auto",
+                                  height = plot_height)
+              )
+            )
        
        #shinydashboard::box(shiny::verbatimTextOutput(ns('exp_genes_in_cell')))
          # )
