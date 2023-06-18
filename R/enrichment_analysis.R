@@ -12,10 +12,9 @@ enrichment_analysis_UI <- function(id,
   
   shiny::fluidRow(
     width = 12,
-    shiny::h1("Enrichment analysis", style = "margin-left: 15px;"),
-    shiny::p(rep("some text some text", times = 50) %>% 
-               paste0(collapse = " "), 
-             style = "font-size: 18px; margin-left: 15px; align: justify;"),
+    shiny::h1("Enrichment analysis", 
+              style = "margin-left: 15px; margin-right: 15px;font-weight: bold;"),
+    enrichment_text,
   
   shiny::wellPanel(
     shiny::fluidRow(
@@ -57,7 +56,7 @@ enrichment_analysis_UI <- function(id,
                             width =  "auto"), 
         style = "overflow-y: auto; height: 620px;") #"100%")
     )
-    )
+    ,style = "margin: 15px")
   )
 }
 
@@ -76,16 +75,37 @@ enrichment_analysis_Shiny <- function(id) {
         shiny::eventReactive(
           eventExpr = input$button,
           valueExpr = {
-            out_df <- 
-              data.frame("gene" =
-                           unlist(
-                             stringr::str_split(string = input$caption,
-                                                pattern = "\\\n"))) %>%
-              dplyr::left_join(., drerio_mart_ids, by = c("gene" = "Gene name")) %>%
-              dplyr::select(NCBI) %>%
-              tidyr::drop_na()
             
-            #out <-
+            pasted_genes <- 
+              unlist(stringr::str_split(string = input$caption,pattern = "\\\n"))
+            
+            if(any(grepl(x = pasted_genes, pattern = "ENSDARG"))) {
+              out_df <- 
+                drerio_mart_ids$NCBI[drerio_mart_ids$`Gene stable ID` %in% pasted_genes] %>%
+                as.data.frame() %>%
+                dplyr::rename("NCBI" = 1) %>%
+                #data.frame("gene" = pasted_genes) %>%
+                #dplyr::left_join(., drerio_mart_ids, by = c("gene" = "Gene stable ID")) %>%
+                #dplyr::select(NCBI) %>%
+                tidyr::drop_na()
+            } else {
+              out_df <- 
+                data.frame("gene" = pasted_genes) %>%
+                dplyr::left_join(., drerio_mart_ids, by = c("gene" = "Gene name")) %>%
+                dplyr::select(NCBI) %>%
+                tidyr::drop_na()
+            }
+            
+            # out_df <- 
+            #   data.frame("gene" =
+            #                unlist(
+            #                  stringr::str_split(string = input$caption,
+            #                                     pattern = "\\\n"))) %>%
+            #   dplyr::left_join(., drerio_mart_ids, by = c("gene" = "Gene name")) %>%
+            #   dplyr::select(NCBI) %>%
+            #   tidyr::drop_na()
+            
+            out <-
               clusterProfiler::enricher(
                 gene = out_df$NCBI,
                 pvalueCutoff = 0.05,
@@ -102,8 +122,20 @@ enrichment_analysis_Shiny <- function(id) {
                         term2gene_CMs},
                 TERM2NAME = NA
               )
+            
+            attr(x = out,
+                 which = "input_type") <- 
+              if(any(grepl(x = pasted_genes, pattern = "ENSDARG"))) {
+                "Gene stable ID"
+              } else {
+                "Gene name"
+              }
+            
+            return(out)
+            
+            
           })
-    
+      
         output$text_output <- shiny::renderPlot({
           
           if(!is.null(click())){
@@ -126,7 +158,12 @@ enrichment_analysis_Shiny <- function(id) {
                                 dplyr::mutate(pvalue = rstatix::p_round(pvalue),
                                               p.adjust = rstatix::p_round(p.adjust),
                                               qvalue = rstatix::p_round(qvalue),
-                                              gene.name = ScExploreR::ncbi2gene(enrichResult = click())) %>%
+                                              gene.name = ScExploreR::ncbi2gene(
+                                                enrichResult = click(), 
+                                                gene_id_type = attr(click(), 
+                                                                    which = "input_type")
+                                                )
+                                              ) %>%
                                 dplyr::select(-c(geneID)),
                               options = list(pageLength = 10, scrollX = TRUE), 
                               filter = "top")

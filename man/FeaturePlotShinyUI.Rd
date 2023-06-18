@@ -6,10 +6,11 @@
 \usage{
 FeaturePlotShinyUI(
   id,
-  label = "Choose gene",
+  label = "Select gene:",
   value = "",
-  placeholder = "myh6",
-  width = "100px"
+  selected = "myh6",
+  width = "100px",
+  label_radio = "Stage:"
 )
 }
 \description{

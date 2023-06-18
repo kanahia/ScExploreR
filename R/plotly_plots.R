@@ -1,4 +1,7 @@
 
+
+# Violin plot plotly ------------------------------------------------------
+
 #' Violin plot plotly
 #'
 #' @param metadata 
@@ -87,6 +90,7 @@ violin_plotly <- function(metadata,
 }
 
 
+# Stacked plotly bar plot -------------------------------------------------
 
 #' Stacked plotly bar plot
 #'
@@ -118,12 +122,32 @@ stacked_bar_plotly <- function(metadata = metadata_all,
             DataSet == "et33_72h_raw" ~ "72h rep 2")
         )
     
+    my_colors <-
+      c("lightsalmon3",
+        wesanderson::wes_palette(n = 4, name = "Rushmore1")[c(3)],
+        "lemonchiffon3",
+        "#edae49")
+    
   } else {
     df <-
       get_data_metrics(metadata = metadata,
                        feature = feature,
                        main_group = main_group)
-  }
+    if(feature == "line") {
+      my_colors <-
+        c(wesanderson::wes_palette(n = 4, name = "Rushmore1")[c(3)], 
+          "#edae49")
+      
+    } else if(feature == "stage") {
+      my_colors <- c("lemonchiffon3", "lightsalmon3")
+    } else if(feature == "Phase"){
+      my_colors <- c("#ee6a5b", 
+                     "#edae49",
+                     wesanderson::wes_palette(n = 4, name = "Rushmore1")[c(3)]
+                     )
+    }
+      
+  } 
   
   plot <- 
     df %>% 
@@ -132,8 +156,8 @@ stacked_bar_plotly <- function(metadata = metadata_all,
       y = ~ round(percent, digits = 2),
       text = ~ n,
       color = ~ df[[feature]],
-      colors = c("lemonchiffon3", "lightsalmon3",
-                 wesanderson::wes_palette(n = 4, name = "Rushmore1")[c(3)], "#edae49"),
+      colors = my_colors,
+      opacity = rep(0.7, times = length(my_colors)),
       type = 'bar',
       hoverinfo = "text",
       hovertext = paste(.$edited_res.1.5,
@@ -142,15 +166,32 @@ stacked_bar_plotly <- function(metadata = metadata_all,
                         "<br> Count :", .$n)
       ) %>% 
     layout(
-      yaxis = list(title = 'Percent (%)'),
+      yaxis = list(title = ''),
       xaxis = list(title= ""),
       barmode = 'stack',
-      hovermode = 'x') %>%
-    layout(legend = list(traceorder = "normal"))
+      hovermode = 'x',
+      legend = list(traceorder = "normal"),
+      annotations =
+        list(
+          list(
+            x = -0.09 ,
+            y = 0.5,
+            text = "Percent %",
+            font = list(color = "black", size = 18),
+            textangle = 270,
+            showarrow = F,
+            xref = 'paper',
+            yref = 'paper',
+            size = 48
+          ))
+      )
     
   
   return(plot)
 }
+
+
+# Violin plot between one metadata split by stage -------------------------
 
 
 
@@ -253,7 +294,8 @@ plotly_cc_stage <- function(data = metadata_all,
                             identity = "edited_res.1.5",
                             stage = "stage",
                             feature = "Phase",
-                            my_colors = c("#ff7f0eeb", "#2ca02ca6", "#d62728d4")){
+                            my_colors = rev(c("#0B775E", "#DC863B"))#c("#ff7f0eeb", "#2ca02ca6", "#d62728d4")
+                            ){
   
   make_plotly <- function(timepoint) {
     dfA <-
@@ -269,8 +311,9 @@ plotly_cc_stage <- function(data = metadata_all,
                         y = ~percent,
                         color = ~as.factor(dfA[[feature]]),
                         colors = my_colors,
-                        opacity = c(0.7, 0.7, 0.7),
+                        #opacity = c(0.7, 0.7, 0.7),
                         type = "bar",
+                        alpha = 0.5,
                         legendgroup= ~ dfA[[feature]],
                         hoverinfo = "text",
                         hovertext = paste(dfA[[identity]],
@@ -317,5 +360,205 @@ plotly_cc_stage <- function(data = metadata_all,
                      list(title = list(text='Phase')),
                    title = 
                      list(title = list(text='Phase'))
-    )
+                   ) %>%
+    plotly::layout(annotations =
+                     list(
+                       list(
+                         x = c(1.03),
+                         y = c(0.78),
+                         text = c("48h"),
+                         font = list(color = "black", size = 18),
+                         textangle = -270,
+                         showarrow = F,
+                         xref = 'paper',
+                         yref = 'paper',
+                         size = 30
+                       )
+                     )) %>%
+    plotly::layout(annotations =
+                     list(
+                       list(
+                         x = c(1.03),
+                         y = c(0.23),
+                         text = c("72h"),
+                         font = list(color = "black", size = 18),
+                         textangle = -270,
+                         showarrow = F,
+                         xref = 'paper',
+                         yref = 'paper',
+                         size = 30
+                       )
+                     ))
+}
+
+
+
+#' ViolinGeneExpStage
+#'
+#' @param gene gene of interests
+#' @param cluster cluste rof interests
+#' @param clustering metadata column with cluster names 
+#' @param metadata metadata
+#' @param slot_data slot data(SCT here)
+#' @param only_boxplot plot boxplot or violin
+#'
+#' @return plotly plot
+#' @import plotly dplyr
+#' @export
+#'
+ViolinGeneExpStage <- function(gene = NULL,
+                               cluster = NULL,
+                               clustering,
+                               metadata,
+                               slot_data,
+                               only_boxplot = TRUE
+                               ) {
+  
+  if(! gene %in% rownames(slot_data)) {
+    stop()
+  }
+  
+  chosen_cells <- 
+    names(slot_data[gene, ][metadata$cell[metadata[[clustering]] == cluster]])
+  
+  stage <- metadata$stage[metadata$cell %in% chosen_cells]
+    
+  data <-
+    data.frame(
+      "cells" = chosen_cells,
+      "normalized_counts" = slot_data[gene, ][chosen_cells],
+      "stage" = stage,
+      "cluster" = cluster
+      )
+  
+  if(sum(data$normalized_counts) == 0) {
+    if(only_boxplot==FALSE | only_boxplot == TRUE) {
+      
+      fig <- 
+        ggplot2::ggplot() +                      
+        ggplot2::annotate("text",
+                          x = 1,
+                          y = 1,
+                          size = 8,
+                          label = "No expression data. \nTry another gene!") + 
+        ggplot2::theme_void()
+      
+      fig <- plotly::ggplotly(fig)
+      fig <- fig %>% 
+        plotly::layout(
+          xaxis = list(
+            title = "",
+            zeroline = FALSE,
+            showline = FALSE,
+            showticklabels = FALSE,
+            showgrid = FALSE),
+          yaxis = list(
+            title = "",
+            zeroline = FALSE,
+            showline = FALSE,
+            showticklabels = FALSE,
+            showgrid = FALSE)
+          )
+    }
+    
+  } else {
+    
+    data <- data[data$normalized_counts != 0, ]
+    data$normalized_counts <- round(data$normalized_counts, digits = 2)
+    
+    if(only_boxplot == FALSE) {
+      
+      #plot
+      fig <- 
+        data %>%
+        plotly::plot_ly(type = 'violin')
+      
+      fig <- fig %>%
+        add_trace(
+          x = ~cluster[data$stage == '48h'],
+          y = ~normalized_counts[data$stage == '48h'],
+          legendgroup = '48h',
+          scalegroup = '48h',
+          name = '48h',
+          side = 'negative',
+          opacity = 0.4,
+          box = 
+            list(visible = T),
+          meanline = 
+            list(visible = T),
+          color = I("#1B9E77")
+        ) 
+      
+      fig <- fig %>%
+        add_trace(
+          x = ~cluster[data$stage == '72h'],
+          y = ~normalized_counts[data$stage == '72h'],
+          legendgroup = '72h',
+          scalegroup = '72h',
+          name = '72h',
+          side = 'positive',
+          opacity = 0.9,
+          box = 
+            list(visible = T),
+          meanline = 
+            list(visible = T),
+          color = I("#D95F02")
+        )
+      
+      fig <- fig %>%
+        layout(
+          xaxis = list(
+            title = "" 
+          ),
+          yaxis = 
+            list(
+              title = "normalized counts",
+              zeroline = F
+            ),
+          violingap = 10,
+          violingroupgap = 10,
+          violinmode = 'overlay'
+        ) 
+      
+    } else if(only_boxplot == TRUE) {
+      
+      Cell <- data$cells
+      
+      fig <- 
+        ggplot2::ggplot(data = data %>%
+                          dplyr::mutate(`normalized counts` = round(normalized_counts, digits = 2)), 
+                        ggplot2::aes(x =stage, 
+                                     y = `normalized counts`, 
+                                     fill = stage,
+                                     #text = paste0("Cell: ", cells),
+                                     key = Cell)) + 
+        ggplot2::geom_boxplot() +
+        ggplot2::theme_minimal() +
+        ggplot2::ylab("normalized counts")+
+        ggplot2::ggtitle(gene)+
+        ggplot2::theme(axis.title = element_text(size = 14),
+                       axis.title.x = element_blank(),
+                       axis.text = element_text(size = 14),
+                       legend.text = element_text(size = 12),
+                       legend.title = element_text(size = 14),
+                       plot.title = element_text(size = 14, face = "bold", hjust = 0.5))+
+        ggplot2::scale_fill_brewer(palette="Dark2") +
+        ggplot2::geom_jitter(width = 0.25) #aes(text = paste0("Cell: ", cells)))
+      
+      fig <- plotly::ggplotly(fig, source="click")
+      
+      if(length(unique(data$stage)) > 1){
+        fig$x$data[[3]]$text <- sub(x = fig$x$data[[3]]$text, pattern = "stage: 48h<br />", replacement = "")
+        fig$x$data[[4]]$text <- sub(x = fig$x$data[[4]]$text, pattern = "stage: 72h<br />", replacement = "")
+      } else {
+        present_stage <- unique(data$stage)
+        fig$x$data[[2]]$text <- sub(x = fig$x$data[[2]]$text, 
+                                    pattern = paste0("stage: ", unique(data$stage), "<br />"), 
+                                    replacement = "")
+      }
+      
+    
+    }
+  }
+  return(fig)
 }

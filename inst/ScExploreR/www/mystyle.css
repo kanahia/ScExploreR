@@ -13,13 +13,13 @@
   border: 1px solid #dddddd;
 }
 
-button.confirm {
+.button.confirm {
   background-color: rgb(90 181 223);
 }
 
 my_alert {font-size: 28px}
 
-button.sweet-alert p {
+.button.sweet-alert p {
     color: #ed4f4f;
     font-size: 28px;
     font-weight: 300;
@@ -54,4 +54,23 @@ button.sweet-alert p {
 
 .col-sm-4 {
     autocomplete: on;
+}
+
+
+.my_test_id {
+    color: black;
+    margin-bottom: 10px;
+}
+
+#shiny-notification-panel {
+  top: 0;
+  bottom: unset;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  max-width: 450px;
+  text-align:center;
+  font-size: 25px;
 }
