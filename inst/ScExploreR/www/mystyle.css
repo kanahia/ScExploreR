@@ -62,3 +62,15 @@ my_alert {font-size: 28px}
     margin-bottom: 10px;
 }
 
+#shiny-notification-panel {
+  top: 0;
+  bottom: unset;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  max-width: 450px;
+  text-align:center;
+  font-size: 25px;
+}

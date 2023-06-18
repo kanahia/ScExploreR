@@ -10,7 +10,8 @@ ExpressionLevelShiny(
   selected = "myh6",
   metadata = NULL,
   slot_data = NULL,
-  boxplot = TRUE
+  boxplot = TRUE,
+  Data2extractCell = NULL
 )
 }
 \description{

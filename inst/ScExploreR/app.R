@@ -55,6 +55,22 @@ ui <-
         shiny::tags$head(shiny::tags$link(rel = "stylesheet", 
                                           type = "text/css", 
                                           href = "mystyle.css")),
+        shiny::tags$head(
+          shiny::tags$style(
+            HTML("#shiny-notification-panel{
+                  top: 0;
+                  bottom: unset;
+                  left: 0;
+                  right: 0;
+                  margin-left: auto;
+                  margin-right: auto;
+                  width: 100%;
+                  max-width: 450px;
+                  text-align:center;
+                  font-size: 25px;}"
+                 )
+            )
+          ),
         #added in css_formating
         skin_colors,
         shinydashboard::tabItems(

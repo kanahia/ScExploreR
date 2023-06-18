@@ -107,8 +107,20 @@ ExpressionLevelShiny <- function(id,
         event.data <- plotly::event_data("plotly_click", source = "click")
 
         if(is.null(event.data) == T) return(NULL)
+        
         # Find selected cell
-        whichCell <- unique(event.data[1,5])[[1]]
+        if(! "key" %in% colnames(event.data)) {
+          
+          shiny::showNotification(ui = "This is a boxplot component not a cell. Please select a right cell.",
+                                  type = "warning",
+                                  duration = 5)
+                     
+          
+          stop()
+        } else {
+          whichCell <- unique(event.data[1,5])[[1]]
+          }
+        
 
         res <- data.frame("cell" = whichCell,
                           "cluster" = metadata[[clustering]][metadata$cell == whichCell],
