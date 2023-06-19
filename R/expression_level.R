@@ -111,8 +111,8 @@ ExpressionLevelShiny <- function(id,
         # Find selected cell
         if(! "key" %in% colnames(event.data)) {
           
-          shiny::showNotification(ui = "This is a boxplot component not a cell. Please select a right cell.",
-                                  type = "warning",
+          shiny::showNotification(ui = "This is a boxplot component not a cell. Please select a valid cell.",
+                                  type = "error",
                                   duration = 5)
                      
           
