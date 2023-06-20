@@ -1,6 +1,6 @@
 #' Volcano plot
 #' 
-#'@param seurat_object seurat object
+#' @param seurat_object seurat object
 #' @param ident.1 
 #' @param ident.2 
 #' @param avg_log2FC.1 
@@ -17,7 +17,10 @@
 #' @param n_genes 
 #' @param point.size 
 #' @param alpha 
-#'@param markers output from FindMarkers/FindAllMarkers from Seurat
+#' @param markers output from FindMarkers/FindAllMarkers from Seurat
+#'
+#' importFrom ggplot2 aes
+#' @export
 
 volcano_plot <- function(seurat_object,
                          markers = NULL,

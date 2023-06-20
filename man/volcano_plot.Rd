@@ -28,7 +28,9 @@ volcano_plot(
 \arguments{
 \item{seurat_object}{seurat object}
 
-\item{markers}{output from FindMarkers/FindAllMarkers from Seurat}
+\item{markers}{output from FindMarkers/FindAllMarkers from Seurat
+
+importFrom ggplot2 aes}
 
 \item{ident.1}{}
 

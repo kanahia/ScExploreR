@@ -435,7 +435,7 @@ server <- function(input, output, session) {
                              type = "error",
                              className = "my_alert")
     } else {
-      volcano_plot(integrated_data,
+	    ScExploreR::volcano_plot(integrated_data,
                    markers = DE_list[[paste0(input$cluster_1, "_vs_", input$cluster_2)]],
                    ident.1 = input$cluster_1,
                    ident.2 = input$cluster_2,
