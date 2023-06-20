@@ -1,4 +1,4 @@
-devtools::load_all()
+library("ScExploreR")
 
 ui <- 
   shinydashboard::dashboardPage(
@@ -530,7 +530,7 @@ server <- function(input, output, session) {
   #       })
   
   
-  output$plotly <- renderPlotly({
+  output$plotly <- plotly::renderPlotly({
     if (input$test_id %in% c('line', 'stage', 'DataSet')) {
            stacked_bar_plotly(feature = input$test_id,
                               metadata = metadata_all,
@@ -544,19 +544,19 @@ server <- function(input, output, session) {
     }
   }) %>%  shiny::bindCache(input$test_id)
   
-  output$plot_violin1 <- renderPlotly({
+  output$plot_violin1 <- plotly::renderPlotly({
     if (input$test_id == 'test') {
       violin_plotly(metadata = metadata_all, CLUSTERS = input$cluster)[[1]]
     }
   }) %>%  shiny::bindCache(input$test_id, input$cluster)
   
-  output$plot_violin2 <- renderPlotly({
+  output$plot_violin2 <- plotly::renderPlotly({
     if (input$test_id == 'test') {
       violin_plotly(metadata = metadata_all, CLUSTERS = input$cluster)[[2]]
     }
   })  %>%  shiny::bindCache(input$test_id, input$cluster)
   
-  output$plot_violin3 <- renderPlotly({
+  output$plot_violin3 <- plotly::renderPlotly({
     if (input$test_id == 'test') {
       violin_plotly(metadata = metadata_all, CLUSTERS = input$cluster)[[3]]
     }
@@ -572,7 +572,7 @@ server <- function(input, output, session) {
     boxplot = TRUE,
     Data2extractCell = slot_data_all)
   
-  # output$test_violin <- renderPlotly({
+  # output$test_violin <- plotly::renderPlotly({
   #   ViolinGeneExpStage(gene = "myh6", 
   #                      cluster = "Atrial CMs I",
   #                      clustering = "custom_int_res2",
