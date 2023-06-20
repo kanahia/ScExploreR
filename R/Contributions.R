@@ -485,7 +485,9 @@ shiny::conditionalPanel(condition = "input.type_of_data == 'qc_cluster'",
 
 #' MultiPlot_Shiny
 #'
-#' @param id 
+#' @param id
+#' 
+#' @importFrom plotly rednerPlotly 
 #'
 #' @export
 #' 
@@ -497,7 +499,7 @@ MultiPlot_Shiny <- function(id,
       
       ns <- shiny::NS(id)
       
-      output$plotly <- renderPlotly({
+      output$plotly <- plotly::renderPlotly({
         if (input$type_of_data %in% c('contribution')) {
           if(input$select_contribution %in% c("DataSet", "line", "stage", "Phase")){
             # stacked_bar_plotly(feature = input$select_contribution,
@@ -517,7 +519,7 @@ MultiPlot_Shiny <- function(id,
         } 
       }) %>%  shiny::bindCache(input$type_of_data, input$select_contribution)
       
-      output$stacked_plotly <- renderPlotly({
+      output$stacked_plotly <- plotly::renderPlotly({
         if(input$type_of_data %in% c("Overview")) {
           StackedMetrics(data = metadata_all, 
                          clustering = "edited_res.1.5",
@@ -533,13 +535,13 @@ MultiPlot_Shiny <- function(id,
         }
       }) %>%  shiny::bindCache(input$type_of_data, input$qc_global)
       
-      output$plot_violin1 <- renderPlotly({
+      output$plot_violin1 <- plotly::renderPlotly({
         if (input$type_of_data == 'qc_cluster') {
           violin_plotly(metadata = metadata_all, CLUSTERS = input$cluster)[[1]]
         }
       }) %>%  shiny::bindCache(input$type_of_data, input$cluster)
       
-      output$plot_violin2 <- renderPlotly({
+      output$plot_violin2 <- plotly::renderPlotly({
         if (input$type_of_data == 'qc_cluster') {
           violin_plotly(metadata = metadata_all, CLUSTERS = input$cluster)[[2]]
         }
