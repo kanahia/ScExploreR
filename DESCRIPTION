@@ -1,7 +1,7 @@
 Package: ScExploreR
 Type: Package
 Title: Single-cell data Explorer
-Version: 0.0.993
+Version: 0.0.994
 Authoars@R: c(
     person("Karim", "Abu Nahia", email = "kanahia@iimcb.gov.pl", role = c("aut", "cre")),
     person("Maciej", "Migdał", email = "mmigdal@iimcb.gov.pl", role = "aut")) 
@@ -24,4 +24,4 @@ Imports:
     rlang,
     tibble,
     viridis
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3

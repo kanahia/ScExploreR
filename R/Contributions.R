@@ -487,7 +487,7 @@ shiny::conditionalPanel(condition = "input.type_of_data == 'qc_cluster'",
 #'
 #' @param id
 #' 
-#' @importFrom plotly rednerPlotly 
+#' @importFrom plotly renderPlotly 
 #'
 #' @export
 #' 
