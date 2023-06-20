@@ -1,7 +1,11 @@
+
+#' @export
 # name to display in title bar
 title <- "ScExploreR"
 
+
 # logo to display in header bar
+#' @export
 header_title <- 
   shiny::tags$a(
     href = 'https://zdglab.iimcb.gov.pl/',
@@ -19,6 +23,7 @@ header_title <-
 
 #skin color
 
+#' @export
 skin_colors <-
   shiny::tags$head(shiny::tags$style(
     shiny::HTML(
@@ -30,6 +35,7 @@ skin_colors <-
     )
     ))
 
+#' @export
 experiment <-
   shiny::tags$img(
     src = "10x_workflow3.png",

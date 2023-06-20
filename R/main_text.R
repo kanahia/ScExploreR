@@ -1,3 +1,4 @@
+#' @export
 main_text <-
   shiny::mainPanel(
     shiny::h1("scRNA-seq reveals the diversity of the developing cardiac cell lineage 
@@ -59,7 +60,7 @@ main_text <-
 
 
 
- 
+#' @export 
 enrichment_text <-
   shiny::p(
     "This tool utilizes a standard hypergeometric test (from ClusterProfiler package)
@@ -81,19 +82,19 @@ enrichment_text <-
             margin-right: 15px;"
   )
 
-
+#' @export
 diff_exp_text <-
   shiny::p("This panel allows for performing differential gene expression analysis between selected clusters. 
            The results are visualized by a volcano plot and a summary table with respective metrics.
            Genes can be labeled based on the significance level or log2FoldChange. 
            The slider can be used to specify the number of gene labels to show." ,
             style = "font-size: 17px; margin-top: 10px; text-align:justify;")
-
+#' @export
 heart_markers <-
   shiny::p("Marker genes between clusters were calculated according to Seurat FindMarkers function using default parameters.",
            style = "font-size: 17px; margin-top: 10px; text-align:justify; margin-left: 15px;")
 
-
+#' @export
 cell_matrix_info <-
   shiny::p(
     "Click the dot in the dot plot to display the gene expression matrix for the cell of interest",
