@@ -104,11 +104,10 @@ ExpressionLevelShiny <- function(id,
         })
       
       output$exp_genes_in_cell <- DT::renderDataTable({ #shiny::renderPrint({
-	shiny::observeEvent(
-	    plotly::event_data("plotly_click", source = "click"), {
-    	    event.data <- plotly::event_data("plotly_click", source = "click")
-	})
-        if(is.null(event.data) == T) return(NULL)
+	 event.data <- plotly::event_data("plotly_click", source = "click")
+
+        if(is.null(event.data) == T) {
+	" "}
         
         # Find selected cell
         if(! "key" %in% colnames(event.data)) {
