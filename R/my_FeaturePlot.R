@@ -53,7 +53,16 @@ my_FeaturePlot <- function(metadata,
   if(gene %in% rownames(m_data)) {
     m_gene <- m_data[gene, ]
   } else {
-    stop() 
+    fig <- 
+        ggplot2::ggplot() +                      
+        ggplot2::annotate("text",
+                          x = 1,
+                          y = 1,
+                          size = 8,
+                          label = "No expression data found. /n Try another gene.") + 
+        ggplot2::theme_void()
+
+    return(fig)	 
     
   }
  
