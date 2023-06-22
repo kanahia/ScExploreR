@@ -110,13 +110,14 @@ ExpressionLevelShiny <- function(id,
         
         # Find selected cell
         if(! "key" %in% colnames(event.data)) {
-          
-          shiny::showNotification(ui = "This is a boxplot component not a cell. Please select a valid cell.",
-                                  type = "error",
-                                  duration = 5)
+          notify_user <- 
+		 shiny::showNotification(ui = "This is a boxplot component not a cell. Please select a valid cell.",
+                 			 type = "error",
+                                 	 duration = 5)
                      
           
-          stop()
+          returrn(notify_user)
+
         } else {
           whichCell <- unique(event.data[1,5])[[1]]
           }
