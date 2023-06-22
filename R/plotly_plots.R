@@ -424,7 +424,25 @@ ViolinGeneExpStage <- function(gene = NULL,
                           size = 8,
                           label = " ") + 
         ggplot2::theme_void()
-	
+
+    empty_plot  <- plotly::ggplotly(empty_plot)
+    empty_plot <- 
+	  empty_plot %>% 
+           plotly::layout(
+          xaxis = list(
+            title = "",
+            zeroline = FALSE,
+            showline = FALSE,
+            showticklabels = FALSE,
+            showgrid = FALSE),
+          yaxis = list(
+            title = "",
+            zeroline = FALSE,
+            showline = FALSE,
+            showticklabels = FALSE,
+            showgrid = FALSE)
+          )
+
 	return(empty_plot) 
   }
   

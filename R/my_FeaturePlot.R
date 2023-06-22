@@ -59,7 +59,7 @@ my_FeaturePlot <- function(metadata,
                           x = 1,
                           y = 1,
                           size = 8,
-                          label = "No expression data found. \n Try another gene.") + 
+                          label = " ") + 
         ggplot2::theme_void()
 
     return(fig)	 
