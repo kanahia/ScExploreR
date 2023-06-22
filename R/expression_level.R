@@ -107,7 +107,8 @@ ExpressionLevelShiny <- function(id,
 	shiny::observeEvent(
 	    plotly::event_data("plotly_click", source = "click"), {
     	    event.data <- plotly::event_data("plotly_click", source = "click")
-        if(is.null(event.data) == T) return(" ")
+	})
+        if(is.null(event.data) == T) return(NULL)
         
         # Find selected cell
         if(! "key" %in% colnames(event.data)) {
@@ -129,8 +130,7 @@ ExpressionLevelShiny <- function(id,
                           "norm.counts" = round(sort(Data2extractCell[, whichCell], decreasing = T), 4)
                           )
         #res <- whichCell
-        return(res)
-         }) 
+        return(res) 
         })
       }
     )
