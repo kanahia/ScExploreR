@@ -415,7 +415,17 @@ ViolinGeneExpStage <- function(gene = NULL,
                                ) {
   
   if(! gene %in% rownames(slot_data)) {
-    stop()
+      
+    empty_plot <-
+	 ggplot2::ggplot() +                      
+       	 ggplot2::annotate("text",
+                          x = 1,
+                          y = 1,
+                          size = 8,
+                          label = " ") + 
+        ggplot2::theme_void()
+	
+	return(empty_plot) 
   }
   
   chosen_cells <- 
