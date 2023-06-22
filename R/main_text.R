@@ -99,5 +99,5 @@ cell_matrix_info <-
   shiny::p(
     "Click the dot in the dot plot to display the gene expression matrix for the cell of interest",
     style = "font-size: 17px; color: black; font-weight: bold; text-decoration: underline; margin-top: -70px;
-             margin-bottom: 45px; margin-left: -8px; text-align: justify;")
+             margin-bottom: 45px; margin-left: -8px; text-align: center;")
 
