@@ -106,8 +106,7 @@ ExpressionLevelShiny <- function(id,
       output$exp_genes_in_cell <- DT::renderDataTable({ #shiny::renderPrint({
 	 event.data <- plotly::event_data("plotly_click", source = "click")
 
-        if(is.null(event.data) == T) {
-	" "}
+        if(is.null(event.data) == T) return(NULL)
         
         # Find selected cell
         if(! "key" %in% colnames(event.data)) {
@@ -117,7 +116,7 @@ ExpressionLevelShiny <- function(id,
                                  	 duration = 5)
                      
           
-          returrn(notify_user)
+          return(notify_user)
 
         } else {
           whichCell <- unique(event.data[1,5])[[1]]
