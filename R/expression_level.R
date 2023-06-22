@@ -107,7 +107,8 @@ ExpressionLevelShiny <- function(id,
 	 event.data <- plotly::event_data("plotly_click", source = "click")
 
         if(is.null(event.data) == T) return(NULL)
-        
+        if(ncol(event.data) < 4) return(NULL)
+
         # Find selected cell
         if(! "key" %in% colnames(event.data)) {
           notify_user <- 
