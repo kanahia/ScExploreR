@@ -106,34 +106,7 @@ ExpressionLevelShiny <- function(id,
       output$exp_genes_in_cell <- DT::renderDataTable({ #shiny::renderPrint({
 	 event.data <- plotly::event_data("plotly_click", source = "click")
 
-        if(is.null(event.data) == T) {
-   
-	fig <- 
-	ggplot2::ggplot() +                      
-	ggplot2::annotate("text",
-			x = 1,
-			y = 1,
-			size = 8,
-			label = "No expression data. \nTry another gene!") + 
-	ggplot2::theme_void()
-
-	fig <- plotly::ggplotly(fig)
-	fig <- fig %>% 
-	plotly::layout(
-			xaxis = list(
-				title = "",
-				zeroline = FALSE,
-				showline = FALSE,
-				showticklabels = FALSE,
-				showgrid = FALSE),
-			yaxis = list(
-				title = "",
-				zeroline = FALSE,
-				showline = FALSE,
-				showticklabels = FALSE,
-				showgrid = FALSE))
-	return(fig) 
-	}
+        if(is.null(event.data) == T) return(NULL)   
 
         # Find selected cell
         if(! "key" %in% colnames(event.data)) {
