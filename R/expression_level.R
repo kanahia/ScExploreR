@@ -107,7 +107,35 @@ ExpressionLevelShiny <- function(id,
 	 event.data <- plotly::event_data("plotly_click", source = "click")
 
         if(is.null(event.data) == T) return(NULL)
-        if(ncol(event.data) < 4) return(NULL)
+        
+	if (! is.data.frame(event.data)) {
+	fig <- 
+	ggplot2::ggplot() +                      
+	ggplot2::annotate("text",
+			x = 1,
+			y = 1,
+			size = 8,
+			label = "No expression data. \nTry another gene!") + 
+	ggplot2::theme_void()
+
+	fig <- plotly::ggplotly(fig)
+	fig <- fig %>% 
+	plotly::layout(
+			xaxis = list(
+				title = "",
+				zeroline = FALSE,
+				showline = FALSE,
+				showticklabels = FALSE,
+				showgrid = FALSE),
+			yaxis = list(
+				title = "",
+				zeroline = FALSE,
+				showline = FALSE,
+				showticklabels = FALSE,
+				showgrid = FALSE))
+
+	return(fig) 
+	}
 
         # Find selected cell
         if(! "key" %in% colnames(event.data)) {
@@ -115,42 +143,12 @@ ExpressionLevelShiny <- function(id,
 		 shiny::showNotification(ui = "This is a boxplot component not a cell. Please select a valid cell.",
                  			 type = "error",
                                  	 duration = 5)
-                     
-          
+                      
           return(notify_user)
-
-        } else {
-	    if (is.null(event.data)) {
-		fig <- 
-    		    ggplot2::ggplot() +                      
-       		    ggplot2::annotate("text",
-                         x = 1,
-                 	 y = 1,
-                         size = 8,
-                         label = "No expression data. \nTry another gene!") + 
-       			 ggplot2::theme_void()
-      
-     		 fig <- plotly::ggplotly(fig)
-      		 fig <- fig %>% 
-       		 plotly::layout(
-         	 xaxis = list(
-         	   title = "",
-           	   zeroline = FALSE,
-            	   showline = FALSE,
-            	   showticklabels = FALSE,
-            	   showgrid = FALSE),
-          	yaxis = list(
-            	   title = "",
-                   zeroline = FALSE,
-                   showline = FALSE,
-                   showticklabels = FALSE,
-                   showgrid = FALSE))
 		
-		return(fig)
-
 	} else {	
           whichCell <- unique(event.data[1,5])[[1]]
-          }
+        
 	}
         
 
