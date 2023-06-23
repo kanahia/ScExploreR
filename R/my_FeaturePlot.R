@@ -53,14 +53,7 @@ my_FeaturePlot <- function(metadata,
   if(gene %in% rownames(m_data)) {
     m_gene <- m_data[gene, ]
   } else {
-    fig <- 
-        ggplot2::ggplot() +                      
-        ggplot2::annotate("text",
-                          x = 1,
-                          y = 1,
-                          size = 8,
-                          label = " ") + 
-        ggplot2::theme_void()
+    fig <- empty_plot(label = " ", return_plotly = FALSE)
 
     return(fig)	 
     

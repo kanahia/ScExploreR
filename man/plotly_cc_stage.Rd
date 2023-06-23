@@ -23,6 +23,9 @@ plotly_cc_stage(
 
 \item{my_colors}{colors}
 }
+\value{
+
+}
 \description{
 Cell-cycle bar chart in plotly
 }

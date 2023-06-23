@@ -104,34 +104,33 @@ ExpressionLevelShiny <- function(id,
         })
       
       output$exp_genes_in_cell <- DT::renderDataTable({ #shiny::renderPrint({
-	 event.data <- plotly::event_data("plotly_click", source = "click")
+        event.data <- plotly::event_data("plotly_click", source = "click")
 
         if(is.null(event.data) == T) return(NULL)   
 
         # Find selected cell
         if(! "key" %in% colnames(event.data)) {
-          notify_user <- 
-		 shiny::showNotification(ui = "This is a boxplot component not a cell. Please select a valid cell.",
-                 			 type = "error",
-                                 	 duration = 5)
+          notify_user <-
+            shiny::showNotification(ui = "This is a boxplot component not a cell. Please select a valid cell.",
+                                    type = "error",
+                                    duration = 5)
                       
           return(notify_user)
-		
-	} else {	
+          
+          } else {	
+            
           whichCell <- unique(event.data[1,5])[[1]]
-        
-	}
-        
-
+          
+          }
         res <- data.frame("cell" = whichCell,
                           "cluster" = metadata[[clustering]][metadata$cell == whichCell],
                           "norm.counts" = round(sort(Data2extractCell[, whichCell], decreasing = T), 4)
                           )
         #res <- whichCell
         return(res) 
-        })
-      }
-    )
+      })
+    }
+  )
 }
 
 

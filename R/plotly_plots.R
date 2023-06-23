@@ -415,35 +415,8 @@ ViolinGeneExpStage <- function(gene = NULL,
                                ) {
   
   if(! gene %in% rownames(slot_data)) {
-      
-    empty_plot <-
-	 ggplot2::ggplot() +                      
-       	 ggplot2::annotate("text",
-                          x = 1,
-                          y = 1,
-                          size = 8,
-                          label = " ") + 
-        ggplot2::theme_void()
-
-    empty_plot  <- plotly::ggplotly(empty_plot)
-    empty_plot <- 
-	  empty_plot %>% 
-           plotly::layout(
-          xaxis = list(
-            title = "",
-            zeroline = FALSE,
-            showline = FALSE,
-            showticklabels = FALSE,
-            showgrid = FALSE),
-          yaxis = list(
-            title = "",
-            zeroline = FALSE,
-            showline = FALSE,
-            showticklabels = FALSE,
-            showgrid = FALSE)
-          )
-
-	return(empty_plot) 
+    empty_plot <- empty_plot(label = " ", return_plotly = TRUE)
+    return(empty_plot) 
   }
   
   chosen_cells <- 
@@ -462,31 +435,8 @@ ViolinGeneExpStage <- function(gene = NULL,
   if(sum(data$normalized_counts) == 0) {
     if(only_boxplot==FALSE | only_boxplot == TRUE) {
       
-      fig <- 
-        ggplot2::ggplot() +                      
-        ggplot2::annotate("text",
-                          x = 1,
-                          y = 1,
-                          size = 8,
-                          label = "No expression data. \nTry another gene!") + 
-        ggplot2::theme_void()
-      
-      fig <- plotly::ggplotly(fig)
-      fig <- fig %>% 
-        plotly::layout(
-          xaxis = list(
-            title = "",
-            zeroline = FALSE,
-            showline = FALSE,
-            showticklabels = FALSE,
-            showgrid = FALSE),
-          yaxis = list(
-            title = "",
-            zeroline = FALSE,
-            showline = FALSE,
-            showticklabels = FALSE,
-            showgrid = FALSE)
-          )
+      fig <- empty_plot(label = "No expression data. \nTry another gene!",
+                        return_plotly = TRUE)
     }
     
   } else {
@@ -590,3 +540,48 @@ ViolinGeneExpStage <- function(gene = NULL,
   }
   return(fig)
 }
+
+
+
+#' Make empty ggplot2 or plotly
+#'
+#' @param label text to be displayed
+#' @param return_plotly if return plotly or ggplot2 object
+#'
+#' @return ggplot2 or plotly object
+#' @export
+#'
+empty_plot <- function(label = " ", 
+                       return_plotly = FALSE) {
+  
+  empty_plot <-
+    ggplot2::ggplot() +                      
+    ggplot2::annotate("text",
+                      x = 1,
+                      y = 1,
+                      size = 8,
+                      label = label) + 
+    ggplot2::theme_void()
+  
+  if(return_plotly == TRUE) {
+    empty_plot  <- plotly::ggplotly(empty_plot)
+    empty_plot <- 
+      empty_plot %>% 
+      plotly::layout(
+        xaxis = list(
+          title = "",
+          zeroline = FALSE,
+          showline = FALSE,
+          showticklabels = FALSE,
+          showgrid = FALSE),
+        yaxis = list(
+          title = "",
+          zeroline = FALSE,
+          showline = FALSE,
+          showticklabels = FALSE,
+          showgrid = FALSE)
+      )
+    }
+  return(empty_plot)
+}
+
