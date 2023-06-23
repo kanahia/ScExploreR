@@ -106,9 +106,8 @@ ExpressionLevelShiny <- function(id,
       output$exp_genes_in_cell <- DT::renderDataTable({ #shiny::renderPrint({
 	 event.data <- plotly::event_data("plotly_click", source = "click")
 
-        if(is.null(event.data) == T) return(NULL)
-        
-	if (! is.data.frame(event.data)) {
+        if(is.null(event.data) == T) {
+   
 	fig <- 
 	ggplot2::ggplot() +                      
 	ggplot2::annotate("text",
@@ -133,7 +132,6 @@ ExpressionLevelShiny <- function(id,
 				showline = FALSE,
 				showticklabels = FALSE,
 				showgrid = FALSE))
-
 	return(fig) 
 	}
 

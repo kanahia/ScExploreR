@@ -1,7 +1,7 @@
 Package: ScExploreR
 Type: Package
 Title: Single-cell data Explorer
-Version: 0.0.1.11
+Version: 0.0.1.12
 Authoars@R: c(
     person("Karim", "Abu Nahia", email = "kanahia@iimcb.gov.pl", role = c("aut", "cre")),
     person("Maciej", "Migdał", email = "mmigdal@iimcb.gov.pl", role = "aut")) 
