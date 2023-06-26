@@ -1,7 +1,7 @@
 
 #' @export
 # name to display in title bar
-title <- "ScExploreR"
+title <- "ZFCardioSCape"
 
 
 # logo to display in header bar

@@ -11,9 +11,6 @@ ncbi2gene(enrichResult, gene_id_type = NULL)
 
 \item{gene_name_type}{ensembl or extrenal gene name}
 }
-\value{
-
-}
 \description{
 ncbi2gene
 }

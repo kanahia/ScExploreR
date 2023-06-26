@@ -3,7 +3,7 @@ main_text <-
   shiny::mainPanel(
     shiny::h1("scRNA-seq reveals the diversity of the developing cardiac cell lineage 
               and molecular building blocks of the primary pacemaker", 
-              style = "font-size: 34px; font-weight: bold; margin-top: 10px; text-align: center"),
+              style = "font-size: 34px; font-weight: bold; margin-top: 25px; text-align: center"),
     
     shiny::p("We present a high-resolution single-cell atlas of the whole developing 
               heart in the zebrafish, a model organism increasingly used to study heart biology. 
@@ -17,7 +17,7 @@ main_text <-
                shiny::span(
                  shiny::tags$u("While we are in the process of publishing our work"), 
                  style = "color: red;"), 
-               "should you choose to use our data in your publication, please cite the preprint .... "
+               "should you choose to use our data in your publication, please cite the preprint. "
                ),
             style = "font-size: 17px; margin-top: 10px; text-align: justify;"),
     

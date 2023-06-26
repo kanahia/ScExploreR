@@ -69,15 +69,17 @@ ui <-
                   text-align:center;
                   font-size: 25px;}"
                  )
-            ),
+            )
+          ),
+        shiny::tags$head(
           shiny::tags$script(
             src = "https://www.googletagmanager.com/gtag/js?id=G-NRVK2V3LXV",
             async = ""
-          ),
-          shiny::tags$script(
-            src = "gtag.js"
+        ),
+        shiny::tags$script(
+          src = "gtag.js"
           )
-          ),
+        ),
         #added in css_formating
         skin_colors,
         shinydashboard::tabItems(
