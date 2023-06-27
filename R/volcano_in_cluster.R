@@ -55,8 +55,8 @@ volcano_plot <- function(seurat_object,
   lim_2 <- min(markers$avg_log2FC)
   
   
-  pos_label_1 <- max(markers$avg_log2FC[markers$avg_log2FC > 0])/2 +0.15
-  pos_label_2 <- min(markers$avg_log2FC[markers$avg_log2FC < 0])/2 - 0.15
+  pos_label_1 <- max(markers$avg_log2FC[markers$avg_log2FC > 0])*0.7 +0.15
+  pos_label_2 <- min(markers$avg_log2FC[markers$avg_log2FC < 0])*0.7 - 0.15
 
   # if(!is.numeric(c(avg_log2FC.1, avg_log2FC.2))) {
   #   stop("log2FC is not numeric")
