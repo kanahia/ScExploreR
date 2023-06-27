@@ -22,7 +22,7 @@ ui <-
                        ),
         shiny::tags$li(class="dropdown",
                        shiny::tags$a(
-			 href="https://www.iimcb.gov.pl/pl/",
+			 href="https://www.iimcb.gov.pl/en/",
                          shiny::tags$img(
                            src = "iimcb.png",
                            height = '90px',
