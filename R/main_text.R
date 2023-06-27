@@ -20,6 +20,12 @@ main_text <-
                "should you choose to use our data in your publication, please cite the preprint. "
                ),
             style = "font-size: 17px; margin-top: 10px; text-align: justify;"),
+    shiny::p("Abu Nahia K, Sulej A, Migdal M, Ochocka N, Ho R, Kaminska B, Zagorski M, Winata C,. scRNA-seq reveals 
+	     the diversity of the developing cardiac cell lineage and molecular building blocks of the primary pacemaker.
+	     BioaRxiv:2023.06.26.546508. Available from: ", 
+	     shiny::tags$a("https://www.biorxiv.org/content/10.1101/2023.06.26.546508v1",
+	     		   href = "https://www.biorxiv.org/content/10.1101/2023.06.26.546508v1", target = "_blank"),
+	     style = "font-size: 17px; text-align: justify; font-weight: bold;"),
     
     # shiny::p("A new p() command starts a new paragraph. Supply a style attribute to change the format of the entire paragraph.",
     #   style = "font-family: 'times'; font-si16pt"),
@@ -50,9 +56,12 @@ main_text <-
              extended with additional EGFP and mRFP sequences. Detailed parameters 
              for cell filtering and downstream data processing can be found in our preprint.",
              shiny::br("Feel free to contact us for further enquiries:",
-                       shiny::tags$a("kanahia@iimcb.gov.pl, cwinata@iimcb.gov.pl.", 
-                                     style = "color: blue")
-                       ),
+                       shiny::tags$a("kanahia@iimcb.gov.pl, cwinata@iimcb.gov.pl", 
+                                     style = "color: blue"),
+	    	      " and visit our lab webpage ", 
+			shiny::tags$a("https://zdglab.iimcb.gov.pl/", 
+				      href = "https://zdglab.iimcb.gov.pl", target = "_blank"),
+                       ), 
              style = "font-size: 17px; margin-top: 10px; text-align: justify;"),
     shiny::br(),
     width = 12
