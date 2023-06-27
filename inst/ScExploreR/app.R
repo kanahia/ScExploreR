@@ -484,8 +484,8 @@ server <- function(input, output, session) {
                                    columnDefs = list(list(width = "75px", targets = 0),
                                                      list(width = "40px", targets = 1:4),
                                                      list(width = "100px", targets = 5),
-                                                     list(className = 'dt-left', targets = "_all"))))
-      #DT::formatRound(columns = c(1, 2), digits = 2)
+                                                     list(className = 'dt-left', targets = "_all")))) %>%
+      DT::formatRound(columns = c(3), digits = 2)
     )
   
   ScExploreR::enrichment_analysis_Shiny(
