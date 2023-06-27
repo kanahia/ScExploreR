@@ -1,6 +1,6 @@
 library("ScExploreR")
 
-ui <- 
+ui <-
   shinydashboard::dashboardPage(
     skin = "blue",
       shinydashboard::dashboardHeader(
@@ -20,11 +20,21 @@ ui <-
                               shiny::icon("github"), 
                               "GitHub", target="_blank")
                        ),
+        shiny::tags$li(class="dropdown",
+                       shiny::tags$a(
+                         shiny::tags$img(
+                           src = "iimcb.png",
+                           height = '90px',
+                           width = '90px',
+                           align = "right",
+                           style = "margin-top: -10px;")
+                         )
+                       ),
         title = header_title, #in css formating
         titleWidth = 220
         ),
       shinydashboard::dashboardSidebar(
-        shiny::tags$style(".left-side, .main-sidebar {padding-top: 100px}"),
+        shiny::tags$style(".left-side, .main-sidebar, .sidebar {padding-top: 50px}"),
         width = 220,
         shinydashboard::sidebarMenu(
           shinydashboard::menuItem(
