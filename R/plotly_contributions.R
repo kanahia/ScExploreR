@@ -189,8 +189,8 @@ StackedMetrics <- function(data,
                       size = 0.3,
                       color = "black") + 
     ggplot2::theme_classic() +
-    ggplot2::theme(axis.text.x = element_text(size = 15),
-                   axis.text.y = element_text(size = 15),  
+    ggplot2::theme(axis.text.x = element_text(size = 12),
+                   axis.text.y = element_text(size = 12),  
                    axis.title.x = element_text(size = 14),
                    axis.title.y = element_text(size = 14),
                    legend.text = element_text(size=12),
