@@ -75,10 +75,12 @@ enrichment_analysis_Shiny <- function(id) {
         shiny::eventReactive(
           eventExpr = input$button,
           valueExpr = {
-            
+  	          
             pasted_genes <- 
               unlist(stringr::str_split(string = input$caption,pattern = "\\\n"))
-            
+        
+	    if(is.null(pasted_genes)) return(NULL)
+    
             if(any(grepl(x = pasted_genes, pattern = "ENSDARG"))) {
               out_df <- 
                 drerio_mart_ids$NCBI[drerio_mart_ids$`Gene stable ID` %in% pasted_genes] %>%
@@ -123,6 +125,7 @@ enrichment_analysis_Shiny <- function(id) {
                 TERM2NAME = NA
               )
             
+	    if(! is.null(out)) {
             attr(x = out,
                  which = "input_type") <- 
               if(any(grepl(x = pasted_genes, pattern = "ENSDARG"))) {
@@ -130,6 +133,7 @@ enrichment_analysis_Shiny <- function(id) {
               } else {
                 "Gene name"
               }
+	    }
             
             return(out)
             
@@ -149,10 +153,11 @@ enrichment_analysis_Shiny <- function(id) {
               ) +
               ggplot2::scale_alpha(range = c(0.2, 0.8)) +
               viridis::scale_color_viridis(direction = -1)
-          }#  click()
+          } else {empty_plot(label = "", return_plotly = FALSE) 
+	  } #  click()
         }) #render
         
-        output$enrich_table <- 
+        output$enrich_table <-
           DT::renderDataTable(as.data.frame(click()) %>%
                                 dplyr::select(-c(1,2,9)) %>%
                                 dplyr::mutate(pvalue = rstatix::p_round(pvalue),

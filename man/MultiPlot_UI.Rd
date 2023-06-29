@@ -6,7 +6,7 @@
 \usage{
 MultiPlot_UI(
   id,
-  label = "Data:",
+  label = "Select category:",
   selected = "selected_cells",
   choices = c(`Selected cells` = "selected_cells", Overview = "Overview", Contribution =
     "contribution", `Cluster metrics` = "qc_cluster", `Global metrics` = "qc"),
