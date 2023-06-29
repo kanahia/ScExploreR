@@ -339,7 +339,7 @@ plot_contribution <- function(metadata,
 #' @export
 #' 
 MultiPlot_UI <- function(id,
-                         label = "Data:",
+                         label = "Select category:",
                          selected = "selected_cells",
                          choices =  
                            c(
