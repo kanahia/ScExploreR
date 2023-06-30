@@ -11,6 +11,9 @@ ncbi2gene(enrichResult, gene_id_type = NULL)
 
 \item{gene_name_type}{ensembl or extrenal gene name}
 }
+\value{
+vecotr of gene names
+}
 \description{
 ncbi2gene
 }

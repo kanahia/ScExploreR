@@ -3,7 +3,7 @@
 #' @param enrichResult 
 #' @param gene_name_type ensembl or extrenal gene name
 #'
-#' @return
+#' @return vecotr of gene names
 #' @export
 #'
 ncbi2gene <- function(enrichResult, gene_id_type = NULL){

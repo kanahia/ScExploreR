@@ -23,3 +23,6 @@ plotly plot
 \description{
 Title
 }
+\examples{
+ClusterComposition(data = metadata_all, clustering = "edited_res.1.5", condition = "nCount_RNA")
+}
