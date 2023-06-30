@@ -521,7 +521,7 @@ ViolinGeneExpStage <- function(gene = NULL,
                        legend.title = element_text(size = 14),
                        plot.title = element_text(size = 14, face = "bold", hjust = 0.5))+
         ggplot2::scale_fill_brewer(palette="Dark2") +
-        ggplot2::geom_jitter(width = 0.25) #aes(text = paste0("Cell: ", cells)))
+        ggplot2::geom_jitter(width = 0.25, size = 2.1) #aes(text = paste0("Cell: ", cells)))
       
       fig <- plotly::ggplotly(fig, source="click")
       
