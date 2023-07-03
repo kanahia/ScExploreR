@@ -46,7 +46,21 @@ ExpressionLevelUI <- function(id,
               loader = "dnaspin",plotly::plotlyOutput(ns("test_violin"), 
                                                    width = "auto", 
                                                    height = plot_height)
+              ),
+            
+            shiny::fluidRow(
+              shiny::column( 
+                width = 3, offset = 3,
+                shinydashboard::valueBoxOutput(outputId = ns("cells_48h"), width = 4) %>%
+                  shiny::tagAppendAttributes(style= 'margin-top: -10px; align: center;')
+                ),
+              shiny::column(
+                width = 3,
+                shinydashboard::valueBoxOutput(outputId = ns("cells_72h"), width = 4) %>%
+                  shiny::tagAppendAttributes(style= 'margin-top: -10px; align: center;')
+                )
               )
+          
             ),
           shinydashboard::box(
             cell_matrix_info,
@@ -58,12 +72,7 @@ ExpressionLevelUI <- function(id,
                                   height = plot_height)
               )
             )
-       
-       #shinydashboard::box(shiny::verbatimTextOutput(ns('exp_genes_in_cell')))
-         # )
-        )
-      
-      
+          )
       )
     )
   
@@ -101,7 +110,71 @@ ExpressionLevelShiny <- function(id,
                                        metadata = metadata, 
                                        slot_data = slot_data, 
                                        only_boxplot = boxplot)
+     
+      })
+      
+      
+      n_cells_for_value <- 
+        shiny::reactive({
+          shiny::req(input$gene_selector)
+          
+          metadata %>% 
+            dplyr::filter(cell %in% names(slot_data[input$gene_selector, 
+                                                    slot_data[input$gene_selector, ] > 0]
+                                          )
+                          ) %>% 
+            dplyr::select(cell, stage, !!sym(clustering)) %>%
+            group_by(!!sym(clustering), stage) %>% 
+            summarise(n = n()) %>%
+            dplyr::filter(!!sym(clustering) %in% input$cluster)
+          # cell_names <- 
+          #   names(slot_data[input$gene_selector, slot_data[input$gene_selector, ] > 0])
+          # 
+          # base::as.matrix(table(metadata$stage[metadata$cell %in% cell_names]))
+   
         })
+      
+      output$cells_48h <-
+        shinydashboard::renderValueBox({
+          if ("48h" %in% n_cells_for_value()$stage) {
+            shinydashboard::valueBox(value = 
+                                       shiny::tags$p(
+                                         paste0("Cells ",
+                                                n_cells_for_value()$n[n_cells_for_value()$stage=="48h"]),
+                                         style = "font-size: 20px; text-align: center;"),
+                                     subtitle = shiny::tags$p("48h", style = "font-size: 18px; text-align: center;"),
+                                     width = NULL,
+                                     color = "aqua")
+          } else {
+            shinydashboard::valueBox(value = 
+                                       shiny::tags$p(paste0("Cells: ", value =  0),
+                                                     style = "font-size: 20px; text-align: center;"),
+                                     subtitle = shiny::tags$p("48h", style = "font-size: 18px; text-align: center;"),
+                                     width = NULL,
+                                     color = "aqua")
+          }
+        })
+      
+      output$cells_72h <-
+        shinydashboard::renderValueBox({
+          if ("72h" %in% n_cells_for_value()$stage) {
+            shinydashboard::valueBox(value = 
+                                       shiny::tags$p(
+                                         paste0("Cells: ", n_cells_for_value()$n[n_cells_for_value()$stage=="72h"]),
+                                         style = "font-size: 20px; text-align: center;"),
+                                     subtitle = shiny::tags$p("72h", style = "font-size: 18px; text-align: center;"),
+                                     width = NULL,
+                                     color = "yellow")
+          } else {
+            shinydashboard::valueBox(value = 
+                                       shiny::tags$p(paste0("Cells: ", 0),
+                                                     style = "font-size: 20px; text-align: center;"),
+                                     subtitle = shiny::tags$p("72h", style = "font-size: 18px; text-align: center;"),
+                                     width = NULL,
+                                     color = "yellow")
+          }
+        })
+      
       
       output$exp_genes_in_cell <- DT::renderDataTable({ #shiny::renderPrint({
         event.data <- plotly::event_data("plotly_click", source = "click")

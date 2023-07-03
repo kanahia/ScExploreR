@@ -79,6 +79,19 @@ ui <-
                   max-width: 450px;
                   text-align:center;
                   font-size: 25px;}"
+                 ),
+            HTML(".small-box.bg-aqua {
+                   background-color: #1b9e77d4 !important; 
+                   color: #353232 !important; width: fit-content;
+                   margin-left: -50px; height: 70px;
+                 }",
+                 
+                 ".small-box.bg-yellow {
+                   background-color: #d95f02c9 !important; 
+                   color: #353232 !important; width: fit-content;
+                   height: 70px;
+                 }",
+                 ".col-sm-offset-1 {margin-left: 9.5%;}"
                  )
             )
           ),
