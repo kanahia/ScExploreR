@@ -12,7 +12,8 @@ my_FeaturePlot(
   pt.size = 5e-04,
   pt.size_pos = 0.005,
   label = FALSE,
-  order = FALSE
+  order = FALSE,
+  exp_lvl = 0
 )
 }
 \arguments{
@@ -22,13 +23,17 @@ my_FeaturePlot(
 
 \item{gene}{gene to be plotted}
 
+\item{identity}{}
+
+\item{pt.size}{dot size}
+
+\item{pt.size_pos}{dot size of cells to be colored}
+
 \item{label}{to plot labels or not}
 
 \item{order}{whether sort plotting order or not}
 
-\item{identitty}{identity of interest (Idents(seurat))}
-
-\item{stage}{filter according to selected stage}
+\item{exp_lvl}{gene expression level to use as a threshold}
 }
 \description{
 Custom FeaturePlot

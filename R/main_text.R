@@ -110,3 +110,43 @@ cell_matrix_info <-
     style = "font-size: 17px; color: black; font-weight: bold; text-decoration: underline; margin-top: -70px;
              margin-bottom: 45px; margin-left: -8px; text-align: center;")
 
+#' @export
+info_exp_lvl <- 
+  shiny::p("This panel allows checking the expression level of the gene of interest in a 
+           particular cluster depending on the developmental stage. A generated boxplot 
+           is interactive so the user can manipulate the graph (zooming, dragging, etc.). 
+           Below the number of cells expressing the chosen gene in a particular cluster is shown.",
+           shiny::br(),
+           shiny::br(),
+           "In order to display other genes expressed in a particular cell, please mouse click on the cell of interest.",
+           style = "text-align: justify")
+
+#' @export
+info_multiplot <-
+  shiny::p("Panel allows data visualization depending on selected conditions." ,
+           shiny::br(),
+           shiny::br(),
+           "At the start, the general QC plot with selected cells included for downstream analysis is shown. 
+           Data were quality-checked based on mitochondrial gene content and a number of expressed genes.",
+           shiny::br(),
+           shiny::br(),
+           "The overview section provides detailed information regarding the number of expressed genes, 
+           UMI, and mitochondrial gene content in each main cell cluster.",
+           shiny::br(),
+           shiny::br(),
+           "The Contribution panel presents the percentage composition of each cluster depending 
+           on the developmental stage, the genetic background of transgenic lines used in the experiment, 
+           sample origin, and cell-cycle stage.",
+           shiny::br(),
+           shiny::br(),
+           "Plots are written in an interactive manner so they can be easily manipulated, for instance, enlarged.",
+           style = "text-align: justify")
+
+#' @export
+info_FeaturePlot <-
+  shiny::p("FeaturePlots can be used to visualize the expression of a particular gene. 
+           The expression level is shown on the UMAP plot where each dot represents a single cell. 
+           By plotting two genes side by side the co-expression can be checked. 
+           Data can be displayed for the entire dataset or based on the developmental stage",
+           style = "text-align: justify")
+

@@ -36,7 +36,13 @@ ExpressionLevelUI <- function(id,
             selected = "Myocardium",
             multiple = FALSE,
             width = '180px')
-          )
+          ),
+        shiny::column(shiny::div(class = "info-icon",
+                                 shiny::icon("info-circle", class = "fa-lg", 
+                                             "data-toggle" = "tooltip"),
+                                 shiny::div(class = "info-tooltip-bottom", 
+                                            info_exp_lvl)),
+                      width = 1)
         ),
       
       shiny::fluidRow(
@@ -60,7 +66,6 @@ ExpressionLevelUI <- function(id,
                   shiny::tagAppendAttributes(style= 'margin-top: -10px; align: center;')
                 )
               )
-          
             ),
           shinydashboard::box(
             cell_matrix_info,

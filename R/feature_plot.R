@@ -40,7 +40,15 @@ FeaturePlotShinyUI <- function(id,
                 selected = "all", 
                 width = "150px")
               )
-            )
+            ),
+          shiny::column(
+            shiny::div(class = "info-icon",
+                       shiny::icon("info-circle", class = "fa-lg", 
+                                   "data-toggle" = "tooltip"),
+                       shiny::div(class = "info-tooltip-bottom", 
+                                  info_FeaturePlot)),  
+            width = 1, 
+            offset = 5)
           ),
           shinycustomloader::withLoader(type = "html",
                                         loader = "dnaspin",

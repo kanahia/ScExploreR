@@ -93,7 +93,8 @@ ui <-
                  }",
                  ".col-sm-offset-1 {margin-left: 9.5%;}"
                  )
-            )
+            ),
+          shiny::tags$script(HTML('$(function () { $("[data-toggle=\'tooltip\']").tooltip(); });'))
           ),
         shiny::tags$head(
           shiny::tags$script(

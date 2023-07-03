@@ -75,3 +75,60 @@ my_alert {font-size: 28px}
   font-size: 25px;
 }
 
+.info-icon {
+  float: right;
+  display: inline-block;
+  margin-top: 25px;
+  color: #47a1d7;
+}
+
+.info-icon .info-tooltip {
+  visibility: hidden;
+  width: 350px;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  border-radius: 4px;
+  padding: 5px;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -100px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.info-icon:hover .info-tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+
+.info-tooltip-bottom {
+  visibility: hidden;
+  width: 350px;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  border-radius: 4px;
+  padding: 5px;
+  position: absolute;
+  z-index: 1;
+  top: 125%;
+  right: -250%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.info-icon:hover .info-tooltip-bottom {
+  visibility: visible;
+  opacity: 1;
+}
+  
+.fa-lg {
+    font-size: 1.8em;
+    line-height: .05em;
+    vertical-align: -.05em;
+}  
+

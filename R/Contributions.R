@@ -427,7 +427,15 @@ MultiPlot_UI <- function(id,
                 multiple = FALSE,
                 width = '180px')
               )
-          )
+          ),
+        shiny::column(
+          shiny::div(class = "info-icon",
+                     shiny::icon("info-circle", class = "fa-lg", 
+                                 "data-toggle" = "tooltip"),
+                     shiny::div(class = "info-tooltip-bottom", 
+                                info_multiplot)),
+          width = 1,
+          offset = 3)
         ), 
 shiny::conditionalPanel(condition = "input.type_of_data == 'selected_cells' || 
                                      input.type_of_data == 'qc'",

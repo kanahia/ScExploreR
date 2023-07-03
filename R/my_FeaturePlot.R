@@ -23,10 +23,12 @@ one_theme <- function() {
 #' @param metadata metadata exported from seurat
 #' @param data_slot slot "data" from seurat
 #' @param gene gene to be plotted
-#' @param identitty identity of interest (Idents(seurat))
 #' @param label to plot labels or not
 #' @param order whether sort plotting order or not
-#' @param stage filter according to selected stage
+#' @param exp_lvl gene expression level to use as a threshold
+#' @param identity 
+#' @param pt.size dot size
+#' @param pt.size_pos dot size of cells to be colored
 #'
 #' @importFrom dplyr rename group_by left_join inner_join select summarise
 #' @importFrom ggplot2 aes ggplot geom_point theme_classic
@@ -42,7 +44,8 @@ my_FeaturePlot <- function(metadata,
                            pt.size =0.0005,
                            pt.size_pos = 0.005,
                            label = FALSE,
-                           order = FALSE) {
+                           order = FALSE,
+                           exp_lvl = 0) {
   #browser()
   metadata <- metadata
   # check if identity is a string
@@ -69,7 +72,7 @@ my_FeaturePlot <- function(metadata,
                       by = "cell")
   
   filtered_data_positive <-
-    as.data.frame(m_gene[m_gene > 0]) %>%
+    as.data.frame(m_gene[m_gene > exp_lvl]) %>%
     tibble::rownames_to_column(var = "cell") %>%
     dplyr::rename("slot_data" = 2)
   
