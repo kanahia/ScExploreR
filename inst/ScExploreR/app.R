@@ -97,8 +97,8 @@ ui <-
           ),
         
         shiny::tags$head(
-          shiny::tags$script(HTML('$(function () { $("[data-toggle=\'tooltip\']").tooltip(); });'),
-                             async = "")),
+          shiny::tags$script(HTML('$(function () { $("[data-toggle=\'tooltip\']").tooltip(); });'))
+          ),
         shiny::tags$head(
           shiny::tags$script(
             src = "https://www.googletagmanager.com/gtag/js?id=G-NRVK2V3LXV",
