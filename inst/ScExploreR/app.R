@@ -66,6 +66,16 @@ ui <-
         shiny::tags$head(shiny::tags$link(rel = "stylesheet", 
                                           type = "text/css", 
                                           href = "mystyle.css")),
+        
+        shiny::tags$head(shiny::tags$link(rel = "shortcut icon", 
+                                          href = "favicon.ico")),
+        shiny::tags$head(
+          tags$link(rel = "shortcut icon", href = "favicon.ico"),
+          tags$link(rel = "apple-touch-icon", sizes = "180x180", href = "favicon.ico"),
+          tags$link(rel = "icon", type = "image/png", sizes = "32x32", href = "favicon-32x32.png"),
+          tags$link(rel = "icon", type = "image/png", sizes = "16x16", href = "favicon-16x16.png")
+        ),
+        
         shiny::tags$head(
           shiny::tags$style(
             HTML("#shiny-notification-panel{
